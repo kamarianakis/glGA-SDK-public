@@ -1,2 +1,273 @@
-# glGA-SDK
-glGA SDK
+# glGA SDK v.2020.1
+
+## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications
+
+---
+
+### *Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, all Rights Reserved*
+
+### *Prof. George Papagiannakis, papagian@csd.uoc.gr*
+
+### *University of Crete & Foundation for Research & Technology - Hellas (FORTH)*
+
+---
+
+> **New decade, new languages, new tools**:
+> cross platform compilation with cmake, cross platform/programming language development with VSCode employing python, C++ and C# for a full computer graphics (CG) stack ( GPU to CPU) to realise cross-operating system, cross-game engine CG algorithm development
+
+### glGA SDK Requirements
+
+**A scientific development/experimentation/visualization and algorithmic design/teaching computation platform** from *GPU CG to XR* and from *euclidean, quaternion algebra to geometric algebra GA* and *deep learning (DL) for computer graphics (CG)*:
+
+- shader based OpenGL4.4 complete pipeline support: vertex, fragment, geometry, compute, tessellation
+- Geometric algebra as an all-in-one framework unifying Linear algebra, complex numbers, Quat, Dquat algebras
+- Window toolkits across multiple OS
+- 2D GUIs easy to setup and parameterize
+- Common 3D file formats such as .dae and .fbx
+- GLSL style mathematics library for shader-based math
+- Python2GPU avenues
+  - Convert to C++
+  - Embed the python interpreter in C++
+- Vulkan support for low level GPU
+- GPGPU programming support for:
+  - OpenCL
+  - CUDA
+  - AMD ROCm
+- OpenVR access to steamVR library for basic VR cross VR-HMD support
+- Jupyter notebooks for literate programming, algorithmic exploration and teaching
+  1. CG Rendering
+     1. Path tracing (*Shirley's "Ray tracing in a Weekend" and SmallPT*)
+     2. Phong Lighting and Shading with point lights
+     3. Camera and Object linear transformations
+     4. Image Based Lighting
+     5. SH area lights with rotation
+     6. Precomputed Radiance Transfer
+  2. CG Character animation
+     1. keyframe animation & blending
+     2. Linear blend skinning
+     3. Dual quaternion skinning
+  3. Geometric Algebra (GA) for Computer Graphics (CG)
+      1. GA motors (EGA, CGA and rotation, translation, dilation)
+      2. GA quaternion blending
+      3. GA skinning
+      4. GA PRT
+      5. GA Cutting
+      6. GA Tearing
+      7. GA drilling
+
+### glGA SDK features
+
+1. `Full-stack CG/VR development`: same code-base across languages and platforms: from python to C++ and from C# and Unity to C++ and Unreal with same basic CG examples.
+2. `Basic glGA examples for introductory CG` programming in:
+   1. C++, OpenGL in glGA 5.0
+   2. Python, OpenGL in glGA SDK 2020
+   3. C#, OpenGL/Dx in Unity
+   4. C++, OpenGL in Unreal
+3. `Path tracing` with smallPT/ray tracing in a weekend
+   1. C++ smallPT
+   2. Python smallPT
+   3. C# smallPT
+   4. python RayTracingInAWeekend from Shirley
+4. `Support for source control & elegant code` documentation
+   1. Github flow
+   2. Github submodules
+   3. Python intro to scientific computing
+   4. Readthedocs Sphinx project
+5. `Support shader-based CG examples` in glGA
+   1. BasicWindow
+   2. BasicCubeGUI
+   3. BasicPhong
+   4. OpenGL Orange book GLSL chapters
+   5. glGACharacterApp
+       - Vertex specification
+       - Mesh loading
+       - Texturing
+       - Character Animation
+       - Skinning
+       - GA interpolation, animation, skinning
+       - VR simulation
+       - All OpengL GPU shader pipeline:
+         - Vertex
+         - Fragment
+         - Geometry
+         - Compute
+         - Tesselation
+           - <https://stackoverflow.com/questions/24083656/tessellation-shader-opengl>
+6. `Support geometric algebra for CG character simulation` in glGA
+    - Gaigen GA on shaders
+    - glGAMesh
+    - glGAMath
+7. `Support shader-based Unity CG examples`
+    - Same glGA basic shader examples in C# and Cg (similar to glGA but for Unity)
+    - Monte Carlo Path Tracing using compute shaders in Unity (BSc thesis)
+8. Support for `python 2 GPU` pathways
+   1. Python2cpp via pybind (module) - and then via C# wrapper to Unity - 
+   2. Embed the python interpreter
+      1. <https://pybind11.readthedocs.io/en/stable/advanced/embedding.html>
+      2. <https://docs.python.org/3.5/extending/embedding.html#pure-embedding>
+      3. Python->Cmake embedded python in Cpp->wrapper C# for Unity!
+   3. Use pybind11 C++ API to call python
+      1. <https://pybind11.readthedocs.io/en/stable/advanced/pycpp/object.htmlUse>
+   4. Cpp2python
+      1. pybind11 to call C++ from python (e.g. glGAMath, glGAMesh classes)
+         - Insight: Python is great for pedagogical experimentation. 
+         - However, once the algorithm is identified, C++ has to be employed, as it is far more efficient and GPU/VR friendly
+         - <https://stackoverflow.com/questions/45054860/extending-c-to-python-using-pybind11>
+         - <https://stackoverflow.com/questions/11866288/importing-a-pyd-created-with-swig-in-python-2-7-3-on-mac>
+   5. Python2cuda via numba (module)
+      - <https://developer.nvidia.com/auth0/callback?destination=how-to-cuda-python&code=jYyBdhhHrr43MYUQ&state=login>
+      - <http://numba.pydata.org/numba-doc/latest/user/5minguide.html>
+      - <https://github.com/ContinuumIO/gtc2020-numba>
+   6. Use Cython to create a C dynamic libray that contains the python modules
+      - <http://docs.cython.org/en/latest/src/tutorial/external.html>
+      - Python2compute shader via gaigen (module)
+   7. Using the unity/unreal python embedded console (2.7) (jupyter instructions)
+   8. Using Unity’s ML agents external communicator module  (jupyter instructions)
+   9. Rebuild unreal engine with Python 3.7 support (instead of 2.7)
+9. `Third party lib support python for data science, CG, GPU and GA` development:
+   1. Jupyter (anaconda, visual studio code)
+   2. numba (conda)
+   3. Clifford (conda)
+   4. galgebra (pip)
+   5. Numpy (conda)
+   6. Matplotlib (conda)
+   7. Scipy (conda)
+   8. Scikit-learn (conda)
+   9. Tensorflow (conda)
+   10. Keras (conda)
+   11. Pybind11 (github)
+   12. Cython (pip)
+   13. Scientific-python-lectures (submodule, github)
+   14. Python CG libraries:
+       1. pyOpenGL/pyOpenGL-accelerate (pip)
+           1. <http://pyopengl.sourceforge.net/context/tutorials/shader_1.html>
+           2. <https://github.com/rougier/python-opengl>
+           3. <http://morpheo.inrialpes.fr/~franco/3dgraphics/practical1.html>
+       2. pySDL2 (pip)
+       3. pyImGUI (pip)
+       4. pyGLM (pip)
+       5. pyAssimp (pip) (first assimp via macports)
+       6. Libigl (conda)
+       7. Pyigl (pip)
+       8. vulkan (pip)
+       9. Pyopencl (github)
+          1. Example in Lecture_6b_hpc from python scientific computing notebook
+       10. pyopenvr (github and pip)
+           1. Has been updated to latest steamvr 1.11.11
+       11. Imageio (conda)
+       12. Pybullet(pip)
+       13. Tqdm progress bar (pip)
+   15. Third party C++/CUDA physics libraries:
+       1. PositionBAsedDyanmics
+           1. <https://github.com/InteractiveComputerGraphics/PositionBasedDynamics.git>
+           2. <https://github.com/Scrawk/Position-Based-Dynamics.git>
+       2. VIPER
+          1. <https://github.com/vcg-uvic/viper.git>
+       3. SphereTree
+          1. <https://github.com/mlund/spheretree.git>
+       4. Bullet (pybullet) conda
+   16. Third party open source CG frameworks for multiOS support
+       1. Magnum (magnum.graphics)
+           1. <https://doc.magnum.graphics/magnum/getting-started.html>
+
+> ### Notes
+>
+>- To get pyassimp to work:
+>   - Install first latest assimp via macports: sudo port install assimp (version 5.0)
+>   - Add opt/local/lib on helper.py (where the assimp library is)
+>     - assimp/port/PyAssimp/pyassimp/structs.py
+>       - Line 1088 in 0adc032
+>         - ("mPrivate", c_char_p), 
+>         - Deleting that line resolves the error.
+>     - Previous glGA cpp framework 5.0 is a submodule
+>       - It can be build as cpp inside visual studio code: <https://medium.com/audelabs/> c-development-using-visual-studio-code-cmake-and-lldb-d0f13d38c563>
+>- Readthedocs project:
+> - <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>
+>- Python/Cpp/C# development:
+> 	- visual studio code with python, cpp, c#, cmake, gitlens, github plugins
+>	- Kite and kite copilot for python docs and intellisense (www.kite.com)
+
+### **References**
+
+1. Papaefthymiou, M., Hildenbrand, D., & Papagiannakis, G. (2016). An inclusive Conformal Geometric Algebra GPU animation interpolation and deformation algorithm. Visual Computer, 32(6-8), 1–9. <http://doi.org/10.1007/s00371-016-1270-8>
+2. Papagiannakis, G., Papanikolaou, P., Greassidou, E., & Trahanias, P. E. (2014). glGA: an OpenGL Geometric Application Framework for a Modern, Shader-based Computer Graphics Curriculum. (pp. 9–16), Eurographics 2014, <http://doi.org/10.2312/eged.20141026>
+3. Papagiannakis, G. (2013). Geometric algebra rotors for skinned character animation blending. Technical Brief, ACM SIGGRAPH ASIA 2013, Hong Kong, November 2013, 1–6.
+
+---
+
+## Why Python?
+
+OpenGL is primarily a C API which for most graphics applications today is actually used with C++ (or C#) in the industry. There are many good reasons for that: often the goal is to have the fastest possible code on the CPU side, since rendering for real-time visualization means that a frame needs to be produced onscreen every 10, 16 or 33 milliseconds (for 100Hz, 60Hz, 30Hz refresh rates) and no time can be wasted.
+
+Our objective here is significantly different: we want to learn and understand the key concepts as efficiently as possible, more than achieve absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
+
+- Python code is more straightforward, easier to read, write, and debug
+- It is less verbose (typically by a factor of 5-10 on the code size), and benefits from an extensive and intuitive set of built-ins (tuples, lists, dictionaries, arrays…)
+- In particular Python constructs, like generators, list and dictionary comprehensions are a great way to reduce simple object construction loops to one readable line of code, or create iterators that unclutter the code. Keep those in mind when you write your application.
+- Well written Python code can be quite fast already, and most inner loop tasks of interest to these practicals happen on the GPU anyway, once properly initialized.
+- What’s more, Python has excellent wrappers to OpenGL and window libraries whose interface closely match their C counterpart. Which means anything you learn about writing code in Python directly maps to the C APIs.
+
+---
+
+## glGA FOLDER Structure
+
+- glGA-SDK:
+  - Readme
+  - License
+  - .gitignore
+  - doc/
+    - pyCG
+      - GI
+        - rayTracingInAweekend
+        - smallPT
+      - pyScientific
+        - GP Juno notebooks
+      - pyGeometricAlgebra
+        - GATE
+        - py2GPU
+          - Py2cpp
+          - Py2numba
+          - Py2csharp
+        - pyDLGA
+          - embodiedAI
+        - pyPhysicsGA
+  - SDK/
+    - python/
+      - glGA/
+        - Helper/
+        - Mesh/
+        - RigMesh/
+        - Math/
+        - KDTree/
+        - PRT/
+      - dlGA/
+        - "deep learning for graphics algorithms and applications 2020"
+      - BasicExamples/
+      - AdvancedExamples/
+      - AssignmentExamples/
+      - OrangeBookExamples/
+      - Apps/
+    - cpp/
+      - lib/
+      - bin/
+    - frameworks
+      - cpp/
+        - Submodule: glGA
+      - python/
+        - Submodule: gate
+      - unity/
+        - Submodule: unity glGA basic shader projects
+      - unreal/
+        - Unreal basic shader projects
+      - extern
+        - python/
+          - Submodule: pybind11
+          - Submodule: scientific computing with python
+          - Submodule: numerical computing with python
+          - Submodule: glassner deep learning1
+          - Submodule: glassner deep learning2
+        - Cpp/
+          - Submodule:Spheretree
+          - Submodule:Pbd
+          - Submodule:Viper
+          - Submodule:Bullet/pybullet
