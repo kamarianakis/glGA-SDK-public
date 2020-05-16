@@ -1,4 +1,6 @@
-# glGA SDK v.2020.1
+# **glGA SDK**
+
+## *version 2020.1*
 
 ## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications
 
@@ -13,11 +15,11 @@
 ---
 
 > **New decade, new languages, new tools**:
-> cross platform compilation with cmake, cross platform/programming language development with VSCode employing python, C++ and C# for a full computer graphics (CG) stack ( GPU to CPU) to realise cross-operating system, cross-game engine CG algorithm development
+> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development
 
 ### glGA SDK Requirements
 
-**A scientific development/experimentation/visualization and algorithmic design/teaching computation platform** from *GPU CG to XR* and from *euclidean, quaternion algebra to geometric algebra GA* and *deep learning (DL) for computer graphics (CG)*:
+**A scientific development/experimentation/visualization and algorithmic design/teaching computation platform** from *CPU to GPU CG and XR* and from *euclidean, quaternion algebra to geometric algebra GA* and *deep learning (DL) for computer graphics (CG)*:
 
 - shader based OpenGL4.4 complete pipeline support: vertex, fragment, geometry, compute, tessellation
 - Geometric algebra as an all-in-one framework unifying Linear algebra, complex numbers, Quat, Dquat algebras
@@ -35,7 +37,7 @@
   - AMD ROCm
 - OpenVR access to steamVR library for basic VR cross VR-HMD support
 - Jupyter notebooks for literate programming, algorithmic exploration and teaching
-  1. CG Rendering
+  1. CG Character Rendering
      1. Path tracing (*Shirley's "Ray tracing in a Weekend" and SmallPT*)
      2. Phong Lighting and Shading with point lights
      3. Camera and Object linear transformations
