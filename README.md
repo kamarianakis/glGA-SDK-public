@@ -208,6 +208,7 @@
 - Lydatakis Nikolaos
 - Papaefthymiou Margarita
 - Kanakis Marios
+- Bachlitzanakis Vasileios
 - Geronikolakis Stratos
 - Evangellou Yannis
 - Kartsonaki Ioanna
@@ -216,7 +217,7 @@
 
 ## **APPENDICES**
 
-## A. Why Python
+## A. Why now in Python
 
 Our objective in this SDK is two-fold:
 
@@ -235,7 +236,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
 
 ---
 
-## B. glGA FOLDER Structure
+## B. glGA Folder Structure Outline
 
 - glGA-SDK:
   - Readme
@@ -244,37 +245,41 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
   - vscode/
     - #*contains vsCode workspace, macPorts list of third party libraries and python virtual environment list of conda and pip packages and modules*
   - doc/
-    - pyCG
-      - GI
+    - pyCG/
+      - GI/
         - rayTracingInAweekend
         - smallPT
-      - pyScientific
-        - GP Juno notebooks
-      - pyGeometricAlgebra
-        - GATE
-      - py2GPU
-        - Py2cpp
-        - Py2numba
-        - Py2csharp
-      - pyDLGA
-        - embodiedAI
-      - pyPhysicsGA
+      - RealtimeRendering/
+      - RealtimeAnimation/
+      - RealtimeDeformation/
+    - pyScientific/
+      - GP Juno notebooks
+    - pyGeometricAlgebra/
+      - GATE/
+    - py2GPU/
+      - Py2cpp/
+      - Py2numba/
+      - Py2csharp/
+    - pyDLGA/
+      - deepLearning
+      - embodiedAI
+    - pyPhysics/
   - SDK/
     - python/
       - glGA/
-        - Helper/
-        - Mesh/
-        - RigMesh/
-        - Math/
-        - KDTree/
-        - PRT/
+        - Helper
+        - Mesh
+        - RigMesh
+        - Math
+        - KDTree
+        - PRT
       - dlGA/
-        - #*deep learning for graphics algorithms and applications 2020*
-      - BasicExamples/
-      - AdvancedExamples/
-      - AssignmentExamples/
-      - OrangeBookExamples/
+        - #*deep learning for graphics algorithms and applications*
       - Apps/
+        - BasicExamples/
+        - AdvancedExamples/
+        - AssignmentExamples/
+        - OrangeBookExamples/
     - cpp/
       - lib/
       - bin/
@@ -283,26 +288,26 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - cpp/
         - Submodule: glGA
       - python/
-        - Submodule: gate
+        - Submodule: GATE
       - unity/
-        - Submodule: unity glGA basic shader projects
+        - Submodule: Unity glGA basic shader projects
       - unreal/
-        - Unreal basic shader projects
-      - extern
-        - python/
-          - Submodule: pybind11
-          - Submodule: scientific computing with python
-          - Submodule: numerical computing with python
-          - deepLearning
-            - Submodule: glassner deep learning1
-            - Submodule: glassner deep learning2
-        - Cpp/
-          - physics
-            - Submodule:Spheretree
-            - Submodule:Pbd
-            - Submodule:Viper
-            - Submodule:Bullet/pybullet
+        - Submodule: Unreal basic shader projects
+  - extern/
+    - python/
+      - Submodule: pybind11
+      - Submodule: scientific computing with python
+      - Submodule: numerical computing with python
+      - deepLearning
+        - Submodule: glassner deep learning1
+        - Submodule: glassner deep learning2
+    - Cpp/
+      - physics
+        - Submodule:Spheretree
+        - Submodule:Pbd
+        - Submodule:Viper
+        - Submodule:Bullet/pybullet
 
 ## *C. Release notes*
 
-- 17/05/20 initial github repository: <https://github.com/papagiannakis/glGA-SDK.git>
+- **17/05/20** initial github repository: <https://github.com/papagiannakis/glGA-SDK.git>
