@@ -2,7 +2,7 @@
 
 ## *version 2020.1*
 
-## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications
+## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications with emphasis on virtual character animation, rendering, deformation
 
 ---
 
@@ -15,20 +15,20 @@
 ---
 
 > **New decade, new languages, new tools**:
-> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development
+> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development.
 
-### glGA SDK Requirements
+### **A. glGA SDK Requirements**
 
 **A scientific development/experimentation/visualization and algorithmic design/teaching computation platform** from *CPU to GPU CG and XR* and from *euclidean, quaternion algebra to geometric algebra GA* and *deep learning (DL) for computer graphics (CG)*:
 
-- shader based OpenGL4.4 complete pipeline support: vertex, fragment, geometry, compute, tessellation
-- Geometric algebra as an all-in-one framework unifying Linear algebra, complex numbers, Quat, Dquat algebras
-- Window toolkits across multiple OS
+- shader based OpenGL4.4 complete pipeline support: vertex, fragment, geometry, compute, tessellation shaders
+- Geometric algebra as an all-in-one framework unifying linear algebra, complex numbers, Quat, Dquat algebras
+- Window toolkits across multiple operating systems
 - 2D GUIs easy to setup and parameterize
 - Common 3D file formats such as .dae and .fbx
 - GLSL style mathematics library for shader-based math
 - Python2GPU avenues
-  - Convert to C++
+  - Convert Python to C++ or Cuda
   - Embed the python interpreter in C++
 - Vulkan support for low level GPU
 - GPGPU programming support for:
@@ -36,7 +36,7 @@
   - CUDA
   - AMD ROCm
 - OpenVR access to steamVR library for basic VR cross VR-HMD support
-- Jupyter notebooks for literate programming, algorithmic exploration and teaching
+- Jupyter notebooks for literate programming, CG algorithmic exploration and teaching
   1. CG Character Rendering
      1. Path tracing (*Shirley's "Ray tracing in a Weekend" and SmallPT*)
      2. Phong Lighting and Shading with point lights
@@ -57,9 +57,9 @@
       6. GA Tearing
       7. GA drilling
 
-### glGA SDK features
+### **B. glGA SDK main features**
 
-1. `Full-stack CG/VR development`: same code-base across languages and platforms: from python to C++ and from C# and Unity to C++ and Unreal with same basic CG examples.
+1. `Full-stack CG development`: same code-base across languages and platforms: from python to C++ and from C# and Unity to C++ and Unreal with same basic CG examples from CPU rendering to GPU shader languages.
 2. `Basic glGA examples for introductory CG` programming in:
    1. C++, OpenGL in glGA 5.0
    2. Python, OpenGL in glGA SDK 2020
@@ -189,7 +189,7 @@
 > 	- visual studio code with python, cpp, c#, cmake, gitlens, github plugins
 >	- Kite and kite copilot for python docs and intellisense (www.kite.com)
 
-### **References**
+### **C. References**
 
 1. Papaefthymiou, M., Hildenbrand, D., & Papagiannakis, G. (2016). An inclusive Conformal Geometric Algebra GPU animation interpolation and deformation algorithm. Visual Computer, 32(6-8), 1–9. <http://doi.org/10.1007/s00371-016-1270-8>
 2. Papagiannakis, G., Papanikolaou, P., Greassidou, E., & Trahanias, P. E. (2014). glGA: an OpenGL Geometric Application Framework for a Modern, Shader-based Computer Graphics Curriculum. (pp. 9–16), Eurographics 2014, <http://doi.org/10.2312/eged.20141026>
@@ -197,26 +197,35 @@
 
 ---
 
-## Why Python?
+## **APPENDICES**
 
-OpenGL is primarily a C API which for most graphics applications today is actually used with C++ (or C#) in the industry. There are many good reasons for that: often the goal is to have the fastest possible code on the CPU side, since rendering for real-time visualization means that a frame needs to be produced onscreen every 10, 16 or 33 milliseconds (for 100Hz, 60Hz, 30Hz refresh rates) and no time can be wasted.
+## a. Why Python?
 
-Our objective here is significantly different: we want to learn and understand the key concepts as efficiently as possible, more than achieve absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
+Our objective in this SDK is two-fold: 
+
+- a) we want to learn and understand key CG and underlying algebraic concepts as efficiently as possible, more than achieving absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
+- b) we want to provide rapid protoyping, algorithmic understanting experimentation and code equivalence between Python, C++ and C# across CPU and GPU frameworks and the two most prevailing, modern game engines (Unity and Unreal).
+
+e.g. OpenGL is primarily a C API which for most CG applications today is actually used with C++ (or C#) in the industry. There are many good reasons for that: often the goal is to have the fastest possible code on the CPU side, since rendering for real-time visualization means that a *frame needs to be produced onscreen every 10, 16 or 33 milliseconds (for 100Hz, 60Hz, 30Hz refresh rates) and no time can be wasted*.
 
 - Python code is more straightforward, easier to read, write, and debug
 - It is less verbose (typically by a factor of 5-10 on the code size), and benefits from an extensive and intuitive set of built-ins (tuples, lists, dictionaries, arrays…)
 - In particular Python constructs, like generators, list and dictionary comprehensions are a great way to reduce simple object construction loops to one readable line of code, or create iterators that unclutter the code. Keep those in mind when you write your application.
 - Well written Python code can be quite fast already, and most inner loop tasks of interest to these practicals happen on the GPU anyway, once properly initialized.
 - What’s more, Python has excellent wrappers to OpenGL and window libraries whose interface closely match their C counterpart. Which means anything you learn about writing code in Python directly maps to the C APIs.
+- Python is already the programming language of choice for deep learning algortihms and data science in general, with numerous libraries and frameworks.
+- Python is already being adopted by latest versions of 3D game engines, such as Unity and Unreal.
 
 ---
 
-## glGA FOLDER Structure
+## b. glGA FOLDER Structure
 
 - glGA-SDK:
   - Readme
   - License
   - .gitignore
+  - vscode/
+    - #*contains vsCode workspace, macPorts list of third party libraries and python virtual environment list of conda and pip packages and modules*
   - doc/
     - pyCG
       - GI
@@ -226,13 +235,13 @@ Our objective here is significantly different: we want to learn and understand t
         - GP Juno notebooks
       - pyGeometricAlgebra
         - GATE
-        - py2GPU
-          - Py2cpp
-          - Py2numba
-          - Py2csharp
-        - pyDLGA
-          - embodiedAI
-        - pyPhysicsGA
+      - py2GPU
+        - Py2cpp
+        - Py2numba
+        - Py2csharp
+      - pyDLGA
+        - embodiedAI
+      - pyPhysicsGA
   - SDK/
     - python/
       - glGA/
@@ -243,7 +252,7 @@ Our objective here is significantly different: we want to learn and understand t
         - KDTree/
         - PRT/
       - dlGA/
-        - "deep learning for graphics algorithms and applications 2020"
+        - #*deep learning for graphics algorithms and applications 2020*
       - BasicExamples/
       - AdvancedExamples/
       - AssignmentExamples/
