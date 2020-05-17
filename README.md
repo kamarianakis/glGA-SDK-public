@@ -222,7 +222,7 @@
 Our objective in this SDK is two-fold:
 
 - a) we want to learn and understand key CG and underlying algebraic concepts as efficiently as possible, more than achieving absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
-- b) we want to provide rapid protoyping, algorithmic understanting experimentation and code equivalence between Python, C++ and C# across CPU and GPU frameworks and the two most prevailing, modern game engines (Unity and Unreal).
+- b) we want to provide rapid prototyping, algorithmic understanding, experimentation and code equivalence between Python, C++ and C# across CPU and GPU frameworks and the two most prevailing, modern game engines (Unity and Unreal).
 
 e.g. OpenGL is primarily a C API which for most CG applications today is actually used with C++ (or C#) in the industry. There are many good reasons for that: often the goal is to have the fastest possible code on the CPU side, since rendering for real-time visualization means that a *frame needs to be produced onscreen every 10, 16 or 33 milliseconds (for 100Hz, 60Hz, 30Hz refresh rates) and no time can be wasted*.
 
@@ -252,6 +252,8 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - RealtimeRendering/
       - RealtimeAnimation/
       - RealtimeDeformation/
+      - pyCGlibs/
+        - jupyterGPnotebook
     - pyScientific/
       - GP Juno notebooks
     - pyGeometricAlgebra/
@@ -286,7 +288,8 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - thirdPartyLibs
     - frameworks
       - cpp/
-        - Submodule: glGA
+        - Submodule: glGA/
+        - Submodule: GAE/
       - python/
         - Submodule: GATE
       - unity/
