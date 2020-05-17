@@ -1,0 +1,4 @@
+[submodule "SDK/frameworks/cpp/glGA-5.0/glGA-5.0"]
+	path = SDK/frameworks/cpp/glGA-5.0/glGA-5.0
+	url = https://github.com/papagiannakis/glGA-5.0.git
+	branch = dev
