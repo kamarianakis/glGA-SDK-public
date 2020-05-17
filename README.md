@@ -191,15 +191,32 @@
 
 ### **C. References**
 
-1. Papaefthymiou, M., Hildenbrand, D., & Papagiannakis, G. (2016). An inclusive Conformal Geometric Algebra GPU animation interpolation and deformation algorithm. Visual Computer, 32(6-8), 1–9. <http://doi.org/10.1007/s00371-016-1270-8>
-2. Papagiannakis, G., Papanikolaou, P., Greassidou, E., & Trahanias, P. E. (2014). glGA: an OpenGL Geometric Application Framework for a Modern, Shader-based Computer Graphics Curriculum. (pp. 9–16), Eurographics 2014, <http://doi.org/10.2312/eged.20141026>
-3. Papagiannakis, G. (2013). Geometric algebra rotors for skinned character animation blending. Technical Brief, ACM SIGGRAPH ASIA 2013, Hong Kong, November 2013, 1–6.
+1. Papaefthymiou M. et al. (2017) Gamified AR/VR Character Rendering and Animation Enabling Technologies. In: Ioannides M., Magnenat-Thalmann N., Papagiannakis G. (eds) Mixed Reality and Gamification for Cultural Heritage. Springer, Cham.
+2. Papaefthymiou, M., Hildenbrand, D., & Papagiannakis, G. (2016). An inclusive Conformal Geometric Algebra GPU animation interpolation and deformation algorithm. Visual Computer, 32(6-8), 1–9. <http://doi.org/10.1007/s00371-016-1270-8>
+3. Papaefthymiou, M., Feng, A., Shapiro, A., Papagiannakis, G., “A fast and robust pipeline for populating mobile AR scenes with gamified virtual characters”. ACM SIGGRAPH-ASIA 2015, Symposium On Mobile Graphics and Interactive Applications, Kobe, ACM Press, November 2015
+4. Papagiannakis, G., Papanikolaou, P., Greassidou, E., & Trahanias, P. E. (2014). glGA: an OpenGL Geometric Application Framework for a Modern, Shader-based Computer Graphics Curriculum. (pp. 9–16), Eurographics 2014, <http://doi.org/10.2312/eged.20141026>
+5. Papagiannakis, G. (2013). Geometric algebra rotors for skinned character animation blending. Technical Brief, ACM SIGGRAPH ASIA 2013, Hong Kong, November 2013, 1–6.
+
+### **D. Contributors**
+
+- Prof. George Papagiannakis
+- Papanikolaou Petros
+- Greassidou Elisavet
+- Georgiou Stylianos
+- Kateros Stavros
+- Zikas Pavlos
+- Lydatakis Nikolaos
+- Papaefthymiou Margarita
+- Kanakis Marios
+- Geronikolakis Stratos
+- Evangellou Yannis
+- Kartsonaki Ioanna
 
 ---
 
 ## **APPENDICES**
 
-## a. Why Python
+## A. Why Python
 
 Our objective in this SDK is two-fold:
 
@@ -218,7 +235,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
 
 ---
 
-## b. glGA FOLDER Structure
+## B. glGA FOLDER Structure
 
 - glGA-SDK:
   - Readme
@@ -285,3 +302,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
             - Submodule:Pbd
             - Submodule:Viper
             - Submodule:Bullet/pybullet
+
+## *C. Release notes*
+
+- 17/05/20 initial github repository: <https://github.com/papagiannakis/glGA-SDK.git>
