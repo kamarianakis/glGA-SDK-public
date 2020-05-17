@@ -261,6 +261,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
     - cpp/
       - lib/
       - bin/
+      - thirdPartyLibs
     - frameworks
       - cpp/
         - Submodule: glGA
@@ -275,10 +276,12 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
           - Submodule: pybind11
           - Submodule: scientific computing with python
           - Submodule: numerical computing with python
-          - Submodule: glassner deep learning1
-          - Submodule: glassner deep learning2
+          - deepLearning
+            - Submodule: glassner deep learning1
+            - Submodule: glassner deep learning2
         - Cpp/
-          - Submodule:Spheretree
-          - Submodule:Pbd
-          - Submodule:Viper
-          - Submodule:Bullet/pybullet
+          - physics
+            - Submodule:Spheretree
+            - Submodule:Pbd
+            - Submodule:Viper
+            - Submodule:Bullet/pybullet
