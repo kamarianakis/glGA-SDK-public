@@ -103,7 +103,7 @@
     - Same glGA basic shader examples in C# and Cg (similar to glGA but for Unity)
     - Monte Carlo Path Tracing using compute shaders in Unity (BSc thesis)
 8. Support for `python 2 GPU` pathways
-   1. Python2cpp via pybind (module) - and then via C# wrapper to Unity - 
+   1. Python2cpp via pybind (module) - and then via C# wrapper to Unity -
    2. Embed the python interpreter
       1. <https://pybind11.readthedocs.io/en/stable/advanced/embedding.html>
       2. <https://docs.python.org/3.5/extending/embedding.html#pure-embedding>
@@ -112,7 +112,7 @@
       1. <https://pybind11.readthedocs.io/en/stable/advanced/pycpp/object.htmlUse>
    4. Cpp2python
       1. pybind11 to call C++ from python (e.g. glGAMath, glGAMesh classes)
-         - Insight: Python is great for pedagogical experimentation. 
+         - Insight: Python is great for pedagogical experimentation.
          - However, once the algorithm is identified, C++ has to be employed, as it is far more efficient and GPU/VR friendly
          - <https://stackoverflow.com/questions/45054860/extending-c-to-python-using-pybind11>
          - <https://stackoverflow.com/questions/11866288/importing-a-pyd-created-with-swig-in-python-2-7-3-on-mac>
@@ -179,15 +179,15 @@
 >   - Add opt/local/lib on helper.py (where the assimp library is)
 >     - assimp/port/PyAssimp/pyassimp/structs.py
 >       - Line 1088 in 0adc032
->         - ("mPrivate", c_char_p), 
+>         - ("mPrivate", c_char_p),
 >         - Deleting that line resolves the error.
 >     - Previous glGA cpp framework 5.0 is a submodule
 >       - It can be build as cpp inside visual studio code: <https://medium.com/audelabs/> c-development-using-visual-studio-code-cmake-and-lldb-d0f13d38c563>
 >- Readthedocs project:
 > - <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>
 >- Python/Cpp/C# development:
-> 	- visual studio code with python, cpp, c#, cmake, gitlens, github plugins
->	- Kite and kite copilot for python docs and intellisense (www.kite.com)
+>   - visual studio code with python, cpp, c#, cmake, gitlens, github plugins
+>   - Kite and kite copilot for python docs and intellisense (www.kite.com)
 
 ### **C. References**
 
@@ -199,9 +199,9 @@
 
 ## **APPENDICES**
 
-## a. Why Python?
+## a. Why Python
 
-Our objective in this SDK is two-fold: 
+Our objective in this SDK is two-fold:
 
 - a) we want to learn and understand key CG and underlying algebraic concepts as efficiently as possible, more than achieving absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
 - b) we want to provide rapid protoyping, algorithmic understanting experimentation and code equivalence between Python, C++ and C# across CPU and GPU frameworks and the two most prevailing, modern game engines (Unity and Unreal).
