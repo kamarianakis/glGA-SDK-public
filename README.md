@@ -15,7 +15,7 @@
 ---
 
 > **New decade, new languages, new tools**:
-> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development.
+> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development. This a `Rosetta stone` approach based on *literate programming*, i.e. writing documentation that contains the same code in different systems: e.g. a jupyter notebook showing basic GPU shader-based programming in Python, C++ and C#.
 
 ### **A. glGA SDK Requirements**
 
@@ -221,7 +221,7 @@
 
 Our objective in this SDK is two-fold:
 
-- a) we want to learn and understand key CG and underlying algebraic concepts as efficiently as possible, more than achieving absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
+- a) we want to teach, learn and expriment with key CG and underlying algebraic concepts as efficiently as possible, more than achieving absolute highest framerates. C/C++ are powerful but cluttered, error-prone low-level languages, that get in the way of this learning efficiency.
 - b) we want to provide rapid prototyping, algorithmic understanding, experimentation and code equivalence between Python, C++ and C# across CPU and GPU frameworks and the two most prevailing, modern game engines (Unity and Unreal).
 - c) we want to emphasize on *"literate programming"* and Python-Jupyter notebooks are the best current vehicle for that IMHO: "In literate programming the emphasis is reversed. Instead of writing code containing documentation, the literate programmer writes documentation containing code. No longer does the English commentary injected into a program have to be hidden in comment delimiters at the top of the file, or under procedure headings, or at the end of lines. Instead, it is wrenched into the daylight and made the main focus. The "program" then becomes primarily a document directed at humans, with the code being herded between "code delimiters" from where it can be extracted and shuffled out sideways to the language system by literate programming tools." <http://www.literateprogramming.com/index.html>
 
@@ -246,6 +246,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
   - vscode/
     - #*contains vsCode workspace, macPorts list of third party libraries and python virtual environment list of conda and pip packages and modules*
   - doc/
+    - #*contains literate programming notebooks with documentation that include code in a Rosetta Stone approach where possible*
     - pyCG/
       - GI/
         - rayTracingInAweekend
@@ -256,7 +257,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - pyCGlibs/
         - jupyterGPnotebook
     - pyScientific/
-      - GP Juno notebooks
+      - jupyterJunonotebooks
     - pyGeometricAlgebra/
       - GATE/
     - py2GPU/
@@ -265,6 +266,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - Py2csharp/
     - pyDLGA/
       - deepLearning
+        - jupyterDLnotebook
       - embodiedAI
     - pyPhysics/
   - SDK/
@@ -292,25 +294,40 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
         - Submodule: glGA/
         - Submodule: GAE/
       - python/
-        - Submodule: GATE
+        - Submodule: GATE/
       - unity/
-        - Submodule: Unity glGA basic shader projects
+        - Submodule: UnityXR-edu/
       - unreal/
-        - Submodule: Unreal basic shader projects
+        - Submodule: Unreal basic shader projects (TBD in future)
   - extern/
     - python/
-      - Submodule: pybind11
-      - Submodule: scientific computing with python
-      - Submodule: numerical computing with python
+      - computing
+        - Submodule: pybind11
+        - Submodule: scientific computing with python
+        - Submodule: numerical computing with python
+        - Submodule: pyopencl
       - deepLearning
         - Submodule: glassner deep learning1
         - Submodule: glassner deep learning2
+      - GI
+        - Submodule:numpy-smallpt
+        - Submodule:raytracing-in-one-weekend-python
     - Cpp/
+      - computing
+        - Submodule:modern-cpp-features
+      - GI
+        - Submodule:rayTracingInOneWeekend
+        - Submodule:rayTracingTheNextWeek
+        - Submodule:rayTracingForTheNextOfYourLife
+        - Submodule:cpp-smallpt
       - physics
         - Submodule:Spheretree
         - Submodule:Pbd
         - Submodule:Viper
         - Submodule:Bullet/pybullet
+    - Csharp/
+      - GI
+        - Submodule:cs-smallpt
 
 ## *C. Release notes*
 
