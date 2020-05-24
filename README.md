@@ -306,6 +306,12 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
         - Submodule: scientific computing with python
         - Submodule: numerical computing with python
         - Submodule: pyopencl
+        - Submodule: clifford
+        - Submodule: pyopengl
+        - Submodule: pyimgui
+        - Submodule: pysdl2
+        - Submodule: tqdm
+        - Submodule: pyGLM
       - deepLearning
         - Submodule: glassner deep learning1
         - Submodule: glassner deep learning2
@@ -315,16 +321,17 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
     - Cpp/
       - computing
         - Submodule:modern-cpp-features
+        - Submodule:learning-cMake
+        - Submodule:GLM
       - GI
-        - Submodule:rayTracingInOneWeekend
-        - Submodule:rayTracingTheNextWeek
-        - Submodule:rayTracingForTheNextOfYourLife
+        - Submodule:rayTracing
         - Submodule:cpp-smallpt
+        - Submodule:spherical-harmonics
       - physics
         - Submodule:Spheretree
         - Submodule:Pbd
         - Submodule:Viper
-        - Submodule:Bullet/pybullet
+        - Submodule:Bullet
     - Csharp/
       - GI
         - Submodule:cs-smallpt
