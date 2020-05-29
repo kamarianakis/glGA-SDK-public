@@ -42,3 +42,7 @@
 	path = extern/python/CG/pyopengl
 	url = git@github.com:papagiannakis/pyopengl.git
 	branch = master
+[submodule "pyimgui"]
+	path = extern/python/CG/pyimgui
+	url = git@github.com:papagiannakis/pyimgui.git
+	branch = master
