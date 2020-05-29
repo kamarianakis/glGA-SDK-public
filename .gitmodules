@@ -10,3 +10,7 @@
 	path = SDK/frameworks/python/MR-GRAIL
 	url = ssh://git@github.com/papagiannakis/MR-GRAIL.git
 	branch = master
+[submodule "UnityXR-edu"]
+	path = SDK/frameworks/unity/UnityXR-edu
+	url = ssh://git@github.com/papagiannakis/UnityXR-edu.git
+	branch = master
