@@ -22,3 +22,7 @@
 	path = extern/python/computing/scientific-python-lectures
 	url = ssh://git@github.com/papagiannakis/scientific-python-lectures.git
 	branch = master
+[submodule "numerical-python"]
+	path = extern/python/computing/numerical-python-book-code
+	url = ssh://git@github.com/papagiannakis/numerical-python-book-code.git
+	branch = master
