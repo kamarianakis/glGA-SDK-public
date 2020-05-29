@@ -30,3 +30,7 @@
 	path = extern/python/computing/pyopencl
 	url = git@github.com:papagiannakis/pyopencl.git
 	branch = master
+[submodule "clifford"]
+	path = extern/python/GA/clifford
+	url = git@github.com:papagiannakis/clifford.git
+	branch = master
