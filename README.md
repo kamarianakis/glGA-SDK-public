@@ -247,28 +247,27 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
     - #*contains vsCode workspace, macPorts list of third party libraries and python virtual environment list of conda and pip packages and modules*
   - doc/
     - #*contains literate programming notebooks with documentation that include code in a Rosetta Stone approach where possible*
-    - pyCG/
-      - GI/
-        - rayTracingInAweekend
-        - smallPT
+    - CG/
       - RealtimeRendering/
       - RealtimeAnimation/
       - RealtimeDeformation/
-      - pyCGlibs/
-        - jupyterGPnotebook
-    - pyScientific/
+      - CGnotes
+    - GI/
+      - rayTracingInAweekend
+      - smallPT
+    - Computing/
       - jupyterJunonotebooks
-    - pyGeometricAlgebra/
+    - GA/
       - GATE/
     - py2GPU/
       - Py2cpp/
       - Py2numba/
       - Py2csharp/
-    - pyDLGA/
+    - DLGA/
       - deepLearning
         - jupyterDLnotebook
       - embodiedAI
-    - pyPhysics/
+    - Physics/
   - SDK/
     - python/
       - glGA/
@@ -306,7 +305,9 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
         - Submodule: scientific computing with python
         - Submodule: numerical computing with python
         - Submodule: pyopencl
+      - GA
         - Submodule: clifford
+      - CG
         - Submodule: pyopengl
         - Submodule: pyimgui
         - Submodule: pysdl2
