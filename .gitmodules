@@ -6,3 +6,7 @@
 	path = SDK/frameworks/cpp/GAE
 	url = ssh://git@github.com/ovidVR/GAE.git
 	branch = master
+[submodule "GATE"]
+	path = SDK/frameworks/python/MR-GRAIL
+	url = ssh://git@github.com/papagiannakis/MR-GRAIL.git
+	branch = master
