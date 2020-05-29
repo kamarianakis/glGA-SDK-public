@@ -14,3 +14,7 @@
 	path = SDK/frameworks/unity/UnityXR-edu
 	url = ssh://git@github.com/papagiannakis/UnityXR-edu.git
 	branch = master
+[submodule "pybind11"]
+	path = extern/python/computing/pybind11
+	url = git@github.com:papagiannakis/pybind11.git
+	branch = master
