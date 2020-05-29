@@ -38,3 +38,7 @@
 	path = extern/python/GA/galgebra
 	url = git@github.com:papagiannakis/galgebra.git
 	branch = master
+[submodule "pyopengl"]
+	path = extern/python/CG/pyopengl
+	url = git@github.com:papagiannakis/pyopengl.git
+	branch = master
