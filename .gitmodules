@@ -46,3 +46,7 @@
 	path = extern/python/CG/pyimgui
 	url = git@github.com:papagiannakis/pyimgui.git
 	branch = master
+[submodule "pySDL2"]
+	path = extern/python/CG/py-sdl2
+	url = git@github.com:papagiannakis/py-sdl2.git
+	branch = master
