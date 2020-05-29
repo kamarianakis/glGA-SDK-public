@@ -18,3 +18,7 @@
 	path = extern/python/computing/pybind11
 	url = git@github.com:papagiannakis/pybind11.git
 	branch = master
+[submodule "scientific-computing-python"]
+	path = extern/python/computing/scientific-python-lectures
+	url = ssh://git@github.com/papagiannakis/scientific-python-lectures.git
+	branch = master
