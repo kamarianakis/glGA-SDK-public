@@ -34,3 +34,7 @@
 	path = extern/python/GA/clifford
 	url = git@github.com:papagiannakis/clifford.git
 	branch = master
+[submodule "galgebra"]
+	path = extern/python/GA/galgebra
+	url = git@github.com:papagiannakis/galgebra.git
+	branch = master
