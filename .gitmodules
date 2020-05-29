@@ -26,3 +26,7 @@
 	path = extern/python/computing/numerical-python-book-code
 	url = ssh://git@github.com/papagiannakis/numerical-python-book-code.git
 	branch = master
+[submodule "pyopencl"]
+	path = extern/python/computing/pyopencl
+	url = git@github.com:papagiannakis/pyopencl.git
+	branch = master
