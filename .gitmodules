@@ -2,3 +2,7 @@
 	path = SDK/frameworks/cpp/glGA-5.0/glGA-5.0
 	url = https://github.com/papagiannakis/glGA-5.0.git
 	branch = dev
+[submodule "GAE"]
+	path = SDK/frameworks/cpp/GAE
+	url = ssh://git@github.com/ovidVR/GAE.git
+	branch = master
