@@ -50,3 +50,7 @@
 	path = extern/python/CG/py-sdl2
 	url = git@github.com:papagiannakis/py-sdl2.git
 	branch = master
+[submodule "tqdm"]
+	path = extern/python/CG/tqdm
+	url = git@github.com:papagiannakis/tqdm.git
+	branch = master
