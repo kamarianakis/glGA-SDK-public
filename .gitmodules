@@ -54,3 +54,7 @@
 	path = extern/python/CG/tqdm
 	url = git@github.com:papagiannakis/tqdm.git
 	branch = master
+[submodule "pyGLM"]
+	path = extern/python/CG/PyGLM
+	url = git@github.com:papagiannakis/PyGLM.git
+	branch = master
