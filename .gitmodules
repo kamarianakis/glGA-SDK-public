@@ -62,3 +62,7 @@
 	path = extern/python/deepLearning/DeepLearningBookCode-Volume1
 	url = git@github.com:papagiannakis/DeepLearningBookCode-Volume1.git
 	branch = master
+[submodule "extern/python/deepLearning/DeepLearningBookCode-Volume2"]
+	path = extern/python/deepLearning/DeepLearningBookCode-Volume2
+	url = git@github.com:papagiannakis/DeepLearningBookCode-Volume2.git
+	branch = master
