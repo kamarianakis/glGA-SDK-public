@@ -70,3 +70,7 @@
 	path = extern/python/GI/numpy-smallpt
 	url = git@github.com:papagiannakis/numpy-smallpt.git
 	branch = master
+[submodule "extern/python/GI/ray-tracing-in-one-weekend-python"]
+	path = extern/python/GI/ray-tracing-in-one-weekend-python
+	url = git@github.com:papagiannakis/ray-tracing-in-one-weekend-python.git
+	branch = master
