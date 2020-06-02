@@ -66,3 +66,7 @@
 	path = extern/python/deepLearning/DeepLearningBookCode-Volume2
 	url = git@github.com:papagiannakis/DeepLearningBookCode-Volume2.git
 	branch = master
+[submodule "extern/python/GI/numpy-smallpt"]
+	path = extern/python/GI/numpy-smallpt
+	url = git@github.com:papagiannakis/numpy-smallpt.git
+	branch = master
