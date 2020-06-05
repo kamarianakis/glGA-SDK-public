@@ -86,3 +86,11 @@
 	path = extern/cpp/computing/glm
 	url = git@github.com:papagiannakis/glm.git
 	branch = master
+[submodule "extern/cpp/GI/raytracing.github.io"]
+	path = extern/cpp/GI/raytracing.github.io
+	url = git@github.com:papagiannakis/raytracing.github.io.git
+	branch = master
+[submodule "extern/cpp/GI/cpp-smallpt"]
+	path = extern/cpp/GI/cpp-smallpt
+	url = git@github.com:papagiannakis/cpp-smallpt.git
+	branch = master
