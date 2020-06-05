@@ -82,3 +82,7 @@
 	path = extern/cpp/computing/learning-cmake
 	url = git@github.com:papagiannakis/learning-cmake.git
 	branch = master
+[submodule "extern/cpp/computing/glm"]
+	path = extern/cpp/computing/glm
+	url = git@github.com:papagiannakis/glm.git
+	branch = master
