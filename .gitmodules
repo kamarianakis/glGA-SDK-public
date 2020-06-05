@@ -110,3 +110,7 @@
 	path = extern/cpp/physics/bullet3
 	url = https://github.com/papagiannakis/bullet3.git
 	branch = master
+[submodule "extern/cpp/cSharp/cs-smallpt"]
+	path = extern/cpp/cSharp/cs-smallpt
+	url = git@github.com:papagiannakis/cs-smallpt.git
+	branch = master
