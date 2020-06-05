@@ -94,3 +94,7 @@
 	path = extern/cpp/GI/cpp-smallpt
 	url = git@github.com:papagiannakis/cpp-smallpt.git
 	branch = master
+[submodule "extern/cpp/GI/spherical-harmonics"]
+	path = extern/cpp/GI/spherical-harmonics
+	url = ssh://git@github.com/papagiannakis/spherical-harmonics.git
+	branch = master
