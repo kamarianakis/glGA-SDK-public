@@ -293,7 +293,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
         - Submodule: glGA/
         - Submodule: GAE/
       - python/
-        - Submodule: GATE/
+        - Submodule: MR-GRAIL/
       - unity/
         - Submodule: UnityXR-edu/
       - unreal/
@@ -302,11 +302,12 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
     - python/
       - computing
         - Submodule: pybind11
-        - Submodule: scientific computing with python
+        - Submodule: scientific-python-lectures
         - Submodule: numerical computing with python
         - Submodule: pyopencl
       - GA
         - Submodule: clifford
+        - Submodule: galgebra
       - CG
         - Submodule: pyopengl
         - Submodule: pyimgui
@@ -331,9 +332,8 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - physics
         - Submodule:Spheretree
         - Submodule:Pbd
-        - Submodule:Viper
-        - Submodule:Bullet
-    - Csharp/
+        - Submodule:Bullet3
+    - cSharp/
       - GI
         - Submodule:cs-smallpt
 
