@@ -102,3 +102,7 @@
 	path = extern/cpp/physics/spheretree
 	url = git@github.com:papagiannakis/spheretree.git
 	branch = master
+[submodule "extern/cpp/physics/PositionBasedDynamics"]
+	path = extern/cpp/physics/PositionBasedDynamics
+	url = ssh://git@github.com/papagiannakis/PositionBasedDynamics.git
+	branch = master
