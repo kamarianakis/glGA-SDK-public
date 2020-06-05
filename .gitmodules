@@ -106,3 +106,7 @@
 	path = extern/cpp/physics/PositionBasedDynamics
 	url = ssh://git@github.com/papagiannakis/PositionBasedDynamics.git
 	branch = master
+[submodule "extern/cpp/physics/bullet3"]
+	path = extern/cpp/physics/bullet3
+	url = https://github.com/papagiannakis/bullet3.git
+	branch = master
