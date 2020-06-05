@@ -98,3 +98,7 @@
 	path = extern/cpp/GI/spherical-harmonics
 	url = ssh://git@github.com/papagiannakis/spherical-harmonics.git
 	branch = master
+[submodule "extern/cpp/physics/spheretree"]
+	path = extern/cpp/physics/spheretree
+	url = git@github.com:papagiannakis/spheretree.git
+	branch = master
