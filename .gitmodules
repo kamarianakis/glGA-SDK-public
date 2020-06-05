@@ -74,3 +74,7 @@
 	path = extern/python/GI/ray-tracing-in-one-weekend-python
 	url = git@github.com:papagiannakis/ray-tracing-in-one-weekend-python.git
 	branch = master
+[submodule "extern/cpp/computing/modern-cpp-features"]
+	path = extern/cpp/computing/modern-cpp-features
+	url = ssh://git@github.com/papagiannakis/modern-cpp-features.git
+	branch = master
