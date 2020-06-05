@@ -78,3 +78,7 @@
 	path = extern/cpp/computing/modern-cpp-features
 	url = ssh://git@github.com/papagiannakis/modern-cpp-features.git
 	branch = master
+[submodule "extern/cpp/computing/learning-cmake"]
+	path = extern/cpp/computing/learning-cmake
+	url = git@github.com:papagiannakis/learning-cmake.git
+	branch = master
