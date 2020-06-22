@@ -308,6 +308,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - GA
         - Submodule: clifford
         - Submodule: galgebra
+        - Submodule: ganja.js
       - CG
         - Submodule: pyopengl
         - Submodule: pyimgui
