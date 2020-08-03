@@ -31,7 +31,7 @@ dependencies:
   - beautifulsoup4=4.9.1=py37hc8dfbb8_0
   - bitarray=1.4.2=py37h60d8a13_0
   - bkcharts=0.2=py37_0
-  - blas=2.14=openblas
+  - blas=1.0=openblas
   - bleach=3.1.5=pyh9f0ad1d_0
   - blosc=1.20.0=hb1e8313_0
   - bokeh=2.1.1=py37hc8dfbb8_0
@@ -103,7 +103,7 @@ dependencies:
   - grpcio=1.30.0=py37hf940fad_0
   - h5py=2.10.0=nompi_py37h28defc4_104
   - harfbuzz=2.4.0=hd8d2a14_3
-  - hdf5=1.10.6=nompi_haae91d6_101
+  - hdf5=1.10.6=hdbbcd12_0
   - heapdict=1.0.1=py_0
   - html5lib=1.1=pyh9f0ad1d_0
   - icu=64.2=h6de7cb9_1
@@ -160,14 +160,14 @@ dependencies:
   - libedit=3.1.20191231=hed1e85f_1
   - libev=4.33=haf1e3a3_0
   - libffi=3.2.1=h4a8c4bd_1007
-  - libgfortran=4.0.0=0
+  - libgfortran=3.0.1=0
   - libiconv=1.15=h0b31af3_1006
   - liblapack=3.8.0=14_openblas
   - liblapacke=3.8.0=14_openblas
   - liblief=0.10.1=hb1e8313_0
   - libllvm9=9.0.1=h7475705_1
   - libnghttp2=1.41.0=h8a08a2b_1
-  - libopenblas=0.3.7=h3d69b6c_4
+  - libopenblas=0.3.7=hd44dcd8_1
   - libopencv=4.4.0=py37_2
   - libpng=1.6.37=hbbe82c9_1
   - libpq=12.3=h489d428_0
@@ -217,8 +217,8 @@ dependencies:
   - nss=3.47=hc0980d9_0
   - numba=0.50.1=py37h0b113e5_1
   - numexpr=2.7.1=py37h94625e5_1
-  - numpy=1.19.1=py37ha6d8c68_0
-  - numpy-base=1.19.1=py37h68fea81_0
+  - numpy=1.19.1=py37h7e69742_0
+  - numpy-base=1.18.5=py37hc72aeb7_0
   - numpydoc=1.1.0=pyh9f0ad1d_0
   - ocl_icd_wrapper_apple=1.0.0=h1de35cc_0
   - olefile=0.46=py_0
@@ -305,7 +305,7 @@ dependencies:
   - ruamel_yaml=0.15.80=py37h9bfed18_1001
   - scikit-image=0.17.2=py37h94625e5_1
   - scikit-learn=0.21.3=py37hd4ffd6c_0
-  - scipy=1.5.2=py37h2702c91_0
+  - scipy=1.2.1=py37hbd7caa9_1
   - seaborn=0.10.1=1
   - seaborn-base=0.10.1=py_1
   - send2trash=1.5.0=py_0
