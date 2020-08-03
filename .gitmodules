@@ -110,11 +110,17 @@
 	path = extern/cpp/physics/bullet3
 	url = https://github.com/papagiannakis/bullet3.git
 	branch = master
-[submodule "extern/cpp/cSharp/cs-smallpt"]
-	path = extern/cpp/cSharp/cs-smallpt
+[submodule "extern/cSharp/GI/cs-smallpt"]
+	path = extern/cSharp/GI/cs-smallpt
 	url = git@github.com:papagiannakis/cs-smallpt.git
 	branch = master
+<<<<<<< HEAD
 [submodule "ganga.js"]
 	path = extern/python/GA/ganja.js
 	url = git@github.com:papagiannakis/ganja.js.git
+=======
+[submodule "extern/cSharp/GI/Ray-tracing-in-one-weekend-CSharp"]
+	path = extern/cSharp/GI/Ray-tracing-in-one-weekend-CSharp
+	url = git@github.com:papagiannakis/Ray-tracing-in-one-weekend-CSharp.git
+>>>>>>> release/2020.0.3
 	branch = master

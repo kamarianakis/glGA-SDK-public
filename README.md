@@ -69,7 +69,7 @@
    1. C++ smallPT
    2. Python smallPT
    3. C# smallPT
-   4. python RayTracingInAWeekend from Shirley
+   4. python RayTracing from P. Shirley
 4. `Support for source control & elegant code` documentation
    1. Github flow
    2. Github submodules
@@ -253,7 +253,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
       - RealtimeDeformation/
       - CGnotes
     - GI/
-      - rayTracingInAweekend
+      - rayTracing
       - smallPT
     - Computing/
       - jupyterJunonotebooks
@@ -337,7 +337,10 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
     - cSharp/
       - GI
         - Submodule:cs-smallpt
+        - Submodule:cs-raytracing
 
 ## *C. Release notes*
 
 - **17/05/20** initial github repository: <https://github.com/papagiannakis/glGA-SDK.git>
+- **05/06/20** version 0.1 with all submodules setup
+- **24/07/20** updated submodules
