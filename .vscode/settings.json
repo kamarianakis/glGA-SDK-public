@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA37/bin/python"
+    "python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA37/bin/python",
+    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
 }
