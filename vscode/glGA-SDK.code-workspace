@@ -27,7 +27,8 @@
 				}
 			]
 		},
-		"python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA/bin/python",
-		"python.dataScience.jupyterServerURI": "local"
+		"python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA37/bin/python",
+		"python.dataScience.jupyterServerURI": "local",
+		"jupyter.jupyterServerType": "local"
 	}
 }

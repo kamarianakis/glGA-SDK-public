@@ -27,7 +27,7 @@ def init():
         print("SDL could not initialize! SDL Error: ", SDL_GetError())
         exit(1)
 
-    print("\nYay! Initialized SDL successfully!")
+    print("\nYay! Initialized SDL successfully in basicWindow!")
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1)
@@ -53,9 +53,9 @@ def init():
         raise RuntimeError('Failed to create SDL window')
         #exit(1)
 
-    print("Yay! Created window successfully!")
+    print("Yay! Created window successfully in basicWindow!")
     gContext = SDL_GL_CreateContext(gWindow)
-    print("Yay! Created OpenGL context successfully!\n\n")
+    print("Yay! Created OpenGL context successfully in basicWindow!\n\n")
     
     if gContext is None:
         print("OpenGL context could not be created! SDL Error: ", SDL_GetError())
@@ -87,7 +87,7 @@ def main():
         print("Window could not be created! ImGUI Error: ")
         exit(1)
     else:
-        print("Yay! ImGUI context created successfully")
+        print("Yay! ImGUI context created successfully in basicWindow")
         
     renderer = SDL2Renderer(gWindow)
 
