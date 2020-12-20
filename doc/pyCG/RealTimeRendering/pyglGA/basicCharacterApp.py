@@ -31,8 +31,8 @@ scene = None
 pMesh = None
 
 if USE_MESH_STATIC:
-    fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/duck.dae"
-    #fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/testScene.dae"
+    #fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/duck.dae"
+    fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/testScene.dae"
     #fileNameS = "./models/testScene.dae"
     print('Model path:',fileNameS)
     positionS = glm.vec3(100.0, 0, 0)
