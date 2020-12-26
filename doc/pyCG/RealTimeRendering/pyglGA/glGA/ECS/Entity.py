@@ -1,7 +1,7 @@
-""" Entity class, part of the glGA SDK ECS
+""" Entity classes, part of the glGA SDK ECS
     
 glGA SDK v2020.1 ECS (Entity Component System)
-@Coopyright 2020 Prof. George Papagiannakis
+@Coopyright 2020 George Papagiannakis
     
 The Entity class is the based aggregation of Components in the glGA ECS.
 
@@ -19,10 +19,14 @@ from typing import List
 
 class Entity(ABC):
     """ The Interface  Entity abstract base class for all Entities
+        The abstract methods update() and transform() contain logic that normally should be taken care by Systems 
+        and are only provided here for debugging purposes only and should not be used, as in the ECS data-driven 
+        methodology, Entities and Components contain data only and no logic.
     """
     
-    def __init__(self):
+    def __init__(self, id=None):
         self._parent = None
+        self._id = id
     
     
     @property
@@ -43,12 +47,12 @@ class Entity(ABC):
         return False
     
     @abstractmethod
-    def update(self) -> bool:
-        return False
+    def update(self) -> str:
+        pass
     
     @abstractmethod
     def transform(self) -> bool:
-        return False
+        pass
 
 
 class SceneEntity(Entity):
@@ -59,21 +63,15 @@ class SceneEntity(Entity):
     It is an actual data aggregator container of Components. All the actuall operations and logic is performed by 
     Systems and not the Components or SceneEntity itself.
     """
-    
-    def __init__(self) -> None:
-        # PEP 256 
-        # note this is how we declare the type of variables in Phython 3.6 and later.
-        # e.g. x: int=1 or x: List[int] = [1] 
-        self._children: List[Entity]=[] 
-       
-    
-    def update(self) ->bool:
-        """ Sample function only for subclassing here """
-        return True
-    
-    def transform(self)->bool:
-        """ Sample update() only for subclassing here """
-        return True
+
+    def __init__(self, id=None) -> None:
+        """
+        PEP 256 
+        note this is how we declare the type of variables in Phython 3.6 and later.
+        e.g. x: int=1 or x: List[int] = [1] 
+        """
+        self._children: List[Entity]=[]
+        self._id = id 
 
     def add(self, object: Entity) ->None:
         self._children.append(object)
@@ -82,3 +80,18 @@ class SceneEntity(Entity):
     def remove(self, object: Entity) ->None:
         self._children.remove(object)
         object._parent = None
+        
+    def isEntity(self) -> bool:
+        return True
+    
+    def update(self) ->str:
+        """" Traverse recursively all children, call their update and print their representation """
+        scene = []
+        for child in self._children:
+            scene.append(child.update())
+        return f"{self._id} <- {''.join(scene)}"
+    
+    
+    def transform(self)->bool:
+        """ Sample transform() only for subclassing here and debug purposes """
+        return False
