@@ -55,13 +55,13 @@ class Entity(ABC):
         pass
 
 
-class SceneEntity(Entity):
+class EntityNode(Entity):
     """
     The main Entity concrete class of glGA ECS 
     This is the typical equivalent of a Group node in traditional scenegraphs or GameObject in Unity Engine
-    It can contain several other SceneEntity objects as children. 
+    It can contain several other EntityNode objects as children. 
     It is an actual data aggregator container of Components. All the actuall operations and logic is performed by 
-    Systems and not the Components or SceneEntity itself.
+    Systems and not the Components or EntityNode itself.
     """
 
     def __init__(self, id=None) -> None:
@@ -81,6 +81,13 @@ class SceneEntity(Entity):
         self._children.remove(object)
         object._parent = None
         
+    def getChild(self, index) ->Entity:
+        if index < len(self._children):
+            return self._children[index]
+    
+    def getNumberOfChildren(self) -> int:
+        return len(self._children)
+    
     def isEntity(self) -> bool:
         return True
     

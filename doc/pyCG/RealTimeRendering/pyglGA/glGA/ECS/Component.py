@@ -23,10 +23,7 @@ class Component(ABC):
     The abstract Component class of our ECS.
     
     Based on the Strategy pattern, it is a data collection of specific
-    class of data. Subclasses typically are Transform, Mesh, Shader, RigidBody specific,
-
-    :param ABC: [description]
-    :type ABC: [type]
+    class of data. Subclasses typically are e.g. Transform, Mesh, Shader, RigidBody etc.
     """
     
     def __init__(self, name=None, type=None, id=None):
@@ -59,8 +56,33 @@ class Component(ABC):
     @id.setter
     def id(self, value):
         self._id = value
-        
-   
+    
+    def execute(self):
+        """
+        method to be subclassed for debuging purposes only, 
+        in case we need some behavioral or logic computation within te Component. 
+        This violates the ECS architecture and should be avoided.
+        """
+        pass
+    
+    def accept(self, system):
+        """
+        Accepts a class object to operate on the Component, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
+        pass
+
+class ComponentA(Component):
+    """
+    An example of a concrete ComponentA class
+    
+    :param Component: [description]
+    :type Component: [type]
+    """
+    pass
+
 
    
     

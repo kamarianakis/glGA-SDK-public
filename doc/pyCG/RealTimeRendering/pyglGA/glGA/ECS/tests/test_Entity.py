@@ -28,72 +28,103 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(entityA.isEntity(), False)
         print("test_isEntity() test: END")
 
-class TestSceneEntity(unittest.TestCase):
+class TestEntityNode(unittest.TestCase):
     
     def test_init(self):
         """
-        SceneEntity init() test
+        EntityNode init() test
         """
-        print("TestSceneEntity:test_init() START")
-        gameObject = SceneEntity() 
+        print("TestEntityNode:test_init() START")
+        gameObject = EntityNode() 
         
-        self.assertIsInstance(gameObject,SceneEntity)
+        self.assertIsInstance(gameObject,EntityNode)
         self.assertIsInstance(gameObject._children, List)
         
         print(gameObject._children)
-        print("TestSceneEntity:test_init() END")
+        print("TestEntityNode:test_init() END")
 
     def test_add(self):
         """
-        SceneEntity add() test
+        EntityNode add() test
         """
-        print("TestSceneEntity:test_add() START")
-        gameObject = SceneEntity()
-        gameObject2 = SceneEntity()
+        print("TestEntityNode:test_add() START")
+        gameObject = EntityNode()
+        gameObject2 = EntityNode()
         gameObject.add(gameObject2)
         self.assertIn(gameObject2,gameObject._children)
         self.assertEqual(gameObject._children[0], gameObject2)
         #print("gameObject._children[0]" + gameObject._children[0])
-        print("TestSceneEntity:test_add() END")
+        print("TestEntityNode:test_add() END")
     
     
     def test_remove(self):
         """
-        SceneEntity remove() test
+        EntityNode remove() test
         """
-        print("TestSceneEntity:test_remove() START")
-        gameObject = SceneEntity()
-        gameObject2 = SceneEntity()
+        print("TestEntityNode:test_remove() START")
+        gameObject = EntityNode()
+        gameObject2 = EntityNode()
         gameObject.add(gameObject2)
         gameObject.remove(gameObject2)
         self.assertNotIn(gameObject2, gameObject._children)
         #print("gameObject._children[0]" + gameObject._children[0])
-        print("TestSceneEntity:test_remove() END")
+        print("TestEntityNode:test_remove() END")
+    
+    def test_getChild(self):
+        """
+        EntityNode test_getChild() test
+        """
+        print("TestEntityNode:test_getChild() START")
+        gameObject = EntityNode()
+        gameObject2 = EntityNode()
+        gameObject.add(gameObject2)
+        self.assertIn(gameObject2, gameObject._children)
+        self.assertEqual(gameObject2, gameObject.getChild(0))
+        #print("gameObject._children[0]" + gameObject._children[0])
+        print("TestEntityNode:test_getChild() END")
         
+    def test_getNumberOfChildren(self):
+        """
+        EntityNode test_getNumberOfChildren() test
+        """
+        print("TestEntityNode:test_getNumberOfChildren() START")
+        gameObject = EntityNode(0)
+        gameObject1 = EntityNode(1)
+        gameObject2 = EntityNode(2)
+        gameObject3 = EntityNode(3)
+        gameObject.add(gameObject1)
+        gameObject1.add(gameObject2)
+        gameObject2.add(gameObject3)
+        self.assertIn(gameObject1, gameObject._children)
+        print(f"test_getNumberOfChildren() scene: \n {gameObject.update()}")
+        self.assertEqual(gameObject.getNumberOfChildren(), 1)
+        #print("gameObject._children[0]" + gameObject._children[0])
+        print("TestEntityNode:test_getNumberOfChildren() END")
+    
     def test_isEntity(self):
         """
-        SceneEntity isEntity() test
+        EntityNode isEntity() test
         """
-        print("TestSceneEntity:test_isEntity() START")
-        gameObject = SceneEntity()
+        print("TestEntityNode:test_isEntity() START")
+        gameObject = EntityNode()
         self.assertEqual(gameObject.isEntity(), True)
         
-        print("TestSceneEntity:test_isEntity() END")
+        print("TestEntityNode:test_isEntity() END")
         
     def test_update(self):
         """
-        SceneEntity update() test
+        EntityNode update() test
         """
-        print("TestSceneEntity:test_update() START")
-        gameObject = SceneEntity("root")
-        gameObject2 = SceneEntity("node2")
-        gameObject3 = SceneEntity("node3")
+        print("TestEntityNode:test_update() START")
+        gameObject = EntityNode("root")
+        gameObject2 = EntityNode("node2")
+        gameObject3 = EntityNode("node3")
         gameObject.add(gameObject2)
         gameObject2.add(gameObject3)
         
         self.assertIn(gameObject3, gameObject2._children)
         print(f"test_update() scene: \n {gameObject.update()}")
-        print("TestSceneEntity:test_update() END")
+        print("TestEntityNode:test_update() END")
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)
