@@ -28,7 +28,45 @@ class System(ABC):
     :type ABC: [type]
     """
     
-    def __init__(self, id=None):
+    def __init__(self, name=None, type=None, id=None):
+        self._name = name
+        self._type = type
         self._id = id
     
-    pass
+    #define properties for id, name, type
+     
+    @property #name
+    def name(self) -> str:
+        """ Get Component's name """
+        return self._name
+    @name.setter
+    def name(self, value):
+        self._name = value
+        
+    @property #type
+    def type(self) -> str:
+        """ Get Component's type """
+        return self._type
+    @type.setter
+    def type(self, value):
+        self._type = value
+        
+    @property #id
+    def id(self) -> str:
+        """ Get Component's id """
+        return self._id
+    @id.setter
+    def id(self, value):
+        self._id = value
+    
+    @classmethod
+    def get_classname(cls):
+        return cls.__name__
+    
+    def update(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components of an EntityNode. 
+        
+        """
+        pass

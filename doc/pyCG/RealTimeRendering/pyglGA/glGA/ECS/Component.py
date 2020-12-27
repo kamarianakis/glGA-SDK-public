@@ -57,6 +57,10 @@ class Component(ABC):
     def id(self, value):
         self._id = value
     
+    @classmethod
+    def get_classname(cls):
+        return cls.__name__
+    
     def execute(self):
         """
         method to be subclassed for debuging purposes only, 
