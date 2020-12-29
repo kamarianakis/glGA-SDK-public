@@ -26,3 +26,23 @@ class TestSystem(unittest.TestCase):
         self.assertEqual(mySystem.id, 100)
         
         print("TestSystem:test_init() END")
+        
+
+class TestRenderGPU(unittest.TestCase):
+    def test_init(self):
+        """
+        default constructor of System class
+        """
+        print("\TestRenderGPU:test_init() START")
+        
+        #mySystem = System(100, "baseSystem", "abstract")
+        mySystem = System()
+        mySystem.name = "RenderGPU"
+        mySystem.type = "System"
+        mySystem.id = 101
+        
+        self.assertEqual(mySystem.name, "RenderGPU")
+        self.assertEqual(mySystem.type,"System")
+        self.assertEqual(mySystem.id, 101)
+        
+        print("TestRenderGPU:test_init() END")

@@ -18,6 +18,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
+from Component import *
+
 class System(ABC):
     """
     Main abstract class of the System part of our ECS
@@ -70,3 +72,13 @@ class System(ABC):
         
         """
         pass
+
+class RenderGPU(System):
+    """
+    
+    A basic forward rendering system based on GPU shaders
+
+    :param System: [description]
+    :type System: [type]
+    """
+    pass

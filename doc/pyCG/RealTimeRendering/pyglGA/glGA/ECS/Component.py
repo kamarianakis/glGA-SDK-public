@@ -18,6 +18,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
+from System import *
+
 class Component(ABC):
     """
     The abstract Component class of our ECS.
@@ -58,10 +60,16 @@ class Component(ABC):
         self._id = value
     
     @classmethod
-    def get_classname(cls):
+    def getClassName(cls):
         return cls.__name__
     
-    def execute(self):
+    def init(self):
+        """
+        abstract method to be subclassed for extra initialisation
+        """
+        pass
+    
+    def update(self):
         """
         method to be subclassed for debuging purposes only, 
         in case we need some behavioral or logic computation within te Component. 
@@ -69,24 +77,45 @@ class Component(ABC):
         """
         pass
     
-    def accept(self, system):
+    def accept(self, system: System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
         :param system: [a System object]
         :type system: [System]
         """
-        pass
+        system.update()
 
-class ComponentA(Component):
+class BasicTransform(Component):
     """
-    An example of a concrete ComponentA class
+    An example of a concrete Component Transform class
+    
+    Contains a basic Euclidean Translation, Rotation and Scale Homogeneous Vector
+    
+    and a 4x4 matrix of all of them
     
     :param Component: [description]
     :type Component: [type]
     """
-    pass
+   
+    def featureA(self):
+        print(self.getClassName(),":featureA() called")
+        
+    def update(self):
+        self.featureA()
 
 
+class Mesh(Component):
+    """
+    A concrete Mesh class
+
+    :param Component: [description]
+    :type Component: [type]
+    """
+    def featureB(self):
+        print(self.getClassName(), ":featureB() called")
+        
+    def update(self):
+        self.featureB()
    
     

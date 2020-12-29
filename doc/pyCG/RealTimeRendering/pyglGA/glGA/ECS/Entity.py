@@ -17,6 +17,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
+from Component import *
+
 class Entity(ABC):
     """ The Interface  Entity abstract base class for all Entities
         The abstract methods update() and transform() contain logic that normally should be taken care by Systems 
@@ -27,7 +29,6 @@ class Entity(ABC):
     def __init__(self, id=None):
         self._parent = None
         self._id = id
-    
     
     @property
     def parent(self) -> Entity:
@@ -55,13 +56,13 @@ class Entity(ABC):
         pass
 
 
-class EntityNode(Entity):
+class EntityElement(Entity):
     """
     The main Entity concrete class of glGA ECS 
     This is the typical equivalent of a Group node in traditional scenegraphs or GameObject in Unity Engine
-    It can contain several other EntityNode objects as children. 
+    It can contain several other EntityElement objects as children. 
     It is an actual data aggregator container of Components. All the actuall operations and logic is performed by 
-    Systems and not the Components or EntityNode itself.
+    Systems and not the Components or EntityElement itself.
     """
 
     def __init__(self, id=None) -> None:
@@ -71,6 +72,7 @@ class EntityNode(Entity):
         e.g. x: int=1 or x: List[int] = [1] 
         """
         self._children: List[Entity]=[]
+        self._components: List[Component]=[]
         self._id = id 
 
     def add(self, object: Entity) ->None:
@@ -87,6 +89,18 @@ class EntityNode(Entity):
     
     def getNumberOfChildren(self) -> int:
         return len(self._children)
+    
+    def addComponent(self, comp: Component) ->None:
+        self._components.append(comp)
+        
+    def getComponent(self, index) -> Component:
+        if index < len(self._components):
+            return self._components[index]
+        else:
+            return None
+    
+    def removeComponent(self, comp: Component) -> None:
+        self._components.remove(comp)
     
     def isEntity(self) -> bool:
         return True

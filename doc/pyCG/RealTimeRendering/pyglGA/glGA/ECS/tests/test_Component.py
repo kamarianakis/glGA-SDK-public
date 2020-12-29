@@ -28,7 +28,7 @@ class TestComponent(unittest.TestCase):
         print("TestComponent:test_init() END")
 
 
-class TestComponentA(unittest.TestCase):
+class TestBasicTransform(unittest.TestCase):
     
     def test_init(self):
         """
@@ -36,14 +36,33 @@ class TestComponentA(unittest.TestCase):
         """
         print("\nTestComponentA:test_init() START")
         
-        #myComponent = Component(100, "baseComponent", "abstract")
-        myComponent = ComponentA()
-        myComponent.name = "ComponentA"
+        myComponent = BasicTransform()
+        myComponent.name = "BasicTransform"
         myComponent.type = "A"
         myComponent.id = 101
         
-        self.assertEqual(myComponent.name, "ComponentA")
+        self.assertEqual(myComponent.name, "BasicTransform")
         self.assertEqual(myComponent.type,"A")
         self.assertEqual(myComponent.id, 101)
-        print(f"myComponent class name is: {myComponent.get_classname()}")
-        print("TestComponentA:test_init() END")  
+        print(f"Called {myComponent.name} update(): {myComponent.update()}")
+        print("TestBasicTransform:test_init() END")  
+        
+
+class TestMesh(unittest.TestCase):
+    
+    def test_init(self):
+        """
+        Default constructor for the basic Mesh class
+        """        
+        print("\TestMesh:test_init() START")
+        
+        myComponent = Mesh()
+        myComponent.name = "BasicMesh"
+        myComponent.type = "B"
+        myComponent.id = 201
+        
+        self.assertEqual(myComponent.name, "BasicMesh")
+        self.assertEqual(myComponent.type,"B")
+        self.assertEqual(myComponent.id, 201)
+        print(f"Called {myComponent.name} update(): {myComponent.update()}")
+        print("TestMesh:test_init() END")  
