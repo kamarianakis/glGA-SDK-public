@@ -1,6 +1,9 @@
 """
-Test class for Component from ECS
+Test Component Unit tests, part of the glGA SDK ECS
     
+glGA SDK v2020.1 ECS (Entity Component System)
+@Coopyright 2020-2021 George Papagiannakis
+
 """
     
 import unittest

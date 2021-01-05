@@ -1,3 +1,11 @@
+"""
+Test Entity Unit tests, part of the glGA SDK ECS
+    
+glGA SDK v2020.1 ECS (Entity Component System)
+@Coopyright 2020-2021 George Papagiannakis
+
+"""
+
 import unittest
 from Entity import *
 from Component import *
@@ -37,7 +45,7 @@ class TestEntityElement(unittest.TestCase):
         print("TestEntityElement:test_init() START")
         gameObject = EntityElement() 
         gameObject2 = EntityElement(10)
-        gameComponent = ComponentA("Transform", "TRS", 200)
+        gameComponent = BasicTransform("Transform", "TRS", 200)
         
         gameObject2.addComponent(gameComponent)
         
