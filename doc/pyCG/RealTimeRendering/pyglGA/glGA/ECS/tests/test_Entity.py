@@ -142,6 +142,8 @@ class TestEntityElement(unittest.TestCase):
         self.assertIn(gameObject3, gameObject2._children)
         print(f"test_update() scene: \n {gameObject.update()}")
         print("TestEntityElement:test_update() END")
+        
+    
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

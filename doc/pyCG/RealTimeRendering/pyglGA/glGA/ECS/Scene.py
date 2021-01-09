@@ -22,44 +22,61 @@ from Entity import *
 from Component import *
 from System import *
 
+class SingletonI(ABC):
+    pass
 
-class SingletonMeta(type):
-    """
-    The Singleton class can be implemented in different ways in Python. Some
-    possible methods include: base class, decorator, metaclass. We will use the
-    metaclass because it is best suited for this purpose.
-    """
-
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        """
-        Possible changes to the value of the `__init__` argument do not affect
-        the returned instance.
-        """
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
-
-
-class Singleton(metaclass=SingletonMeta):
-    def some_business_logic(self):
-        """
-        Finally, any singleton should define some business logic, which can be
-        executed on its instance.
-        """
-
-        # ...
-
+class Scene(SingletonI):
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            print('Creating Scene Object')
+            cls._instance = super(Scene, cls).__new__(cls)
+            # add further init here
+        return cls._instance
+    
+    def init():
+        pass
+    
+    def update():
+        pass
+    
+    def processInput():
+        pass
+        
+    def render():
+        pass
+    
+    def run():
+        pass
 
 if __name__ == "__main__":
     # The client code.
 
-    s1 = Singleton()
-    s2 = Singleton()
+    s1 = Scene()
+    s2 = Scene()
 
     if id(s1) == id(s2):
         print("Singleton works, both variables contain the same instance.")
     else:
         print("Singleton failed, variables contain different instances.")
+        
+    # create the basic Chapter 8 Hierarchy example from Angel ICG book
+    
+    base = EntityElement(1)
+    arm = EntityElement(2)
+    forearm = EntityElement(3)
+    
+    baseShape = EntityElement(4)
+    armShape = EntityElement(5)
+    forearmShape = EntityElement(6)
+    
+    base.add(arm)
+    base.add(baseShape)
+    arm.add(forearm)
+    arm.add(armShape)
+    forearm.add(forearmShape)
+    
+    scenegraph = base.update()
+    
+    print("Scenegraph is: ", scenegraph)
