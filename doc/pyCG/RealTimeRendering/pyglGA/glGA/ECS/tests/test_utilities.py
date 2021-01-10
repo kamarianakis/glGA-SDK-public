@@ -92,7 +92,8 @@ class TestUtilities(unittest.TestCase):
         
     def test_ortho(self):
         """
-        test_ortho function
+        test_ortho function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
         print("\TestUtilities:test_ortho() START")
         matOrtho = ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
@@ -109,3 +110,45 @@ class TestUtilities(unittest.TestCase):
         print(np_Ortho)
     
         print("TestUtilities:test_ortho() END")
+        
+    def test_perspective(self):
+        """
+        test_perspective function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
+        """
+        print("\TestUtilities:test_perspective() START")
+        matPersp = perspective(90.0, 1, 0.1, 100)
+        np_Persp = np.array([
+            [0.61737,0.0,0.0,0.0],
+            [0.0,0.61737,0.0,0.0],
+            [0.0,0.0,-1.002,-0.2002],
+            [0.0,0.0,-1.0,0.0],
+        ],dtype=np.float,order='F')
+        
+        self.assertAlmostEqual(matPersp.all(), np_Persp.all())
+       
+        print(matPersp)
+        print(np_Persp)
+    
+        print("TestUtilities:test_perspective() END")
+        
+    def test_frustum(self):
+        """
+        test_frustum function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
+        """
+        print("\TestUtilities:test_frustum() START")
+        matPersp = frustum(-10.0, 10.0,-10.0,10.0, 0.1, 100)
+        np_Persp = np.array([
+            [0.01,0.0,0.0,0.0],
+            [0.0,0.01,0.0,0.0],
+            [0.0,0.0,-1.002,-0.2002],
+            [0.0,0.0,-1.0,0.0],
+        ],dtype=np.float,order='F')
+        
+        self.assertAlmostEqual(matPersp.all(), np_Persp.all())
+       
+        print(matPersp)
+        print(np_Persp)
+    
+        print("TestUtilities:test_frustum() END")

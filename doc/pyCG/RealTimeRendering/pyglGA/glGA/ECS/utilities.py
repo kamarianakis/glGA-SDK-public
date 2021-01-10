@@ -82,8 +82,12 @@ def identity(rank=4):
         return np.identity(4)
     
 def ortho(left, right, bottom, top, near, far):
-    """orthogonal projection matrix for OpenGL
-
+    """ Orthographic projection matrix creation function, where 
+    the viewing volume is a rectangular parallelepiped, or more informally, a box. 
+    Original projection matrices defined in http://www.glprogramming.com/red/appendixf.html
+    and in http://www.glprogramming.com/red/chapter03.html. Tested also again glm similar 
+    functions.
+    
     :param left: [coordinates of projection unit cube]
     :type left: [float]
     :param right: [coordinates of projection unit cube]
@@ -105,3 +109,61 @@ def ortho(left, right, bottom, top, near, far):
                      [0,    0,    -2/dz, rz],
                      [0,    0,    0,     1]
                      ], dtype=np.float,order='F')
+    
+def perspective(fovy, aspect, near, far):
+    """Perspective projection matrix creation function, where 
+    the viewing volume is a truncated pyramid. 
+    Original projection matrices defined in http://www.glprogramming.com/red/appendixf.html
+    and in http://www.glprogramming.com/red/chapter03.html and 
+    https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml 
+    Tested also again glm similar functions.
+
+    :param fovy: [description]
+    :type fovy: [type]
+    :param aspect: [description]
+    :type aspect: [type]
+    :param near: [description]
+    :type near: [type]
+    :param far: [description]
+    :type far: [type]
+    """
+    _scale = 1.0/math.tan(math.radians(fovy)/2.0)
+    sx, sy = _scale / aspect, _scale
+    zz = (far + near) / (near - far)
+    zw = 2 * far * near/(near - far)
+    return np.array([[sx, 0,  0,  0],
+                     [0,  sy, 0,  0],
+                     [0,  0, zz, zw],
+                     [0,  0, -1,  0]], dtype=np.float,order='F')
+    
+def frustum(xmin, xmax, ymin, ymax, zmin, zmax):
+    """Alternative Perspective projection matrix creation function, where 
+    the viewing volume is a truncated pyramid. 
+    Original projection matrices defined in http://www.glprogramming.com/red/appendixf.html
+    and in http://www.glprogramming.com/red/chapter03.html and 
+    https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml 
+    Tested also again glm similar functions.
+
+    :param xmin: [description]
+    :type xmin: [type]
+    :param xmax: [description]
+    :type xmax: [type]
+    :param ymin: [description]
+    :type ymin: [type]
+    :param ymax: [description]
+    :type ymax: [type]
+    :param zmin: [description]
+    :type zmin: [type]
+    :param zmax: [description]
+    :type zmax: [type]
+    """
+    a = (xmax+xmin) / (xmax-xmin)
+    b = (ymax+ymin) / (ymax-ymin)
+    c = -(zmax+zmin) / (zmax-zmin)
+    d = -2*zmax*zmin / (zmax-zmin)
+    sx = 2*zmin / (xmax-xmin)
+    sy = 2*zmin / (ymax-ymin)
+    return np.array([[sx, 0,  a, 0],
+                     [0, sy,  b, 0],
+                     [0,  0,  c, d],
+                     [0,  0, -1, 0]], dtype=np.float,order='F')
