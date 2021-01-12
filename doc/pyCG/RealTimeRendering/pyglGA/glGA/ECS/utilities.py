@@ -37,7 +37,7 @@ def normalise(vector):
     #norm = math.sqrt(vector*vector)
     if isinstance(vector, np.ndarray)==False:
         vector = vec(vector)
-    norm = np.sqrt(np.sum(vector**2))
+    norm = np.linalg.norm(vector,2) #equivalent to norm = np.sqrt(np.sum(vector**2))
     return vector / norm if norm >0. else vector
 
 def lerp(point_a, point_b, fraction):
@@ -167,3 +167,62 @@ def frustum(xmin, xmax, ymin, ymax, zmin, zmax):
                      [0, sy,  b, 0],
                      [0,  0,  c, d],
                      [0,  0, -1, 0]], dtype=np.float,order='F')
+    
+
+def translate(x=0.0, y=0.0, z=0.0):
+    """ Convert a euclidean translation vector in homogeneous coordinates to a 
+    standard 4x4 Translation Transformation matrix based on the original OpenGL formulas defined in:
+    http://www.glprogramming.com/red/appendixf.html and OpenGL 1.0 specification. 
+    The matrix will be created either from 3 euclidean coordinates or a vector x: vec(x)
+
+    :param x: [description], defaults to 0.0
+    :type x: float, optional or vec
+    :param y: [description], defaults to 0.0
+    :type y: float, optional
+    :param z: [description], defaults to 0.0
+    :type z: float, optional
+    """
+    Tmat = np.identity(4, np.float32)
+    #Tmat[0,3] = x
+    #Tmat[1,3] = y
+    #Tmat[2,3] = z
+    if isinstance(x, Number):
+        Tmat[:3,3] = vec(x,y,z)  
+    else:
+         Tmat[:3,3] = vec(x)
+    
+    return Tmat
+
+
+def scale(x, y=None, z=None):
+    """Convert a euclidean scaling vector in homogeneous coordinates to a 
+    standard 4x4 Scaling Transformation matrix based on the original OpenGL formulas defined in:
+    http://www.glprogramming.com/red/appendixf.html and OpenGL 1.0 specification. 
+    The matrix will be created either from 3 euclidean coordinates for scaling in 3 dimensions 
+    or a vector x: vec(x) for uniform scaling across x,y,z dimensions
+
+    :param x: [description], defaults to 1.0
+    :type x: float, optional
+    :param y: [description], defaults to None
+    :type y: [type], optional
+    :param z: [description], defaults to None
+    :type z: [type], optional
+    """
+    x, y, z = (x, y, z)  if isinstance(x, Number) else (x[0], x[1], x[2])
+    y, z = (x, x) if y is None or z is None else (y, z) # case of uniform scaling if y, z are None
+    return np.diag((x, y, z, 1))
+
+
+def sincos(degrees=0.0, radians=None):
+    """Utility function to calculate with one call sine and cosine of an angle in radians or degrees
+    If there is one argument, then assumes that single input is in degrees, 
+    otherwise ignores first value and takes second for radians (needs two in that case)
+    It returns the value in radians, first sin then cos
+    
+    :param degrees: [description], defaults to 0.0
+    :type degrees: float, optional
+    :param radians: [description], defaults to None
+    :type radians: [type], optional
+    """
+    radians = radians if radians else math.radians(degrees)
+    return math.sin(radians), math.cos(radians) 

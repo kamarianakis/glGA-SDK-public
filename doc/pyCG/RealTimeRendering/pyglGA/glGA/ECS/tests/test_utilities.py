@@ -152,3 +152,98 @@ class TestUtilities(unittest.TestCase):
         print(np_Persp)
     
         print("TestUtilities:test_frustum() END")
+    
+    def test_translate(self):
+        """
+        test_translate function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
+        """
+        print("\TestUtilities:test_translate() START")
+        matTrans = translate(1.0, 2.0, 3.0)
+        matTrans2 = translate(vec(1.0, 2.0, 3.0))
+        mT = np.array([
+            [1.0,0.0,0.0,1.0],
+            [0.0,1.0,0.0,2.0],
+            [0.0,0.0,1.0,3.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        self.assertEqual(matTrans.tolist(), mT.tolist())
+        self.assertEqual(matTrans2.tolist(), mT.tolist())
+       
+        print(matTrans)
+        print(matTrans2)
+        print(mT)
+    
+        print("TestUtilities:test_translate() END")
+        
+    
+    def test_scale(self):
+        """
+        test_scale function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
+        """
+        print("\TestUtilities:test_scale() START")
+        matTrans = scale(1.0, 2.0, 3.0)
+        matTrans2 = scale(vec(1.0, 2.0, 3.0))
+        matTrans3 = scale(10.0) #uniform scaling
+        mT = np.array([
+            [1.0,0.0,0.0,0.0],
+            [0.0,2.0,0.0,0.0],
+            [0.0,0.0,3.0,0.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        mT3 = np.array([
+            [10.0,0.0,0.0,0.0],
+            [0.0,10.0,0.0,0.0],
+            [0.0,0.0,10.0,0.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        self.assertEqual(matTrans.tolist(), mT.tolist())
+        self.assertEqual(matTrans2.tolist(), mT.tolist())
+        self.assertEqual(matTrans3.tolist(), mT3.tolist())
+       
+        print(matTrans)
+        print(matTrans2)
+        print(mT)
+        print(matTrans3)
+    
+        print("TestUtilities:test_scale() END")
+        
+    def test_sincos(self):
+        """
+        test_sincos is sine cosine calculation function, 
+        tested against results from https://glm.g-truc.net/0.9.4/api/a00136.html
+        from GLM 0.9.5.1 radians are default and not degrees: GLM_FORCE_RADIANS 
+        """
+        print("\TestUtilities:test_sincos() START")
+        
+        cos0 = 1.0
+        cos45 = 0.7071067811865476
+        sin0 = 0.0
+        sin90 = 1.0
+        cos90 = 0.0
+        
+        sine0, cosine0 = sincos(0.0)
+        sine45, cosine45 = sincos(45, np.pi/4)
+        sine90, cosine90 = sincos(90, np.pi/2)
+        sine90d, cosine90d = sincos(90) #cosine90 does not return pure 0
+        
+        print(f' sine90: {sine90}, sin90: {sin90}')
+        print(f' cosine90: {cosine90}, cos90: {cos90}')
+        print(f' cosine90d: {cosine90d}, sine90d: {sine90d}')
+        print(f' sine0: {sine90}, sin0: {sin0}')
+        print(f' cosine0: {cosine0}, cos0: {cos0}')
+        print(f' cosine45: {cosine45}, cos45: {cos45}')
+        
+        self.assertAlmostEqual(sine0, sin0)
+        self.assertAlmostEqual(sine90, sin90)
+        self.assertAlmostEqual(sine90d, sin90)
+        self.assertAlmostEqual(cosine0, cos0)
+        self.assertAlmostEqual(cosine90, cos90)
+        self.assertAlmostEqual(cosine90d, cos90)
+        self.assertAlmostEqual(cosine45, cos45)
+        self.assertAlmostEqual(sine45, cos45)
+        
+        print("TestUtilities:test_sincos() END")    
