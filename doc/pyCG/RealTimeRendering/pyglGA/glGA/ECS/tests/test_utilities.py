@@ -119,14 +119,15 @@ class TestUtilities(unittest.TestCase):
         print("\TestUtilities:test_perspective() START")
         matPersp = perspective(90.0, 1, 0.1, 100)
         np_Persp = np.array([
-            [0.61737,0.0,0.0,0.0],
-            [0.0,0.61737,0.0,0.0],
+            [1.0,0.0,0.0,0.0],
+            [0.0,1.0,0.0,0.0],
             [0.0,0.0,-1.002,-0.2002],
             [0.0,0.0,-1.0,0.0],
         ],dtype=np.float,order='F')
         
-        self.assertAlmostEqual(matPersp.all(), np_Persp.all())
-       
+        #self.assertAlmostEqual(matPersp.all(), np_Persp.all())
+        np.testing.assert_array_almost_equal(matPersp,np_Persp,decimal=5)
+        
         print(matPersp)
         print(np_Persp)
     
@@ -247,3 +248,30 @@ class TestUtilities(unittest.TestCase):
         self.assertAlmostEqual(sine45, cos45)
         
         print("TestUtilities:test_sincos() END")    
+    
+        
+    def test_rotate(self):
+        """
+        test_rotate function, 
+        tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
+        and theory: https://en.wikipedia.org/wiki/Rotation_matrix 
+        """
+        print("\TestUtilities:test_rotate() START")
+        axis=(1.0, 1.0, 1.0)
+        angle = 90.0
+        matRot = rotate(axis, angle)
+        
+        mR = np.array([
+            [0.333333,-0.244017,0.910684,0.0],
+            [0.910684,0.333333,-0.244017,0.0],
+            [-0.244017,0.910684,0.333333,0.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        #self.assertAlmostEquals(matRot.all(), mR.all(),6)
+        np.testing.assert_array_almost_equal(matRot,mR,decimal=6)
+       
+        print(matRot)
+        print(mR)
+    
+        print("TestUtilities:test_rotate() END")

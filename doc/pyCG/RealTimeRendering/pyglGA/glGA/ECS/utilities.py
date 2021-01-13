@@ -127,7 +127,8 @@ def perspective(fovy, aspect, near, far):
     :param far: [description]
     :type far: [type]
     """
-    _scale = 1.0/math.tan(math.radians(fovy)/2.0)
+    #_scale = 1.0/math.tan(math.radians(fovy)/2.0)
+    _scale = 1.0/math.tan(math.radians(fovy/2.0))
     sx, sy = _scale / aspect, _scale
     zz = (far + near) / (near - far)
     zw = 2 * far * near/(near - far)
@@ -226,3 +227,24 @@ def sincos(degrees=0.0, radians=None):
     """
     radians = radians if radians else math.radians(degrees)
     return math.sin(radians), math.cos(radians) 
+
+def rotate(axis=(1.0,0.0,0.0), angle=0.0, radians=None):
+    """From a euclidean axis vector and a rotation angle, generate a 
+    standard 4x4 Rotation Transformation matrix based on the original OpenGL formulas defined in:
+    http://www.glprogramming.com/red/appendixf.html and axis-angle theoretical matrix specification:
+    https://en.wikipedia.org/wiki/Rotation_matrix  
+
+    :param axis: [description], defaults to (1.0,0.0,0.0)
+    :type axis: tuple, optional
+    :param angle: [description], defaults to 0.0
+    :type angle: float, optional
+    :param radians: [description], defaults to None
+    :type radians: [type], optional
+    """
+    x, y, z = normalise(vec(axis))
+    s, c = sincos(angle, radians)
+    nc = 1 - c
+    return np.array([[x*x*nc + c,   x*y*nc - z*s, x*z*nc + y*s, 0],
+                     [y*x*nc + z*s, y*y*nc + c,   y*z*nc - x*s, 0],
+                     [x*z*nc - y*s, y*z*nc + x*s, z*z*nc + c,   0],
+                     [0,            0,            0,            1]], dtype=np.float,order='F')
