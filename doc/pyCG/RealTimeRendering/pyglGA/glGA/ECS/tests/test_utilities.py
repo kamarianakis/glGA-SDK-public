@@ -275,3 +275,32 @@ class TestUtilities(unittest.TestCase):
         print(mR)
     
         print("TestUtilities:test_rotate() END")
+    
+    
+    def test_lookat(self):
+        """
+        test_lookat function, 
+        tested against results from 
+        https://github.com/g-truc/glm/blob/master/glm/ext/matrix_transform.inl
+        and https://github.com/Zuzu-Typ/PyGLM/blob/master/wiki/function-reference/stable_extensions/matrix_transform.md#lookAt-function 
+        """
+        print("\TestUtilities:test_rotate() START")
+        eye = vec(1.0, 1.0, 1.0)
+        target = vec(10,10,10)
+        up = vec(0.0, 1.0, 0.0)
+        matLookat = lookat(eye, target, up)
+        
+        mLat = np.array([
+            [-0.707107,0.0,0.707107,-0.0],
+            [-0.408248,0.816497,-0.408248,-0.0],
+            [-0.57735,-0.57735,-0.577353,1.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F') #glm.lookAtLH
+        
+        #self.assertAlmostEquals(matRot.all(), mR.all(),6)
+        np.testing.assert_array_almost_equal(matLookat,mLat,decimal=5)
+       
+        print(matLookat)
+        print(mLat)
+    
+        print("TestUtilities:test_lookat() END")

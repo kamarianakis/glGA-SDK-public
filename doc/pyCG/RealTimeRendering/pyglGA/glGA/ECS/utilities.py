@@ -248,3 +248,58 @@ def rotate(axis=(1.0,0.0,0.0), angle=0.0, radians=None):
                      [y*x*nc + z*s, y*y*nc + c,   y*z*nc - x*s, 0],
                      [x*z*nc - y*s, y*z*nc + x*s, z*z*nc + c,   0],
                      [0,            0,            0,            1]], dtype=np.float,order='F')
+    
+    
+def lookat(eye, target, up):
+    """Utility function to calculate a 4x4 camera lookat matrix, based on the eye, target and up camera vectors:
+    based on the gluLookAt() convenience method of https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
+    and the implementation of https://github.com/g-truc/glm/blob/master/glm/ext/matrix_transform.inl
+    and https://github.com/Zuzu-Typ/PyGLM/blob/master/wiki/function-reference/stable_extensions/matrix_transform.md#lookAt-function 
+        
+    :param eye: [description]
+    :type eye: [type]
+    :param target: [description]
+    :type target: [type]
+    :param up: [description]
+    :type up: [type]
+    """
+    """
+    eye = np.round(normalise(vec(eye)[:3]),5)
+    view = np.round(normalise(vec(target)[:3] - vec(eye)[:3]),5)
+    up = np.round(normalise(vec(up)[:3]),5)
+    right = np.round(normalise(np.cross(up, view)),5)
+    up = np.round(np.cross(view, right),5)
+    rotation = np.identity(4)
+    rotation[:3, :3] = np.vstack([right, up, view])
+    return rotation @ translate(-eye)
+    """
+    
+    
+    
+    eye = normalise(vec(eye)[:3])
+    target = normalise(vec(target)[:3])
+    view = normalise(vec(target)[:3] - vec(eye)[:3]) #f in glm
+    up = normalise(vec(up)[:3])
+    right = normalise(np.cross(up, view)) #s in glm
+    up = np.cross(view, right) #u in glm
+    
+    f = view
+    s = right
+    u = up
+    
+    rotation = np.identity(4)
+    
+    rotation[0,0] = s[0]
+    rotation[0,1] = s[1]
+    rotation[0,2] = s[2]
+    rotation[1,0] = u[0]
+    rotation[1,1] = u[1]
+    rotation[1,2] = u[2]
+    rotation[2,0] = f[0]
+    rotation[2,1] = f[1]
+    rotation[2,2] = f[2]
+    rotation[0,3] = -np.dot(s, eye)
+    rotation[1,3] = -np.dot(u, eye)
+    rotation[2,3] = -np.dot(f, eye)
+    
+    return rotation
