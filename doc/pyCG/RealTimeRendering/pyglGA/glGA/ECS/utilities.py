@@ -263,19 +263,7 @@ def lookat(eye, target, up):
     :param up: [description]
     :type up: [type]
     """
-    """
-    eye = np.round(normalise(vec(eye)[:3]),5)
-    view = np.round(normalise(vec(target)[:3] - vec(eye)[:3]),5)
-    up = np.round(normalise(vec(up)[:3]),5)
-    right = np.round(normalise(np.cross(up, view)),5)
-    up = np.round(np.cross(view, right),5)
-    rotation = np.identity(4)
-    rotation[:3, :3] = np.vstack([right, up, view])
-    return rotation @ translate(-eye)
-    """
-    
-    
-    
+ 
     eye = normalise(vec(eye)[:3])
     target = normalise(vec(target)[:3])
     view = normalise(vec(target)[:3] - vec(eye)[:3]) #f in glm
@@ -303,3 +291,99 @@ def lookat(eye, target, up):
     rotation[2,3] = -np.dot(f, eye)
     
     return rotation
+
+# -------------------- quaternion algebra convenience functions ----------------------
+
+#quaternion()
+def quaternion(x=vec(0.0, 0.0, 0.0, 0.0), y=0.0, z=0.0, w=1.0):
+    """Generate a quaternion array from 4 values or a vec3 for vector and w for scalar parts
+    It has been tested against: 
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html#scipy.spatial.transform.Rotation 
+
+    :param x: [description], defaults to vec(0.0, 0.0, 0.0, 0.0)
+    :type x: [type], optional
+    :param y: [description], defaults to 0.0
+    :type y: float, optional
+    :param z: [description], defaults to 0.0
+    :type z: float, optional
+    :param w: [description], defaults to 1.0
+    :type w: float, optional
+    """
+    x, y, z = (x, y, z) if isinstance(x, Number) else (x[0], x[1], x[2])
+    return np.array([x, y, z, w], dtype=np.float,order='F') 
+
+
+def quaternion_from_axis_angle(axis:vec, degrees=0.0, radians=None):
+    """Generate a quaternion from a rotation axis and an angle
+    # https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm 
+    # https://en.wikipedia.org/wiki/Axis–angle_representation#Rotation_vector 
+
+    :param axis: [description]
+    :type axis: vec
+    :param degrees: [description], defaults to 0.0
+    :type degrees: float, optional
+    :param radians: [description], defaults to None
+    :type radians: [type], optional
+    """
+    sin, cos = sincos(radians * 0.5) if radians else sincos(degrees * 0.5)
+    return quaternion(normalise(vec(axis)) * sin, w=cos)
+
+def quaternion_from_euler(pitch=0.0, yaw=0.0, roll=0.0, radians=None):
+    """Create a quaternion out of euler angles (pitch = x, yaw = y, roll = z)
+    https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+    
+    :param yaw: [description], defaults to 0.0
+    :type yaw: float, optional
+    :param pitch: [description], defaults to 0.0
+    :type pitch: float, optional
+    :param roll: [description], defaults to 0.0
+    :type roll: float, optional
+    :param radians: [description], defaults to None
+    :type radians: [type], optional
+    """
+    siy, coy = sincos(yaw * 0.5, radians[0] * 0.5 if radians else None)
+    sir, cor = sincos(roll * 0.5, radians[1] * 0.5 if radians else None)
+    sip, cop = sincos(pitch * 0.5, radians[2] * 0.5 if radians else None)
+    return quaternion(x=coy*sir*cop - siy*cor*sip, y=coy*cor*sip + siy*sir*cop,
+                      z=siy*cor*cop - coy*sir*sip, w=coy*cor*cop + siy*sir*sip)
+
+
+def quaternion_mul(q1, q2):
+    """Compute and return a new quaternion which is the product of two quaternions
+    https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/arithmetic/index.htm
+
+    :param q1: [description]
+    :type q1: [type]
+    :param q2: [description]
+    :type q2: [type]
+    """
+    return np.dot(np.array([
+                            [q1[1],  q1[0], -q1[3],  q1[2]],
+                            [q1[2],  q1[3],  q1[0], -q1[1]],
+                            [q1[3], -q1[2],  q1[1],  q1[0]],
+                            [q1[0], -q1[1], -q1[2], -q1[3]]
+                            ],dtype=np.float,order='F'), q2)
+                        
+
+def quaternion_matrix(q):
+    """Compute and return a 4x4 matrix from the quaternion q
+    https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm 
+
+    :param q: [description]
+    :type q: [type]
+    """
+    q = normalise(q)  # only unit quaternions are valid rotations.
+    nxx, nyy, nzz = -q[1]*q[1], -q[2]*q[2], -q[3]*q[3]
+    qwx, qwy, qwz = q[0]*q[1], q[0]*q[2], q[0]*q[3]
+    qxy, qxz, qyz = q[1]*q[2], q[1]*q[3], q[2]*q[3]
+    return np.array([
+                    [2*(nyy + nzz)+1, 2*(qxy - qwz),   2*(qxz + qwy),   0],
+                     [2 * (qxy + qwz), 2 * (nxx + nzz) + 1, 2 * (qyz - qwx), 0],
+                     [2 * (qxz - qwy), 2 * (qyz + qwx), 2 * (nxx + nyy) + 1, 0],
+                     [0, 0, 0, 1] 
+                     ], dtype=np.float,order='F')
+    
+
+#quaternion_slerp()
+# https://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp 
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Slerp.html#scipy.spatial.transform.Slerp 

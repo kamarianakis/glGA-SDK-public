@@ -8,11 +8,13 @@ glGA SDK v2020.1 ECS (Entity Component System)
 
 import unittest
 import numpy as np
+from scipy.spatial.transform import Rotation as R
 
 from utilities import *
 
 class TestUtilities(unittest.TestCase):
     """ main class to test CG utilities and convenience functions """
+    
     def test_vec(self):
         """
         test_vec function
@@ -23,6 +25,7 @@ class TestUtilities(unittest.TestCase):
         np_a = np.array([1.0,0.0,0.0,1.0],dtype=np.float,order='F')
         
         self.assertEqual(vec_a.tolist(), np_a.tolist())
+        np.testing.assert_array_equal(vec_a,np_a)
         print(vec_a)
         print(np_a)
     
@@ -42,6 +45,8 @@ class TestUtilities(unittest.TestCase):
         
         self.assertAlmostEqual(norm_vec.all(), norm_np.all())
         self.assertAlmostEqual(norm_a.all(), norm_np.all())
+        np.testing.assert_array_almost_equal(norm_vec,norm_np,decimal=5)
+        np.testing.assert_array_almost_equal(norm_a,norm_np,decimal=5)
         print(norm_vec)
         print(norm_np)
         print(norm_a)
@@ -304,3 +309,60 @@ class TestUtilities(unittest.TestCase):
         print(mLat)
     
         print("TestUtilities:test_lookat() END")
+        
+    
+    def test_quaternion(self):
+        """
+        test_quaternion to test quaternion algebra elements from individual components or vec4
+        tested against scipy.spatial.transform.Rotation (by default produces normalised quaternions)
+        """
+        print("\TestUtilities:test_quaternion() START")
+        
+        quat_a = quaternion(1.0,1.0,1.0,1.0)
+        vec_a = vec(1.0, 1.0, 1.0)  
+        quat_a_vec = quaternion(vec_a, 1.0)
+        quat_a_vec_norm = normalise(quat_a_vec)
+        
+        quat_np_a = np.array([1.0,1.0,1.0,1.0],dtype=np.float,order='F')
+        rot = R.from_quat(quat_np_a)
+        
+        quat_b = quaternion(1.0,2.0,3.0,4.0)
+        quat_b = normalise(quat_b)
+        rot_b = R.from_quat([1.0, 2.0, 3.0, 4.0])
+        
+        rot_c = R.from_rotvec(np.pi/2 * np.array([0, 0, 1]))
+        quat_c = quaternion_from_axis_angle([0.0,0.0,1.0],90.0)
+        
+        rot_euler = R.from_euler('y', [90], degrees=True)
+        quat_euler = quaternion_from_euler(0.0,90.0,0.0)
+        
+        rot_ab = rot_b * rot; #somehow this is buggy in scipy!!!
+        rot_ab_glm = R.from_quat( [0.365148, 0.182574,0.547723, -0.730297])
+        quat_ab = quaternion_mul(quat_a_vec_norm, quat_b)
+        
+        quat_ab_matrix = quaternion_matrix(quat_ab)
+        
+        print("quat_a:\t", quat_a)
+        print("quat_a_vec:\t", quat_a_vec)
+        print("rot.as_quat():\t", rot.as_quat())
+        print("quat_a_vec_norm:\t",quat_a_vec_norm)
+        print("\nrot_b.as_quat():\t", rot_b.as_quat())
+        print("quat_b:\t", quat_b)
+        print("\nrot_c.as_quat():\t ", rot_c.as_quat())
+        print("quat_c:\t ", quat_c)
+        print("\nrot_euler.as_quat():\t ", rot_euler.as_quat())
+        print("quat_euler:\t ", quat_euler)
+        print("\nrot_ab_glm.as_quat():\t ", rot_ab_glm.as_quat())
+        print("quat_ab:\t ", quat_ab)
+        print("rot_ab.as_quat():\t ", rot_ab.as_quat())
+        print("\nquat_ab_matrix: ",quat_ab_matrix)
+        print("rot_ab_glm.as_matrix(): ",rot_ab_glm.as_matrix())
+
+        np.testing.assert_array_equal(quat_a,quat_np_a)
+        np.testing.assert_array_equal(quat_a,quat_a_vec)
+        np.testing.assert_array_equal(rot.as_quat(),quat_a_vec_norm)
+        np.testing.assert_array_equal(rot_b.as_quat(),quat_b)
+        np.testing.assert_array_equal(rot_c.as_quat(),quat_c)
+        np.testing.assert_array_almost_equal(rot_ab_glm.as_quat(),quat_ab)
+    
+        print("TestUtilities:test_quaternion() END")
