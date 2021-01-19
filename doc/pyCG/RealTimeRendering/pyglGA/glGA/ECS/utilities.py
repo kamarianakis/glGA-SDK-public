@@ -296,7 +296,7 @@ def lookat(eye, target, up):
 
 #quaternion()
 def quaternion(x=vec(0.0, 0.0, 0.0, 0.0), y=0.0, z=0.0, w=1.0):
-    """Generate a quaternion array from 4 values or a vec3 for vector and w for scalar parts
+    """Generate a quaternion array from 4 values or a vec3 for vector and w for scalar parts (scalar-last list scipy)
     It has been tested against: 
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html#scipy.spatial.transform.Rotation 
 
@@ -314,7 +314,7 @@ def quaternion(x=vec(0.0, 0.0, 0.0, 0.0), y=0.0, z=0.0, w=1.0):
 
 
 def quaternion_from_axis_angle(axis:vec, degrees=0.0, radians=None):
-    """Generate a quaternion from a rotation axis and an angle
+    """Generate a quaternion from a rotation axis and an angle, scalar-last like scipy
     # https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm 
     # https://en.wikipedia.org/wiki/Axis–angle_representation#Rotation_vector 
 
@@ -329,7 +329,7 @@ def quaternion_from_axis_angle(axis:vec, degrees=0.0, radians=None):
     return quaternion(normalise(vec(axis)) * sin, w=cos)
 
 def quaternion_from_euler(pitch=0.0, yaw=0.0, roll=0.0, radians=None):
-    """Create a quaternion out of euler angles (pitch = x, yaw = y, roll = z)
+    """Create a quaternion out of euler angles (pitch = x, yaw = y, roll = z), scalar-last like scipy
     https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
     
     :param yaw: [description], defaults to 0.0
@@ -349,7 +349,7 @@ def quaternion_from_euler(pitch=0.0, yaw=0.0, roll=0.0, radians=None):
 
 
 def quaternion_mul(q1, q2):
-    """Compute and return a new quaternion which is the product of two quaternions
+    """Compute and return a new quaternion which is the product of two quaternions, scalar-last like scipy
     https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/arithmetic/index.htm
 
     :param q1: [description]
@@ -366,7 +366,7 @@ def quaternion_mul(q1, q2):
                         
 
 def quaternion_matrix(q):
-    """Compute and return a 4x4 matrix from the quaternion q
+    """Compute and return a 4x4 matrix from the quaternion q, scalar-last like scipy
     https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm 
 
     :param q: [description]
@@ -384,6 +384,36 @@ def quaternion_matrix(q):
                      ], dtype=np.float,order='F')
     
 
-#quaternion_slerp()
-# https://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp 
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Slerp.html#scipy.spatial.transform.Slerp 
+def quaternion_slerp(q0, q1, fraction):
+    """Spherical linear interpolation from unit q0 to unit q1 based on fraction f:
+    https://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp 
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Slerp.html#scipy.spatial.transform.Slerp 
+    http://number-none.com/product/Understanding%20Slerp,%20Then%20Not%20Using%20It/ 
+    
+    :param q0: [description]
+    :type q0: [type]
+    :param q1: [description]
+    :type q1: [type]
+    :param fraction: [description]
+    :type fraction: [type]
+    """
+    # only unit quaternions are valid rotations.
+    q0, q1 = normalise(q0), normalise(q1)
+    # Compute the cosine of the angle between the two vectors.
+    dot = np.dot(q0, q1)
+    
+    # if the inputs are too close, linearly interpolate and normalize the result
+    DOT_THRESHOLD = 0.9995
+    if dot > DOT_THRESHOLD:
+        quat_result = q0 + fraction * (q1 -q0)
+        return normalise(quat_result)
+
+    # if negative dot product, the quaternions have opposite handedness
+    # and slerp won't take the shorter path. Fix by reversing one quaternion.
+    q1, dot = (q1, dot) if dot > 0 else (-q1, -dot)
+
+    theta_0 = math.acos(np.clip(dot, -1, 1))  # angle between input vectors
+    theta = theta_0 * fraction                # angle between q0 and result
+    q2 = normalise(q1 - q0*dot)              # {q0, q2} now orthonormal basis
+
+    return   q0*math.cos(theta) + q2*math.sin(theta)

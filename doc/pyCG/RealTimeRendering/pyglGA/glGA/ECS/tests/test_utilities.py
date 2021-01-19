@@ -9,6 +9,7 @@ glGA SDK v2020.1 ECS (Entity Component System)
 import unittest
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+from scipy.spatial.transform import Slerp
 
 from utilities import *
 
@@ -176,6 +177,8 @@ class TestUtilities(unittest.TestCase):
         
         self.assertEqual(matTrans.tolist(), mT.tolist())
         self.assertEqual(matTrans2.tolist(), mT.tolist())
+        np.testing.assert_array_equal(matTrans,mT)
+        np.testing.assert_array_equal(matTrans2,mT)
        
         print(matTrans)
         print(matTrans2)
@@ -275,6 +278,8 @@ class TestUtilities(unittest.TestCase):
         
         #self.assertAlmostEquals(matRot.all(), mR.all(),6)
         np.testing.assert_array_almost_equal(matRot,mR,decimal=6)
+        np.testing.assert_array_almost_equal(matRot,mR)
+       
        
         print(matRot)
         print(mR)
@@ -315,6 +320,7 @@ class TestUtilities(unittest.TestCase):
         """
         test_quaternion to test quaternion algebra elements from individual components or vec4
         tested against scipy.spatial.transform.Rotation (by default produces normalised quaternions)
+        and glm.quat: NOTE GLM IS SCALAR-FIRST 
         """
         print("\TestUtilities:test_quaternion() START")
         
@@ -336,13 +342,21 @@ class TestUtilities(unittest.TestCase):
         rot_euler = R.from_euler('y', [90], degrees=True)
         quat_euler = quaternion_from_euler(0.0,90.0,0.0)
         
-        rot_ab = rot_b * rot; #somehow this is buggy in scipy!!!
+        rot_ab = rot * rot_b; #somehow this scipy quat mult yields different results than ours or glm!!!
         rot_ab_glm = R.from_quat( [0.365148, 0.182574,0.547723, -0.730297])
         quat_ab = quaternion_mul(quat_a_vec_norm, quat_b)
         
         quat_ab_matrix = quaternion_matrix(quat_ab)
         
-        print("quat_a:\t", quat_a)
+        quat_slerp = quaternion_slerp(quat_a_vec_norm, quat_b, 0.5)
+        rot_ab_glm_slerp = R.from_quat( [0.348973, 0.442316, 0.535659,  0.629002])
+        """key_rots = np.array([rot, rot_b])
+        key_times = [0, 1]
+        slerp = Slerp(key_times,key_rots)
+        rot_ab_slerp = slerp([0.5])
+        """
+        
+        print("\nquat_a:\t", quat_a)
         print("quat_a_vec:\t", quat_a_vec)
         print("rot.as_quat():\t", rot.as_quat())
         print("quat_a_vec_norm:\t",quat_a_vec_norm)
@@ -357,6 +371,9 @@ class TestUtilities(unittest.TestCase):
         print("rot_ab.as_quat():\t ", rot_ab.as_quat())
         print("\nquat_ab_matrix: ",quat_ab_matrix)
         print("rot_ab_glm.as_matrix(): ",rot_ab_glm.as_matrix())
+        print("\nquat_slerp: ",normalise(quat_slerp))
+        print("rot_ab_glm_slerp: ",rot_ab_glm_slerp.as_quat())
+        #print("rot_ab_slerp: ",rot_ab_slerp.as_quat()) #quat slerp is untested as it gives different results than glm!
 
         np.testing.assert_array_equal(quat_a,quat_np_a)
         np.testing.assert_array_equal(quat_a,quat_a_vec)
@@ -364,5 +381,6 @@ class TestUtilities(unittest.TestCase):
         np.testing.assert_array_equal(rot_b.as_quat(),quat_b)
         np.testing.assert_array_equal(rot_c.as_quat(),quat_c)
         np.testing.assert_array_almost_equal(rot_ab_glm.as_quat(),quat_ab)
+        np.testing.assert_array_almost_equal(rot_ab_glm_slerp.as_quat(),quat_slerp)
     
         print("TestUtilities:test_quaternion() END")
