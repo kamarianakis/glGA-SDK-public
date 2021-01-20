@@ -63,13 +63,13 @@ if __name__ == "__main__":
         
     # create the basic Chapter 8 Hierarchy example from Angel ICG book
     
-    base = EntityElement(1)
-    arm = EntityElement(2)
-    forearm = EntityElement(3)
+    base = Entity("base", "group", 1)
+    arm = Entity("arm", "group",2)
+    forearm = Entity("forearm", "group",3)
     
-    baseShape = EntityElement(4)
-    armShape = EntityElement(5)
-    forearmShape = EntityElement(6)
+    baseShape = Entity("baseShape", "shape",4)
+    armShape = Entity("armShape", "shape", 5)
+    forearmShape = Entity("forearmShape", "shape", 6)
     
     base.add(arm)
     base.add(baseShape)

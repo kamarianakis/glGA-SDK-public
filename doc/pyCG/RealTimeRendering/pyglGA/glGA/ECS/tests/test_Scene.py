@@ -35,9 +35,9 @@ class TestScene(unittest.TestCase):
         """
         print("\TestScene:test_sampleScene() START")
         
-        base = EntityElement(1)
-        arm = EntityElement(2)
-        forearm = EntityElement(3)
+        base = Entity(1)
+        arm = Entity(2)
+        forearm = Entity(3)
     
         base.add(arm)
         arm.add(forearm)

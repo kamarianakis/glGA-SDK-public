@@ -15,17 +15,18 @@ The following is example restructured text doc example
 """
 
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import List
+from abc        import ABC, abstractmethod
+from typing     import List
 
-from System import *
+from System     import *
+from utilities  import *
 
 class Component(ABC):
     """
-    The abstract Component class of our ECS.
+    The Interface Component class of our ECS.
     
-    Based on the Strategy pattern, it is a data collection of specific
-    class of data. Subclasses typically are e.g. Transform, Mesh, Shader, RigidBody etc.
+    Based on the Composite pattern, it is a data collection of specific
+    class of data. Subclasses typically are e.g. Transform, RenderMesh, Shader, RigidBody etc.
     """
     
     def __init__(self, name=None, type=None, id=None):
@@ -63,12 +64,14 @@ class Component(ABC):
     def getClassName(cls):
         return cls.__name__
     
+    @abstractmethod
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
         """
         pass
     
+    @abstractmethod
     def update(self):
         """
         method to be subclassed for debuging purposes only, 
@@ -77,6 +80,7 @@ class Component(ABC):
         """
         pass
     
+    @abstractmethod
     def accept(self, system: System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
@@ -90,24 +94,52 @@ class BasicTransform(Component):
     """
     An example of a concrete Component Transform class
     
-    Contains a basic Euclidean Translation, Rotation and Scale Homogeneous Vector
-    
-    and a 4x4 matrix of all of them
+    Contains a basic Euclidean Translation, Rotation and Scale Homogeneous matrices
+    all-in-one TRS 4x4 matrix
     
     :param Component: [description]
     :type Component: [type]
     """
    
-    def featureA(self):
-        print(self.getClassName(),":featureA() called")
-        
+    def __init__(self, name=None, type=None, id=None):
+        self._name = name
+        self._type = type
+        self._id = id
+        self._trs = identity()
+         
+    @property #trs
+    def trs(self):
+        """ Get Component's transform: translation, rotation ,scale """
+        return self._trs
+    @trs.setter
+    def trs(self, value):
+        self._trs = value
+                 
+    
     def update(self):
-        self.featureA()
+        pass
+    
+    
+    def accept(self, system: System):
+        """
+        Accepts a class object to operate on the Component, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
+        system.update()
+    
+    
+    def init(self):
+        """
+        abstract method to be subclassed for extra initialisation
+        """
+        pass
 
 
-class Mesh(Component):
+class RenderMesh(Component):
     """
-    A concrete Mesh class
+    A concrete RenderMesh class
 
     :param Component: [description]
     :type Component: [type]
@@ -118,4 +150,18 @@ class Mesh(Component):
     def update(self):
         self.featureB()
    
+    def accept(self, system: System):
+        """
+        Accepts a class object to operate on the Component, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
+        system.update()
+    
+    def init(self):
+        """
+        abstract method to be subclassed for extra initialisation
+        """
+        pass
     
