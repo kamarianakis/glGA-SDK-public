@@ -103,11 +103,11 @@ class RenderGPU(System):
             s = stack.pop()
             if s not in path:
                 path.append(s)
-            if s not in graph:
+            if s not in graph: # keys are group nodes in graph
                 #leaf node
                 continue
-            for neighbor in graph[s]:
-                stack.append(neighbor)
+            for child in graph[s]: #values are children in graph
+                stack.append(child)
 
         return ' '.join(path)
         
@@ -128,8 +128,8 @@ class RenderGPU(System):
                 # leaf node, backtrack
                 return path
             
-            for neighbor in graph[source]:
-                path = self.dfs_update_recursive(graph, neighbor, path)
+            for child in graph[source]:
+                path = self.dfs_update_recursive(graph, child, path)
                 
         return path
         

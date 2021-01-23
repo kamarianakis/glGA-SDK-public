@@ -69,7 +69,9 @@ class TestRenderGPU(unittest.TestCase):
         self.assertEqual(mySystem.type,"Rendering")
         self.assertEqual(mySystem.id, 102)
         
-        #create a sample graph to test the system
+        #create a sample graph to test the system, as a python dictionary
+        #keys: group nodes
+        #values: children nodes
         graph = {"A":["D", "C", "B"],
                 "B":["E"],
                 "C":["G", "F"],
