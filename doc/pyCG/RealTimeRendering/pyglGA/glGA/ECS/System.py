@@ -73,12 +73,70 @@ class System(ABC):
         """
         pass
 
+
+
 class RenderGPU(System):
     """
-    
     A basic forward rendering system based on GPU shaders
-
     :param System: [description]
     :type System: [type]
     """
-    pass
+    
+    
+    def dfs_update(self, graph, source):
+        """ a non-recursive Depth First Search algorithm
+        based on https://likegeeks.com/depth-first-search-in-python/
+        
+        :param graph: [the graph to traverse]
+        :type graph: [dictionary]
+        :param source: [the node to start searching]
+        :type source: [string]
+        """
+        
+        if source is None or source not in graph:
+            return "invalid input"
+
+        path = []
+        stack = [source]
+
+        while (len(stack) != 0):
+            s = stack.pop()
+            if s not in path:
+                path.append(s)
+            if s not in graph:
+                #leaf node
+                continue
+            for neighbor in graph[s]:
+                stack.append(neighbor)
+
+        return ' '.join(path)
+        
+    def dfs_update_recursive(self, graph, source, path = []):
+        """a recursive DFS update for a dictionary based simple graph
+
+        :param graph: [description]
+        :type graph: [type]
+        :param source: [description]
+        :type source: [type]
+        :param path: [description], defaults to []
+        :type path: list, optional
+        """
+        if source not in path:
+            path.append(source)
+            
+            if source not in graph:
+                # leaf node, backtrack
+                return path
+            
+            for neighbor in graph[source]:
+                path = self.dfs_update_recursive(graph, neighbor, path)
+                
+        return path
+        
+       
+    def update(self, recursive = False, graph = None, source = None):
+        if recursive is True:
+            return self.dfs_update_recursive(graph, source)
+        else:
+            return self.dfs_update(graph, source)
+            
