@@ -35,12 +35,19 @@ class TestScene(unittest.TestCase):
         """
         print("\TestScene:test_sampleScene() START")
         
-        base = Entity(1)
-        arm = Entity(2)
-        forearm = Entity(3)
+        base = Entity("base", "group", 1)
+        arm = Entity("arm", "group",2)
+        forearm = Entity("forearm", "group",3)
+    
+        baseShape = Entity("baseShape", "shape",4)
+        armShape = Entity("armShape", "shape", 5)
+        forearmShape = Entity("forearmShape", "shape", 6)
     
         base.add(arm)
+        base.add(baseShape)
         arm.add(forearm)
+        arm.add(armShape)
+        forearm.add(forearmShape)
     
         scenegraph = base.update()
     

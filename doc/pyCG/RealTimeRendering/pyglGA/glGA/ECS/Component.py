@@ -33,8 +33,9 @@ class Component(ABC):
         self._name = name
         self._type = type
         self._id = id
+        self._parent = None
     
-    #define properties for id, name, type
+    #define properties for id, name, type, parent
      
     @property #name
     def name(self) -> str:
@@ -59,19 +60,27 @@ class Component(ABC):
     @id.setter
     def id(self, value):
         self._id = value
+        
+    @property #parent
+    def parent(self) -> Component:
+        """ Get Entity's parent """
+        return self._parent
+    @parent.setter
+    def parent(self, value):
+        self._parent = value
     
     @classmethod
     def getClassName(cls):
         return cls.__name__
     
-    @abstractmethod
+    #@abstractmethod
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
         """
         pass
     
-    @abstractmethod
+    #@abstractmethod
     def update(self):
         """
         method to be subclassed for debuging purposes only, 
@@ -80,7 +89,7 @@ class Component(ABC):
         """
         pass
     
-    @abstractmethod
+    #@abstractmethod
     def accept(self, system: System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
@@ -89,6 +98,11 @@ class Component(ABC):
         :type system: [System]
         """
         system.update()
+        
+    def print(self):
+        #print out name, type, id of this Component
+        print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
+        print(f" ______________________________________________________________")
 
 class BasicTransform(Component):
     """

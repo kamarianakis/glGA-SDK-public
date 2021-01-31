@@ -19,6 +19,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from Component import *
+from Entity import *
 
 class System(ABC):
     """
@@ -72,7 +73,34 @@ class System(ABC):
         
         """
         pass
+    
+    def apply(self, Entity):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Entities. 
+        
+        """
+        pass
+    
+    
+    def apply(self, Component):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
 
+
+class TransformUpdate(System):
+    """
+
+    :param System: [description]
+    :type System: [type]
+    :return: [description]
+    :rtype: [type]
+    """
+    pass
 
 
 class RenderGPU(System):

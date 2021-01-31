@@ -31,6 +31,12 @@ class TestSystem(unittest.TestCase):
         print("TestSystem:test_init() END")
         
     
+class TestTransformUpdate(unittest.TestCase):
+    def test_init(self):
+        """
+        
+        """
+        pass
         
 
 class TestRenderGPU(unittest.TestCase):

@@ -30,24 +30,34 @@ class Scene(SingletonI):
     
     def __new__(cls):
         if cls._instance is None:
-            print('Creating Scene Object')
+            print('Creating Scene Singleton Object')
             cls._instance = super(Scene, cls).__new__(cls)
             # add further init here
         return cls._instance
     
     def init():
+        """call the init() of all systems attached to this Scene based on the Visitor pattern
+        """
         pass
     
     def update():
+        """call the update() of all systems attached to this Scene based on the Visitor pattern
+        """
         pass
     
     def processInput():
+        """process the user input per frame based on Strategy and Decorator patterns
+        """
         pass
         
     def render():
+        """call the render() of all systems attached to this Scene based on the Visitor pattern
+        """
         pass
     
     def run():
+        """main loop Scene method based on the "gameloop" game programming pattern
+        """
         pass
 
 if __name__ == "__main__":
@@ -77,6 +87,12 @@ if __name__ == "__main__":
     arm.add(armShape)
     forearm.add(forearmShape)
     
-    scenegraph = base.update()
+    #scenegraph = base.update()
+    #print("Scenegraph is: ", scenegraph)
+    # ----------- attach a render system to root Entity ---------------
+    # 
+    #
+    print(f"----------- attached a render system to root Entity: {base._name} ---------------")
     
-    print("Scenegraph is: ", scenegraph)
+    # ----------- run a render system from root Entity towards leaf nodes (DFS) and compute l2world matrix ---------------
+   

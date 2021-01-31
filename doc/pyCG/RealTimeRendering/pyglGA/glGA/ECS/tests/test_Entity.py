@@ -104,20 +104,32 @@ class TestEntity(unittest.TestCase):
         
         print("TestEntity:test_isEntity() END")
         
-    def test_update(self):
+    def test_print(self):
         """
-        Entity update() test
+        Entity print() test
         """
-        print("TestEntity:test_update() START")
-        gameObject = Entity("root")
-        gameObject2 = Entity("node2")
-        gameObject3 = Entity("node3")
+        print("TestEntity:test_print() START")
+        gameObject = Entity("root", "Group", "1")
+        gameObject2 = Entity("node2", "Group", "2")
+        gameObject3 = Entity("node3", "Group", "3")
+        gameObject4 = Entity("node4", "Group", "4")
+        gameObject5 = Entity("node5", "Group", "5")
+        gameObject6 = Entity("node6", "Group", "6")
+        trans4 = BasicTransform("trans4", "Transform", "1")
+        trans5 = BasicTransform("trans5", "Transform", "2")
+        trans6 = BasicTransform("trans6", "Transform", "3")
         gameObject.add(gameObject2)
         gameObject2.add(gameObject3)
+        gameObject.add(gameObject4)
+        gameObject2.add(gameObject5)
+        gameObject3.add(gameObject6)
+        gameObject4.add(trans4)
+        gameObject5.add(trans5)
+        gameObject6.add(trans6)
         
         self.assertIn(gameObject3, gameObject2._children)
-        print(f"test_update() scene: \n {gameObject.update()}")
-        print("TestEntity:test_update() END")
+        print(f"\nscenegraph is: {gameObject.print()}")
+        print("TestEntity:test_print() END")
         
     
 
