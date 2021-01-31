@@ -384,3 +384,7 @@ class TestUtilities(unittest.TestCase):
         np.testing.assert_array_almost_equal(rot_ab_glm_slerp.as_quat(),quat_slerp)
     
         print("TestUtilities:test_quaternion() END")
+        
+
+if __name__ == "__main__":
+    unittest.main(argv=[''], verbosity=3, exit=False)

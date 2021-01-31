@@ -54,3 +54,7 @@ class TestScene(unittest.TestCase):
         print("Scenegraph is: ", scenegraph)
     
         print("TestScene:test_sampleScene() END")
+
+
+if __name__ == "__main__":
+    unittest.main(argv=[''], verbosity=3, exit=False)

@@ -18,7 +18,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from typing import Any, List
 
-from Component import Component, BasicTransform, RenderMesh
+from Component import *
 from System import *
 
 class EntityDfsIterator(Iterator):

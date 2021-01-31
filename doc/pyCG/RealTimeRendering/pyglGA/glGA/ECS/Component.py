@@ -36,7 +36,6 @@ class Component(ABC):
         self._parent = None
     
     #define properties for id, name, type, parent
-     
     @property #name
     def name(self) -> str:
         """ Get Component's name """
@@ -54,7 +53,7 @@ class Component(ABC):
         self._type = value
         
     @property #id
-    def id(self) -> str:
+    def id(self) -> int:
         """ Get Component's id """
         return self._id
     @id.setter
@@ -63,7 +62,7 @@ class Component(ABC):
         
     @property #parent
     def parent(self) -> Component:
-        """ Get Entity's parent """
+        """ Get Component's parent """
         return self._parent
     @parent.setter
     def parent(self, value):
@@ -103,6 +102,9 @@ class Component(ABC):
         #print out name, type, id of this Component
         print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
         print(f" ______________________________________________________________")
+        
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}"
 
 class BasicTransform(Component):
     """
@@ -158,11 +160,11 @@ class RenderMesh(Component):
     :param Component: [description]
     :type Component: [type]
     """
-    def featureB(self):
-        print(self.getClassName(), ":featureB() called")
+    def draw(self):
+        print(self.getClassName(), ": draw() called")
         
     def update(self):
-        self.featureB()
+        self.draw()
    
     def accept(self, system: System):
         """
