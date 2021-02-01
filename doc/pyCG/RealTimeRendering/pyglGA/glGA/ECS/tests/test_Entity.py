@@ -128,13 +128,14 @@ class TestEntity(unittest.TestCase):
         gameObject6.add(trans6)
         
         self.assertIn(gameObject3, gameObject2._children)
-        print(f"\nscenegraph is: {gameObject.print()}")
+        self.assertIn(trans5, gameObject5._children)
+        gameObject.print()
         print("TestEntity:test_print() END")
         
 
 class TestComponent(unittest.TestCase):
     
-    #@unittest.skip("Component is ABC due to @abstractmethod update(), skipping the test")
+    @unittest.skip("Component is ABC due to @abstractmethod update(), skipping the test")
     def test_init(self):
         #default constructor of Component class
         print("\nTestComponent:test_init() START")
@@ -175,8 +176,23 @@ class TestBasicTransform(unittest.TestCase):
         self.assertEqual(myComponent.id, 101)
         np.testing.assert_array_equal(myComponent.trs,mT)
         
-        print(f"Called {myComponent.name} update(): {myComponent.update()}")
-        print("TestBasicTransform:test_init() END")  
+        myComponent.print()
+        print("TestBasicTransform:test_init() END") 
+    
+    
+    def test_BasicTransform_compNullIterator(self):
+        #test null iterator
+        print("\nTestBasicTransform:test_BasicTransform_compNullIterator() START")
+        
+        myTrans = BasicTransform("myTrans", "BasicTransform", "1")
+        myIter = iter(myTrans)
+        
+        self.assertIsInstance(myIter, CompNullIterator)
+        self.assertEqual(myIter.hasNext(), False)
+        self.assertEqual(next(myIter), None)
+        
+        print(myTrans)
+        print("\nTestBasicTransform:test_BasicTransform_compNullIterator() END")
         
 
 class TestRenderMesh(unittest.TestCase):
@@ -196,6 +212,19 @@ class TestRenderMesh(unittest.TestCase):
         print(f"Called {myComponent.name} update(): {myComponent.update()}")
         print("TestRenderMesh:test_init() END")  
 
+    def test_RenderMesh_compNullIterator(self):
+        #test null iterator
+        print("\nTestRenderMesh:test_RenderMesh_compNullIterator() START")
+        
+        myMesh = RenderMesh("myTrans", "RenderMesh", "2")
+        myIter = iter(myMesh)
+        
+        self.assertIsInstance(myIter, CompNullIterator)
+        self.assertEqual(myIter.hasNext(), False)
+        self.assertEqual(next(myIter), None)
+        
+        print(myMesh)
+        print("\nTestRenderMesh:test_RenderMesh_compNullIterator() END")
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

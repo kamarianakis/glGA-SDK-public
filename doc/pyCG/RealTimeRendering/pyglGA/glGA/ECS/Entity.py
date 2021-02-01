@@ -22,37 +22,46 @@ from Component import *
 from System import *
 
 class EntityDfsIterator(Iterator):
-        """
-        This is a depth-first-iterator for Hierarchical Entities (Iterables) and their Components, 
-        based on the Iterator design pattern
+    """
+    This is a depth-first-iterator for Hierarchical Entities (Iterables) and their Components, 
+    based on the Iterator design pattern
 
-        :param Iterator: [description]
-        :type Iterator: [type]
-        """
-        
-        """_position attribute stores the position with the children List of an entity
-        """
-        _position: int = None
-        
-        def __init__(self, entity: Entity) ->None:
-            self._entity = entity
-            self._children = entity._children
-            self._position = 0        
-        
-        def __next__(self):
-            """
-            The __next__() iterator method should return the next Entity in the graph, using a DFS algorithm.
-            On reaching the end and in subsequent calls, it raises a StopIteration
-            """
-            try:
-                value = self._entity._children[self._position]
-                self._position += 1
-            except IndexError:
-                raise StopIteration()
+    :param Iterator: [description]
+    :type Iterator: [type]
+    """
             
-            return value
+    #_position attribute stores the position with the children List of an entity
+        
+    # List stack to push/pop iterators
+    _position: int = None
+            
+    def __init__(self, entity: Entity) ->None:
+        self._entity = entity
+        self._children = entity._children
+        self._position = 0    
+                
+            
+    def __next__(self):
+        """
+        The __next__() iterator method should return the next Entity in the graph, using a DFS algorithm.
+        On reaching the end and in subsequent calls, it raises a StopIteration
+        """
+        try:
+            value = self._entity._children[self._position]
+            self._position += 1
+        except IndexError:
+            raise StopIteration()    
+        return value
+    
+    
+    def hasNext(self) ->bool:
+        """
+        Peak to see if there is a next element to access
+        """ 
+        return True
+            
 
-class Entity(Component, Iterable):
+class Entity(Component):
     """
     The main EntityI concrete class of glGA ECS 
     This is the typical equivalent of a Group node in traditional scenegraphs or GameObject in Unity Engine
@@ -141,8 +150,8 @@ class Entity(Component, Iterable):
         The __iter__() method normaly returns the iterator object itself, by default
         we return the depth-first-search iterator
         """
-        #return EntityDfsIterator(self)
-        pass
+        return EntityDfsIterator(self)
+        
     
     
     
