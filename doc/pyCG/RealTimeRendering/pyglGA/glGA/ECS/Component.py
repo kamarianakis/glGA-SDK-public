@@ -25,7 +25,7 @@ from utilities  import *
 
 class Component(ABC, Iterable):
     """
-    The Interface Component class of our ECS.
+    The Interface Component class of our ECSS.
     
     Based on the Composite pattern, it is a data collection of specific
     class of data. 

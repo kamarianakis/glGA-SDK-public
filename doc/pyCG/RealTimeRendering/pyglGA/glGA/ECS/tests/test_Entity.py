@@ -132,6 +132,36 @@ class TestEntity(unittest.TestCase):
         gameObject.print()
         print("TestEntity:test_print() END")
         
+    def test_EntityDfsIterator(self):
+        """
+        Entity EntityDfsIterator() test
+        """
+        print("TestEntity:test_EntityDfsIterator() START")
+        gameObject = Entity("root", "Group", "1")
+        gameObject2 = Entity("node2", "Group", "2")
+        gameObject3 = Entity("node3", "Group", "3")
+        gameObject4 = Entity("node4", "Group", "4")
+        gameObject5 = Entity("node5", "Group", "5")
+        gameObject6 = Entity("node6", "Group", "6")
+        trans4 = BasicTransform("trans4", "Transform", "1")
+        trans5 = BasicTransform("trans5", "Transform", "2")
+        trans6 = BasicTransform("trans6", "Transform", "3")
+        gameObject.add(gameObject2)
+        gameObject2.add(gameObject3)
+        gameObject.add(gameObject4)
+        gameObject2.add(gameObject5)
+        gameObject3.add(gameObject6)
+        gameObject4.add(trans4)
+        gameObject5.add(trans5)
+        gameObject6.add(trans6)
+        
+        self.assertIn(gameObject3, gameObject2._children)
+        self.assertIn(trans5, gameObject5._children)
+        
+        #test the EntityDfsIterator to traverse the above ECS scenegraph
+        
+        print("TestEntity:test_EntityDfsIterator() END")
+        
 
 class TestComponent(unittest.TestCase):
     
