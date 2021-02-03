@@ -147,8 +147,8 @@ class TestEntity(unittest.TestCase):
         trans5 = BasicTransform("trans5", "Transform", "2")
         trans6 = BasicTransform("trans6", "Transform", "3")
         gameObject.add(gameObject2)
-        gameObject2.add(gameObject3)
         gameObject.add(gameObject4)
+        gameObject2.add(gameObject3)
         gameObject2.add(gameObject5)
         gameObject3.add(gameObject6)
         gameObject4.add(trans4)
@@ -162,10 +162,10 @@ class TestEntity(unittest.TestCase):
         
         dfsIterator = iter(gameObject)
         
-        for i in range(1):
-            traversedEntity = next(dfsIterator)
-            print(traversedEntity)
-        """
+        #for i in range(5):
+        #    traversedEntity = next(dfsIterator)
+        #    print(traversedEntity)
+        
         while(dfsIterator.hasNext()):
             try:
                 traversedEntity = next(dfsIterator)
@@ -173,7 +173,7 @@ class TestEntity(unittest.TestCase):
                 print("\n------------- dfsIterator StopIteration exception!")
             else:
                 print(traversedEntity)
-        """
+        
         
         print("TestEntity:test_EntityDfsIterator() END")
         

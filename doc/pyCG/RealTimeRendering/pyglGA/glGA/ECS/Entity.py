@@ -32,15 +32,16 @@ class EntityDfsIterator(Iterator):
             
     # List stack to push/pop iterators
             
-    def __init__(self, entity: Entity) ->None:
-        self._entity = entity
-        self._children = entity._children
+    def __init__(self, entityChildren: List) ->None:
+        #self._entity = entity
+        self._children = entityChildren
         # access top level Entity List iterator
-        self._entityIterator = iter(entity._children)
+        self._entityIterator = iter(self._children)
         self._stack: List[Iterator] = []
         # store top level Entity List iterator in stack
         self._stack.append(self._entityIterator)
         self._hasnext = None
+        
         
     def peek(self)->Iterator:
         """ Stack peek over
@@ -59,12 +60,12 @@ class EntityDfsIterator(Iterator):
         if (self.hasNext()):
             # if there is a next element, get current iterator off the stack and get its next element
             eIterator = self.peek()
-            component = next(eIterator)
+            component = eIterator.__next__()
             
             # we throw that component's iterator in the stack. If the component is an Entity, it will iterate
             # over its items. If the component is a concrete Component, we get CompNullIterator, no iteration 
             # happens. Then we return the component
-            self._stack.append(iter(component))
+            self._stack.append(iter(component._children))
 
             return component
         else:
@@ -78,8 +79,10 @@ class EntityDfsIterator(Iterator):
         if (len(self._children) == 0): 
             return False
         else:
-            eIterator = self.peek()
-            if (not self.list_hasNext(eIterator)): #Our Python implementation of a standard List iterator hasNext()
+            entIterator = iter(self._children) # get a fresh new iterator so that it does not advance the state of stack's iterator
+            #if (not self.list_hasNext(eIterator)): #Our Python implementation of a standard List iterator hasNext()
+            comp = next(entIterator, None) 
+            if (comp == None):
                 self._stack.pop()
                 return self.hasNext()
             else:
@@ -189,7 +192,7 @@ class Entity(Component):
         The __iter__() method normaly returns the iterator object itself, by default
         we return the depth-first-search iterator
         """
-        return EntityDfsIterator(self)
+        return EntityDfsIterator(self._children)
         
     
     

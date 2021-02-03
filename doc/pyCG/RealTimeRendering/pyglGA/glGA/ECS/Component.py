@@ -37,6 +37,7 @@ class Component(ABC, Iterable):
         self._type = type
         self._id = id
         self._parent = self
+        self._children = []
     
     #define properties for id, name, type, parent
     @property #name
@@ -137,8 +138,8 @@ class CompNullIterator(Iterator):
     :param Iterator: [description]
     :type Iterator: [type]
     """
-    def __init__(self, comp: Component):
-        self._comp = comp
+    def __init__(self, compChildren: List):
+        self._comp = compChildren
     
     def __next__(self):
         return None
@@ -163,6 +164,7 @@ class BasicTransform(Component):
         self._id = id
         self._trs = identity()
         self._parent = self
+        self._children = []
          
     @property #trs
     def trs(self):
@@ -196,7 +198,7 @@ class BasicTransform(Component):
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
         """
-        return CompNullIterator(self) 
+        return CompNullIterator(self._children) 
 
 
 class RenderMesh(Component):
