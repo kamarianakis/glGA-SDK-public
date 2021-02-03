@@ -160,6 +160,21 @@ class TestEntity(unittest.TestCase):
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         
+        dfsIterator = iter(gameObject)
+        
+        for i in range(1):
+            traversedEntity = next(dfsIterator)
+            print(traversedEntity)
+        """
+        while(dfsIterator.hasNext()):
+            try:
+                traversedEntity = next(dfsIterator)
+            except StopIteration:
+                print("\n------------- dfsIterator StopIteration exception!")
+            else:
+                print(traversedEntity)
+        """
+        
         print("TestEntity:test_EntityDfsIterator() END")
         
 
