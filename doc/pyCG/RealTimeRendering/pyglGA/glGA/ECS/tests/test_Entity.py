@@ -115,9 +115,9 @@ class TestEntity(unittest.TestCase):
         gameObject4 = Entity("node4", "Group", "4")
         gameObject5 = Entity("node5", "Group", "5")
         gameObject6 = Entity("node6", "Group", "6")
-        trans4 = BasicTransform("trans4", "Transform", "1")
-        trans5 = BasicTransform("trans5", "Transform", "2")
-        trans6 = BasicTransform("trans6", "Transform", "3")
+        trans4 = BasicTransform("trans4", "Transform", "7")
+        trans5 = BasicTransform("trans5", "Transform", "8")
+        trans6 = BasicTransform("trans6", "Transform", "9")
         gameObject.add(gameObject2)
         gameObject2.add(gameObject3)
         gameObject.add(gameObject4)
@@ -143,34 +143,44 @@ class TestEntity(unittest.TestCase):
         gameObject4 = Entity("node4", "Group", "4")
         gameObject5 = Entity("node5", "Group", "5")
         gameObject6 = Entity("node6", "Group", "6")
-        trans4 = BasicTransform("trans4", "Transform", "1")
-        trans5 = BasicTransform("trans5", "Transform", "2")
-        trans6 = BasicTransform("trans6", "Transform", "3")
+        trans4 = BasicTransform("trans4", "Transform", "7")
+        trans5 = BasicTransform("trans5", "Transform", "8")
+        trans6 = BasicTransform("trans6", "Transform", "9")
         gameObject.add(gameObject2)
         gameObject.add(gameObject4)
-        gameObject2.add(gameObject3)
-        gameObject2.add(gameObject5)
-        gameObject3.add(gameObject6)
+        #gameObject2.add(gameObject3)
+        #gameObject2.add(gameObject5)
+        #gameObject3.add(gameObject6)
         gameObject4.add(trans4)
-        gameObject5.add(trans5)
-        gameObject6.add(trans6)
+        #gameObject5.add(trans5)
+        #gameObject6.add(trans6)
         
-        self.assertIn(gameObject3, gameObject2._children)
-        self.assertIn(trans5, gameObject5._children)
+        #self.assertIn(gameObject3, gameObject2._children)
+        #self.assertIn(trans5, gameObject5._children)
+        #print("\n------------- gameobject print START!")
+        #gameObject.print()
+        #print("\n------------- gameobject print END!")
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
-        
         dfsIterator = iter(gameObject)
         
-        #for i in range(5):
-        #    traversedEntity = next(dfsIterator)
-        #    print(traversedEntity)
+        """  
+        for i in range(2):
+            try:
+                traversedEntity = next(dfsIterator)
+            except StopIteration:
+                print("\n------------- dfsIterator StopIteration exception!")
+                break
+            else:
+                print(traversedEntity)
         
+        """
         while(dfsIterator.hasNext()):
             try:
                 traversedEntity = next(dfsIterator)
             except StopIteration:
                 print("\n------------- dfsIterator StopIteration exception!")
+                break
             else:
                 print(traversedEntity)
         

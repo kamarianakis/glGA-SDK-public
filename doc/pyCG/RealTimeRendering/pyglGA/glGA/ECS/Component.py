@@ -138,8 +138,8 @@ class CompNullIterator(Iterator):
     :param Iterator: [description]
     :type Iterator: [type]
     """
-    def __init__(self, compChildren: List):
-        self._comp = compChildren
+    def __init__(self, comp: Component):
+        self._comp = comp
     
     def __next__(self):
         return None
@@ -198,7 +198,7 @@ class BasicTransform(Component):
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
         """
-        return CompNullIterator(self._children) 
+        return CompNullIterator(self) 
 
 
 class RenderMesh(Component):
@@ -208,6 +208,14 @@ class RenderMesh(Component):
     :param Component: [description]
     :type Component: [type]
     """
+    def __init__(self, name=None, type=None, id=None):
+        self._name = name
+        self._type = type
+        self._id = id
+        self._trs = identity()
+        self._parent = self
+        self._children = []
+    
     def draw(self):
         print(self.getClassName(), ": draw() called")
         
