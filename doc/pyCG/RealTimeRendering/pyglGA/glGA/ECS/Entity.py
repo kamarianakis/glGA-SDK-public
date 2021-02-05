@@ -20,6 +20,7 @@ from typing import Any, List
 
 from Component import *
 from System import *
+import copy
 
 class EntityDfsIterator(Iterator):
     """
@@ -41,24 +42,29 @@ class EntityDfsIterator(Iterator):
         
         # store top level Entity List iterator in stack
         self._stack.append(self._entityIterator)
-        self._hasnext = None
-        
-    def peek(self)->Iterator:
-        """ Stack peek over
-            just return last stack element without removing it
-        """
-        if (len(self._stack) == 0):
-            return None
-        else:
-            return self._stack[-1]
+        self._hasNext = True
                     
     def __next__(self):
         """
         The __next__() iterator method should return the next Entity in the graph, using a DFS algorithm.
         """
-        if (self.hasNext()):
+        if (len(self._stack) == 0): 
+            raise StopIteration
+        else:
+            # entIterator = iter(self._entity._children) # get a fresh new iterator so that it does not advance the state of stack's iterator
+            eIterator = self._stack[-1]
+            entIterator = copy.deepcopy(eIterator) #trying stack peek
+            try:
+                comp = next(entIterator, None) # check if it has next 
+            except StopIteration:
+                self._hasNext = False
+                self._stack.pop()
+            else:
+                self._hasNext = True
+        
+        if (self._hasNext):
             # if there is a next element, get current iterator off the stack and get its next element
-            eIterator = self.peek()
+            eIterator = self._stack[-1]
             try:
                 component = next(eIterator, None)
             except StopIteration:
@@ -67,16 +73,14 @@ class EntityDfsIterator(Iterator):
                 # we throw that component's iterator in the stack. If the component is an Entity, it will iterate
                 # over its items. If the component is a concrete Component, we get CompNullIterator, no iteration 
                 # happens. Then we return the component
-                if component !=None:
+                if (component !=None) and isinstance(component, Entity):
                     self._stack.append(iter(component._children))
                 return component
         else:
-            return None
+            raise StopIteration
     
+    """
     def hasNext(self) ->bool:
-        """
-        Peak to see if there is a next element to access
-        """
         # to see if there is a next element, we check to see if the stack is empty; if so, there isn't
         if (len(self._stack) == 0): 
             return False
@@ -89,20 +93,7 @@ class EntityDfsIterator(Iterator):
                 return self.hasNext()
             else:
                 return True
-    
-    
-    def list_hasNext(self, iter) ->bool:
-        """ Python List iterator hasNext() implementation
-        Standard iterators in Python lack hasNext(), so here is a simple implementation
-        """
-        if self._hasnext is None:
-            try: 
-                next(iter)
-            except StopIteration: 
-                self._hasnext = False
-            else: 
-                self._hasnext = True
-        return self._hasnext
+    """
 
 class Entity(Component):
     """

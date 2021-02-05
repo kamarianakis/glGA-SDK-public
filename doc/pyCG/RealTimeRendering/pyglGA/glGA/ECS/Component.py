@@ -37,7 +37,7 @@ class Component(ABC, Iterable):
         self._type = type
         self._id = id
         self._parent = self
-        self._children = []
+        self._children = None
     
     #define properties for id, name, type, parent
     @property #name

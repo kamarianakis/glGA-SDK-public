@@ -146,8 +146,9 @@ class TestEntity(unittest.TestCase):
         trans4 = BasicTransform("trans4", "Transform", "7")
         trans5 = BasicTransform("trans5", "Transform", "8")
         trans6 = BasicTransform("trans6", "Transform", "9")
-        gameObject.add(gameObject2)
         gameObject.add(gameObject4)
+        gameObject.add(gameObject2)
+        
         #gameObject2.add(gameObject3)
         #gameObject2.add(gameObject5)
         #gameObject3.add(gameObject6)
@@ -155,6 +156,9 @@ class TestEntity(unittest.TestCase):
         #gameObject5.add(trans5)
         #gameObject6.add(trans6)
         
+        self.assertIn(gameObject2, gameObject._children)
+        self.assertIn(gameObject4, gameObject._children)
+        self.assertIn(trans4, gameObject4._children)
         #self.assertIn(gameObject3, gameObject2._children)
         #self.assertIn(trans5, gameObject5._children)
         #print("\n------------- gameobject print START!")
@@ -163,9 +167,9 @@ class TestEntity(unittest.TestCase):
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         dfsIterator = iter(gameObject)
+        print(gameObject)
         
-        """  
-        for i in range(2):
+        for i in range(3):
             try:
                 traversedEntity = next(dfsIterator)
             except StopIteration:
@@ -175,15 +179,16 @@ class TestEntity(unittest.TestCase):
                 print(traversedEntity)
         
         """
-        while(dfsIterator.hasNext()):
+        done_traversing = False
+        while(not done_traversing):
             try:
                 traversedEntity = next(dfsIterator)
             except StopIteration:
                 print("\n------------- dfsIterator StopIteration exception!")
-                break
+                done_traversing = True
             else:
                 print(traversedEntity)
-        
+        """
         
         print("TestEntity:test_EntityDfsIterator() END")
         
