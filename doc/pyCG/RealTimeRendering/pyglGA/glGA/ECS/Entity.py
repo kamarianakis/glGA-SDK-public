@@ -22,6 +22,7 @@ from Component import *
 from System import *
 import copy
 
+
 class EntityDfsIterator(Iterator):
     """
     This is a depth-first-iterator for Hierarchical Entities (Iterables) and their Components, 
@@ -42,59 +43,28 @@ class EntityDfsIterator(Iterator):
         
         # store top level Entity List iterator in stack
         self._stack.append(self._entityIterator)
-        self._hasNext = True
                     
     def __next__(self):
         """
         The __next__() iterator method should return the next Entity in the graph, using a DFS algorithm.
+        This is a "pythonic" iterator, based on standard python List iterators
         """
         if (len(self._stack) == 0): 
             raise StopIteration
         else:
-            # entIterator = iter(self._entity._children) # get a fresh new iterator so that it does not advance the state of stack's iterator
-            eIterator = self._stack[-1]
-            entIterator = copy.deepcopy(eIterator) #trying stack peek
+            stackIter = self._stack[-1] # peak last stack element
             try:
-                comp = next(entIterator, None) # check if it has next 
+                node = next(stackIter) # advance stack iterator to retrieve first child node in it
             except StopIteration:
-                self._hasNext = False
-                self._stack.pop()
+                    self._stack.pop() # remove top iterator as it has been exhausted
+                    return None
             else:
-                self._hasNext = True
-        
-        if (self._hasNext):
-            # if there is a next element, get current iterator off the stack and get its next element
-            eIterator = self._stack[-1]
-            try:
-                component = next(eIterator, None)
-            except StopIteration:
-                print("\n------------- EntityDfsIterator.__next__() StopIteration exception!")
-            else: 
-                # we throw that component's iterator in the stack. If the component is an Entity, it will iterate
-                # over its items. If the component is a concrete Component, we get CompNullIterator, no iteration 
-                # happens. Then we return the component
-                if (component !=None) and isinstance(component, Entity):
-                    self._stack.append(iter(component._children))
-                return component
-        else:
-            raise StopIteration
-    
-    """
-    def hasNext(self) ->bool:
-        # to see if there is a next element, we check to see if the stack is empty; if so, there isn't
-        if (len(self._stack) == 0): 
-            return False
-        else:
-            entIterator = iter(self._entity._children) # get a fresh new iterator so that it does not advance the state of stack's iterator
-            #if (not self.list_hasNext(eIterator)): #Our Python implementation of a standard List iterator hasNext()
-            comp = next(entIterator, None) 
-            if (comp == None):
-                self._stack.pop()
-                return self.hasNext()
-            else:
-                return True
-    """
-
+                if isinstance(node, Entity):
+                    self._stack.append(iter(node._children)) # push the new Entity's iterator on top of the stack to be parsed next() iteration
+                    return node #node is an Entity
+                else: 
+                    return node #node is Component
+            
 class Entity(Component):
     """
     The main EntityI concrete class of glGA ECS 

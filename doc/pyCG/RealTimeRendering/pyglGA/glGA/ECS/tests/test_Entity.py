@@ -143,40 +143,40 @@ class TestEntity(unittest.TestCase):
         gameObject4 = Entity("node4", "Group", "4")
         gameObject5 = Entity("node5", "Group", "5")
         gameObject6 = Entity("node6", "Group", "6")
+        gameObject7 = Entity("node7", "Group", "7")
         trans4 = BasicTransform("trans4", "Transform", "7")
         trans5 = BasicTransform("trans5", "Transform", "8")
         trans6 = BasicTransform("trans6", "Transform", "9")
-        gameObject.add(gameObject4)
         gameObject.add(gameObject2)
-        
-        #gameObject2.add(gameObject3)
-        #gameObject2.add(gameObject5)
-        #gameObject3.add(gameObject6)
+        gameObject.add(gameObject4)
+        gameObject.add(gameObject7)
+        gameObject2.add(gameObject3)
+        gameObject2.add(gameObject5)
+        gameObject3.add(gameObject6)
         gameObject4.add(trans4)
-        #gameObject5.add(trans5)
-        #gameObject6.add(trans6)
+        gameObject5.add(trans5)
+        gameObject6.add(trans6)
         
         self.assertIn(gameObject2, gameObject._children)
         self.assertIn(gameObject4, gameObject._children)
         self.assertIn(trans4, gameObject4._children)
-        #self.assertIn(gameObject3, gameObject2._children)
-        #self.assertIn(trans5, gameObject5._children)
-        #print("\n------------- gameobject print START!")
-        #gameObject.print()
-        #print("\n------------- gameobject print END!")
+        self.assertIn(gameObject3, gameObject2._children)
+        self.assertIn(trans5, gameObject5._children)
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         dfsIterator = iter(gameObject)
         print(gameObject)
         
-        for i in range(3):
+        """
+        for i in range(5):
             try:
                 traversedEntity = next(dfsIterator)
             except StopIteration:
                 print("\n------------- dfsIterator StopIteration exception!")
                 break
             else:
-                print(traversedEntity)
+                if (traversedEntity is not None):
+                    print(traversedEntity)
         
         """
         done_traversing = False
@@ -187,8 +187,9 @@ class TestEntity(unittest.TestCase):
                 print("\n------------- dfsIterator StopIteration exception!")
                 done_traversing = True
             else:
-                print(traversedEntity)
-        """
+                if (traversedEntity is not None):
+                    print(traversedEntity)
+        
         
         print("TestEntity:test_EntityDfsIterator() END")
         
