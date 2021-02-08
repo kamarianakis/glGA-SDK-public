@@ -167,29 +167,20 @@ class TestEntity(unittest.TestCase):
         dfsIterator = iter(gameObject)
         print(gameObject)
         
-        """
-        for i in range(5):
-            try:
-                traversedEntity = next(dfsIterator)
-            except StopIteration:
-                print("\n------------- dfsIterator StopIteration exception!")
-                break
-            else:
-                if (traversedEntity is not None):
-                    print(traversedEntity)
-        
-        """
+        nodePath = []
         done_traversing = False
         while(not done_traversing):
             try:
                 traversedEntity = next(dfsIterator)
             except StopIteration:
-                print("\n------------- dfsIterator StopIteration exception!")
+                print("\n-------- end of Scene reached, traversed all Components!")
                 done_traversing = True
             else:
                 if (traversedEntity is not None):
                     print(traversedEntity)
+                    nodePath.append(traversedEntity)
         
+        print("".join(str(nodePath)))
         
         print("TestEntity:test_EntityDfsIterator() END")
         

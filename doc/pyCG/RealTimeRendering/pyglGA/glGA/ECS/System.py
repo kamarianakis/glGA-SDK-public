@@ -63,7 +63,7 @@ class System(ABC):
         self._id = value
     
     @classmethod
-    def get_classname(cls):
+    def getClassName(cls):
         return cls.__name__
     
     def update(self):
@@ -83,7 +83,16 @@ class System(ABC):
         pass
     
     
-    def apply(self, Component):
+    def apply(self, renderMesh: RenderMesh):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
+    
+    
+    def apply(self, basicTransform: BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -100,7 +109,24 @@ class TransformUpdate(System):
     :return: [description]
     :rtype: [type]
     """
-    pass
+    
+    def update(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components of an EntityNode. 
+        
+        """
+        pass
+    
+    
+    def apply(self, basicTransform: BasicTransform):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        print(self.getClassName(), ": apply(BasicTransform) called")
+        basicTransform.update()
 
 
 class RenderGPU(System):
@@ -110,61 +136,23 @@ class RenderGPU(System):
     :type System: [type]
     """
     
+    def update(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components of an EntityNode. 
+        
+        """
+        pass
     
-    def dfs_update(self, graph, source):
-        """ a non-recursive Depth First Search algorithm
-        based on https://likegeeks.com/depth-first-search-in-python/
-        
-        :param graph: [the graph to traverse]
-        :type graph: [dictionary]
-        :param source: [the node to start searching]
-        :type source: [string]
+    
+    def apply(self, renderMesh: RenderMesh):
         """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
         
-        if source is None or source not in graph:
-            return "invalid input"
-
-        path = []
-        stack = [source]
-
-        while (len(stack) != 0):
-            s = stack.pop()
-            if s not in path:
-                path.append(s)
-            if s not in graph: # keys are group nodes in graph
-                #leaf node
-                continue
-            for child in graph[s]: #values are children in graph
-                stack.append(child)
-
-        return ' '.join(path)
-        
-    def dfs_update_recursive(self, graph, source, path = []):
-        """a recursive DFS update for a dictionary based simple graph
-
-        :param graph: [description]
-        :type graph: [type]
-        :param source: [description]
-        :type source: [type]
-        :param path: [description], defaults to []
-        :type path: list, optional
         """
-        if source not in path:
-            path.append(source)
-            
-            if source not in graph:
-                # leaf node, backtrack
-                return path
-            
-            for child in graph[source]:
-                path = self.dfs_update_recursive(graph, child, path)
-                
-        return path
-        
-       
-    def update(self, recursive = False, graph = None, source = None):
-        if recursive is True:
-            return self.dfs_update_recursive(graph, source)
-        else:
-            return self.dfs_update(graph, source)
+        print(self.getClassName(), ": apply(RenderMesh) called")
+        renderMesh.update()
+    
+    
             

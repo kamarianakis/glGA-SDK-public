@@ -84,7 +84,7 @@ class Entity(Component):
         self._name = name
         self._type = type
         self._id = id
-        self._parent = self
+        self._parent = None
     
     
     def print(self):
@@ -92,7 +92,11 @@ class Entity(Component):
         Print out contents of Entity for Debug purposes only
         """
         #print out name, type, id of this Entity
-        print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
+        if (self._parent is not None): #in case this is not the root node
+            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
+        else:
+            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: None (root node)")
+
         print(f" --------------------------------------------------- ")
         #create a local iterator of Entity's children
         debugIterator = iter(self._children)
@@ -156,6 +160,13 @@ class Entity(Component):
         we return the depth-first-search iterator
         """
         return EntityDfsIterator(self)
+    
+    def __str__(self):
+        if (self._parent is not None): #in case this is not the root node
+            return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}"
+        else:
+            return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: None (root node)"
+
         
     
     

@@ -163,6 +163,7 @@ class BasicTransform(Component):
         self._type = type
         self._id = id
         self._trs = identity()
+        self._l2world = identity()
         self._parent = self
         self._children = []
          
@@ -173,10 +174,17 @@ class BasicTransform(Component):
     @trs.setter
     def trs(self, value):
         self._trs = value
-                 
+
+    @property #l2world
+    def l2world(self):
+        """ Get Component's transform: translation, rotation ,scale """
+        return self._l2world
+    @l2world.setter
+    def l2world(self, value):
+        self._l2world = value                 
     
     def update(self):
-        pass
+        print(self.getClassName(), ": update() called")
     
     
     def accept(self, system: System):
@@ -186,7 +194,7 @@ class BasicTransform(Component):
         :param system: [a System object]
         :type system: [System]
         """
-        system.update()
+        system.apply(self)
     
     
     def init(self):
@@ -220,6 +228,7 @@ class RenderMesh(Component):
         print(self.getClassName(), ": draw() called")
         
     def update(self):
+        print(self.getClassName(), ": update() called")
         self.draw()
    
     def accept(self, system: System):
@@ -229,7 +238,7 @@ class RenderMesh(Component):
         :param system: [a System object]
         :type system: [System]
         """
-        system.update()
+        system.apply(self)
     
     def init(self):
         """

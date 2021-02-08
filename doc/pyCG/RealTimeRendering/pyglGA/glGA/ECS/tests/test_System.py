@@ -32,11 +32,66 @@ class TestSystem(unittest.TestCase):
         
     
 class TestTransformUpdate(unittest.TestCase):
-    def test_init(self):
+    def test_TransformUpdate_use(self):
         """
+        Entity EntityDfsIterator() test
+        """
+        print("TestTransformUpdate:test_TransformUpdate_use() START")
+        gameObject = Entity("root", "Group", "1")
+        gameObject2 = Entity("node2", "Group", "2")
+        gameObject3 = Entity("node3", "Group", "3")
+        gameObject4 = Entity("node4", "Group", "4")
+        gameObject5 = Entity("node5", "Group", "5")
+        gameObject6 = Entity("node6", "Group", "6")
+        gameObject7 = Entity("node7", "Group", "7")
+        trans4 = BasicTransform("trans4", "Transform", "7")
+        trans5 = BasicTransform("trans5", "Transform", "8")
+        trans6 = BasicTransform("trans6", "Transform", "9")
+        gameObject.add(gameObject2)
+        gameObject.add(gameObject4)
+        gameObject.add(gameObject7)
+        gameObject2.add(gameObject3)
+        gameObject2.add(gameObject5)
+        gameObject3.add(gameObject6)
+        gameObject4.add(trans4)
+        gameObject5.add(trans5)
+        gameObject6.add(trans6)
         
-        """
-        pass
+        self.assertIn(gameObject2, gameObject._children)
+        self.assertIn(gameObject4, gameObject._children)
+        self.assertIn(trans4, gameObject4._children)
+        self.assertIn(gameObject3, gameObject2._children)
+        self.assertIn(trans5, gameObject5._children)
+        
+        #test the EntityDfsIterator to traverse the above ECS scenegraph
+        dfsIterator = iter(gameObject)
+        print(gameObject)
+        
+        #instantiate a new TransformUpdate System to visit all scenegraph componets
+        transUpdate = TransformUpdate("transUpdate", "TransformUpdate", "001")
+        
+        nodePath = []
+        done_traversing = False
+        while(not done_traversing):
+            try:
+                traversedComp = next(dfsIterator)
+            except StopIteration:
+                print("\n-------- end of Scene reached, traversed all Components!")
+                done_traversing = True
+            else:
+                if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedComp)
+                    
+                    #accept a TransformUpdate visitor System for each Component that can accept it (BasicTransform)
+                    traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                
+                    nodePath.append(traversedComp)
+        
+        #print("".join(str(nodePath)))
+        
+        
+        
+        print("TestTransformUpdate:test_TransformUpdate_use() END")
         
 
 class TestRenderGPU(unittest.TestCase):
@@ -74,25 +129,6 @@ class TestRenderGPU(unittest.TestCase):
         self.assertEqual(mySystem.name, "mySystem")
         self.assertEqual(mySystem.type,"Rendering")
         self.assertEqual(mySystem.id, 102)
-        
-        #create a sample graph to test the system, as a python dictionary
-        #keys: group nodes
-        #values: children nodes
-        graph = {"A":["D", "C", "B"],
-                "B":["E"],
-                "C":["G", "F"],
-                "D":["H"],
-                "E":["I"],
-                "F":["J"]}
-        
-        
-        print("\n\n DFS PATH non recursive-------------------")
-        DFS_path = mySystem.update(False, graph, "A")
-        print(DFS_path)
-        
-        print("\n\n DFS PATH recursive-------------------")
-        DFS_path_r = mySystem.update(True, graph, "A")
-        print(" ".join(DFS_path_r))
         
         print("TestSystem:test_update() END")
         
