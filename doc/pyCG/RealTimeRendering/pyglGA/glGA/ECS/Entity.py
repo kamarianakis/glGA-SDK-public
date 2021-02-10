@@ -124,6 +124,15 @@ class Entity(Component):
         else:
             return None
     
+    def getChildByType(self, type) ->Component:
+        for node in self._children:
+            if node.type == type:
+                return node
+        return None
+    
+    def getParent(self) ->Component:
+            return self._parent
+    
     def getNumberOfChildren(self) -> int:
         return len(self._children)
     

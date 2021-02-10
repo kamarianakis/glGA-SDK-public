@@ -30,6 +30,10 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(gameObject2._id,10)
         self.assertEqual(gameObject2.getChild(0),gameComponent)
         
+        self.assertEqual(gameObject2.name, "gameObject2")
+        self.assertEqual(gameObject2.type,"Group")
+        self.assertEqual(gameObject2.id, 10)
+        
         gameObject2.remove(gameComponent)
         self.assertEqual(gameObject2.getChild(0), None)
         
@@ -63,18 +67,21 @@ class TestEntity(unittest.TestCase):
         #print("gameObject._children[0]" + gameObject._children[0])
         print("TestEntity:test_remove() END")
     
-    def test_getChild(self):
+    def test_getChildParent(self):
         """
-        Entity test_getChild() test
+        Entity test_getChildParent() test
         """
-        print("TestEntity:test_getChild() START")
+        print("TestEntity:test_getChildParent() START")
         gameObject = Entity()
         gameObject2 = Entity()
         gameObject.add(gameObject2)
         self.assertIn(gameObject2, gameObject._children)
         self.assertEqual(gameObject2, gameObject.getChild(0))
+        self.assertEqual(gameObject, gameObject2.getParent())
+        self.assertEqual(gameObject, gameObject2.parent)
+        self.assertNotEqual(gameObject2, gameObject2.parent)
         #print("gameObject._children[0]" + gameObject._children[0])
-        print("TestEntity:test_getChild() END")
+        print("TestEntity:test_getChildParent() END")
         
     def test_getNumberOfChildren(self):
         """
@@ -93,6 +100,31 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(gameObject.getNumberOfChildren(), 1)
         #print("gameObject._children[0]" + gameObject._children[0])
         print("TestEntity:test_getNumberOfChildren() END")
+    
+    def test_getChildByType(self):
+        """
+        Entity test_getChildByType() test
+        """
+        print("TestEntity:test_getChildByType() START")
+        gameObject = Entity("root", "Entity", "1")
+        gameObject2 = Entity("node2", "Entity", "2")
+        gameObject3 = Entity("node3", "Entity", "3")
+        
+        trans4 = BasicTransform("trans4", "BasicTransform", "7")
+        trans5 = BasicTransform("trans5", "BasicTransform", "8")
+        
+        gameObject.add(gameObject2)
+        gameObject2.add(gameObject3)
+        gameObject2.add(trans4)
+        gameObject3.add(trans5)
+        
+        self.assertEqual(trans4, gameObject2.getChildByType("BasicTransform"))
+        self.assertEqual(gameObject3, gameObject2.getChildByType("Entity"))
+        
+        self.assertIn(gameObject2, gameObject._children)
+        self.assertEqual(gameObject2.getNumberOfChildren(), 2)
+        
+        print("TestEntity:test_getChildByType() END")
     
     def test_isEntity(self):
         """

@@ -101,7 +101,7 @@ class System(ABC):
         pass
 
 
-class TransformUpdate(System):
+class TransformSystem(System):
     """
 
     :param System: [description]
@@ -109,6 +109,13 @@ class TransformUpdate(System):
     :return: [description]
     :rtype: [type]
     """
+    
+    def __init__(self, name=None, type=None, id=None, cameraComponent=None):
+        self._name = name
+        self._type = type
+        self._id = id
+        self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
+        
     
     def update(self):
         """
@@ -124,12 +131,30 @@ class TransformUpdate(System):
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
         
+        In this case calculate the l2w BasicTransform component matrix
+        
         """
         print(self.getClassName(), ": apply(BasicTransform) called")
+        
+        """
+        # get parent Entity p1
+        componentEntity = basicTransform.parent
+        # while (p1._parent is not None)
+        while(componentEntity is not None):
+            # get that parent's TRS by type
+            parentBasicTrans = componentEntity.getChildByType("BasicTransform")
+            parentTRS = parentBasicTrans.trs
+            # l2world = multiply current with parent's TRS 
+            parentBasicTrans.l2world = basicTransform.trs @ parentBasicTrans.l2world
+        else: #parent is the root node, so check if root node has a Transform component
+            componentEntity = basicTransform.parent
+        """
+          
+        
         basicTransform.update()
 
 
-class RenderGPU(System):
+class RenderSystem(System):
     """
     A basic forward rendering system based on GPU shaders
     :param System: [description]

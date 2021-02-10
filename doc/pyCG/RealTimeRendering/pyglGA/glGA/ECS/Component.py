@@ -184,7 +184,12 @@ class BasicTransform(Component):
         self._l2world = value                 
     
     def update(self):
+        """ Local 2 world transformation calculation
+        Traverses upwards whole scenegraph and multiply all transformations along this path
+        """
         print(self.getClassName(), ": update() called")
+       
+        
     
     
     def accept(self, system: System):

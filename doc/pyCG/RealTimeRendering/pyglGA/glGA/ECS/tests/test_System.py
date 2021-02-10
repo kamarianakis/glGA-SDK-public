@@ -67,8 +67,8 @@ class TestTransformUpdate(unittest.TestCase):
         dfsIterator = iter(gameObject)
         print(gameObject)
         
-        #instantiate a new TransformUpdate System to visit all scenegraph componets
-        transUpdate = TransformUpdate("transUpdate", "TransformUpdate", "001")
+        #instantiate a new TransformSystem System to visit all scenegraph componets
+        transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
         
         nodePath = []
         done_traversing = False
@@ -82,7 +82,7 @@ class TestTransformUpdate(unittest.TestCase):
                 if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
                     print(traversedComp)
                     
-                    #accept a TransformUpdate visitor System for each Component that can accept it (BasicTransform)
+                    #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
                     traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
                 
                     nodePath.append(traversedComp)
@@ -94,24 +94,24 @@ class TestTransformUpdate(unittest.TestCase):
         print("TestTransformUpdate:test_TransformUpdate_use() END")
         
 
-class TestRenderGPU(unittest.TestCase):
+class TestRenderSystem(unittest.TestCase):
     def test_init(self):
         """
         default constructor of System class
         """
-        print("\TestRenderGPU:test_init() START")
+        print("\TestRenderSystem:test_init() START")
         
         #mySystem = System(100, "baseSystem", "abstract")
-        mySystem = RenderGPU()
-        mySystem.name = "RenderGPU"
+        mySystem = RenderSystem()
+        mySystem.name = "RenderSystem"
         mySystem.type = "System"
         mySystem.id = 101
         
-        self.assertEqual(mySystem.name, "RenderGPU")
+        self.assertEqual(mySystem.name, "RenderSystem")
         self.assertEqual(mySystem.type,"System")
         self.assertEqual(mySystem.id, 101)
         
-        print("TestRenderGPU:test_init() END")
+        print("TestRenderSystem:test_init() END")
     
     def test_update(self):
         """
@@ -121,7 +121,7 @@ class TestRenderGPU(unittest.TestCase):
         print("\TestSystem:test_update() START")
         
         #mySystem = System(100, "baseSystem", "abstract")
-        mySystem = RenderGPU()
+        mySystem = RenderSystem()
         mySystem.name = "mySystem"
         mySystem.type = "Rendering"
         mySystem.id = 102
