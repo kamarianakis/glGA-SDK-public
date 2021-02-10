@@ -125,6 +125,37 @@ class TransformSystem(System):
         """
         pass
     
+    def getLocal2World(self, leafComp: Component, topComp=None):
+        """Calculate the l2world BasicTransform matrix
+
+        :param leafComp: [description]
+        :type leafComp: Component
+        :param topComp: [description], defaults to None
+        :type topComp: [type], optional
+        """
+        
+        # get parent Entity this BasicTransform Component belongs to
+        componentEntity = leafComp.parent
+        topAccessedEntity = componentEntity
+        parentTRS = identity()
+        # while (p1._parent is not None)
+        while(componentEntity is not topComp):
+            # get that parent's TRS by type
+            parentBasicTrans = componentEntity.getChildByType("BasicTransform")
+            if(parentBasicTrans is not None):
+                parentTRS = parentBasicTrans.trs
+                # l2world = multiply current with parent's TRS 
+                leafComp.l2world = leafComp.l2world @ parentBasicTrans.trs
+            topAccessedEntity = componentEntity
+            componentEntity = componentEntity.parent
+        else: #parent is now the root node, so check if it has a Transform component
+            parentBasicTrans = topAccessedEntity.getChildByType("BasicTransform")
+            if(parentBasicTrans is not None):
+                parentTRS = parentBasicTrans.trs
+                # l2world = multiply current with parent's TRS 
+                leafComp.l2world = leafComp.l2world @ parentBasicTrans.trs
+        
+        
     
     def apply(self, basicTransform: BasicTransform):
         """
@@ -136,21 +167,7 @@ class TransformSystem(System):
         """
         print(self.getClassName(), ": apply(BasicTransform) called")
         
-        """
-        # get parent Entity p1
-        componentEntity = basicTransform.parent
-        # while (p1._parent is not None)
-        while(componentEntity is not None):
-            # get that parent's TRS by type
-            parentBasicTrans = componentEntity.getChildByType("BasicTransform")
-            parentTRS = parentBasicTrans.trs
-            # l2world = multiply current with parent's TRS 
-            parentBasicTrans.l2world = basicTransform.trs @ parentBasicTrans.l2world
-        else: #parent is the root node, so check if root node has a Transform component
-            componentEntity = basicTransform.parent
-        """
-          
-        
+        self.getLocal2World(basicTransform)
         basicTransform.update()
 
 

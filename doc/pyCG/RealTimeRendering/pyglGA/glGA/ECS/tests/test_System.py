@@ -32,9 +32,92 @@ class TestSystem(unittest.TestCase):
         
     
 class TestTransformUpdate(unittest.TestCase):
+    
+    def test_getLocal2World(self):
+        """
+        System test_getLocal2World() test
+        """
+        print("TestTransformUpdate:test_getLocal2World() START")
+        gameObject = Entity("root", "Entity", "0")
+        gameObject1 = Entity("node1", "Entity", "1")
+        gameObject2 = Entity("node2", "Entity", "2")
+        gameObject3 = Entity("node3", "Entity", "3")
+        
+        trans4 = BasicTransform("trans4", "BasicTransform", "7")
+        trans5 = BasicTransform("trans5", "BasicTransform", "8")
+        trans6 = BasicTransform("trans6", "BasicTransform", "9")
+        transRoot = BasicTransform("transRoot", "BasicTransform", "0")
+        
+        myComponent = BasicTransform("myComponent", "BasicTransform", "100")
+        mT = np.array([
+            [1.0,0.0,0.0,1.0],
+            [0.0,1.0,0.0,2.0],
+            [0.0,0.0,1.0,3.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        mT2 = np.array([
+            [1.0,0.0,0.0,2.0],
+            [0.0,1.0,0.0,3.0],
+            [0.0,0.0,1.0,4.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        mTf = np.array([
+            [1.0,0.0,0.0,3.0],
+            [0.0,1.0,0.0,5.0],
+            [0.0,0.0,1.0,7.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F')
+        
+        myComponent.l2world = mT
+        
+        trans4.trs = translate(1.0, 2.0, 3.0)
+        trans6.trs = translate(2.0, 3.0, 4.0)
+        gameObject.add(gameObject1)
+        gameObject.add(transRoot)
+        gameObject1.add(gameObject2)
+        gameObject2.add(gameObject3)
+        gameObject1.add(trans6)
+        gameObject2.add(trans4)
+        gameObject3.add(trans5)
+        
+        """
+        root
+            |
+            node1, transRoot
+            |   
+            node2, trans6: translate(2,3,4)
+                |       
+                node3,  trans4: translate(1,2,3)
+                    |
+                    trans5
+        """
+        self.assertEqual(trans4, gameObject2.getChildByType("BasicTransform"))
+        self.assertEqual(gameObject3, gameObject2.getChildByType("Entity"))
+        self.assertIn(gameObject1, gameObject._children)
+        self.assertEqual(gameObject2.getNumberOfChildren(), 2)
+        
+         #instantiate a new TransformSystem System to visit all scenegraph componets
+        transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
+        trans5.accept(transUpdate)
+        #check if the local2World was correctly calculated upstream
+        print(trans5.l2world)
+        print(mT @ mT2)
+        np.testing.assert_array_equal(mTf,trans5.l2world)
+        
+        #reapplhy the TransformSystem this time to another BasicTransform
+        # to calculate its l2world
+        trans6.accept(transUpdate)
+        print(trans6.l2world)
+        print(mT2)
+        np.testing.assert_array_equal(mT2,trans6.l2world)
+        
+        print("TestTransformUpdate:test_getLocal2World() END")
+        
     def test_TransformUpdate_use(self):
         """
-        Entity EntityDfsIterator() test
+        System test_TransformUpdate_use() test
         """
         print("TestTransformUpdate:test_TransformUpdate_use() START")
         gameObject = Entity("root", "Group", "1")
