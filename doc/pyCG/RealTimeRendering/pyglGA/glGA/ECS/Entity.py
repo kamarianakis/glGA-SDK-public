@@ -140,8 +140,8 @@ class Entity(Component):
     def isEntity(self) -> bool:
         return True
     
-    def update(self) ->str:
-        pass
+    def update(self, **kwargs) ->bool:
+        return True
     
     def transform(self)->bool:
         """ Sample transform() only for subclassing here and debug purposes """

@@ -96,7 +96,7 @@ class Component(ABC, Iterable):
         pass
     
     @abstractmethod
-    def update(self):
+    def update(self, **kwargs):
         """
         method to be subclassed for debuging purposes only, 
         in case we need some behavioral or logic computation within te Component. 
@@ -183,11 +183,22 @@ class BasicTransform(Component):
     def l2world(self, value):
         self._l2world = value                 
     
-    def update(self):
+    def update(self, **kwargs):
         """ Local 2 world transformation calculation
         Traverses upwards whole scenegraph and multiply all transformations along this path
+        
+        Arguments could be "l2world=" or "trs=" to set respective matrices 
         """
         print(self.getClassName(), ": update() called")
+        arg1 = "l2world"
+        arg2 = "trs"
+        if arg1 in kwargs:
+            print("Setting: ", arg1," with: ", kwargs[arg1])
+            self._l2world = kwargs[arg1]
+        if arg2 in kwargs:
+            print("Setting: ", arg2," with: ", kwargs[arg2])
+            self._trs = kwargs[arg1]
+        
        
         
     

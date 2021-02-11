@@ -132,12 +132,15 @@ class TransformSystem(System):
         :type leafComp: Component
         :param topComp: [description], defaults to None
         :type topComp: [type], optional
+        :return: the local2world matrix of the visited BasicTransform
+        :rtype: numpy.array
         """
         
         # get parent Entity this BasicTransform Component belongs to
         componentEntity = leafComp.parent
         topAccessedEntity = componentEntity
         parentTRS = identity()
+        l2worldTRS = leafComp.l2world
         # while (p1._parent is not None)
         while(componentEntity is not topComp):
             # get that parent's TRS by type
@@ -145,7 +148,7 @@ class TransformSystem(System):
             if(parentBasicTrans is not None):
                 parentTRS = parentBasicTrans.trs
                 # l2world = multiply current with parent's TRS 
-                leafComp.l2world = leafComp.l2world @ parentBasicTrans.trs
+                l2worldTRS = l2worldTRS @ parentBasicTrans.trs
             topAccessedEntity = componentEntity
             componentEntity = componentEntity.parent
         else: #parent is now the root node, so check if it has a Transform component
@@ -153,7 +156,9 @@ class TransformSystem(System):
             if(parentBasicTrans is not None):
                 parentTRS = parentBasicTrans.trs
                 # l2world = multiply current with parent's TRS 
-                leafComp.l2world = leafComp.l2world @ parentBasicTrans.trs
+                l2worldTRS = l2worldTRS @ parentBasicTrans.trs
+                
+        return l2worldTRS
         
         
     
@@ -167,8 +172,10 @@ class TransformSystem(System):
         """
         print(self.getClassName(), ": apply(BasicTransform) called")
         
-        self.getLocal2World(basicTransform)
-        basicTransform.update()
+        # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
+        l2worldTRS = self.getLocal2World(basicTransform)
+        #update l2world of basicTransform
+        basicTransform.update(l2world=l2worldTRS) 
 
 
 class RenderSystem(System):
