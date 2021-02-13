@@ -31,13 +31,13 @@ class TestSystem(unittest.TestCase):
         print("TestSystem:test_init() END")
         
     
-class TestTransformUpdate(unittest.TestCase):
+class TestTransformSystem(unittest.TestCase):
     
     def test_getLocal2World(self):
         """
         System test_getLocal2World() test
         """
-        print("TestTransformUpdate:test_getLocal2World() START")
+        print("TestTransformSystem:test_getLocal2World() START")
         gameObject = Entity("root", "Entity", "0")
         gameObject1 = Entity("node1", "Entity", "1")
         gameObject2 = Entity("node2", "Entity", "2")
@@ -113,13 +113,13 @@ class TestTransformUpdate(unittest.TestCase):
         print(mT2)
         np.testing.assert_array_equal(mT2,trans6.l2world)
         
-        print("TestTransformUpdate:test_getLocal2World() END")
+        print("TestTransformSystem:test_getLocal2World() END")
         
-    def test_TransformUpdate_use(self):
+    def test_TransformSystem_use(self):
         """
-        System test_TransformUpdate_use() test
+        TransformSystem() use case test
         """
-        print("TestTransformUpdate:test_TransformUpdate_use() START")
+        print("TestTransformSySystem() START")
         gameObject = Entity("root", "Group", "1")
         gameObject2 = Entity("node2", "Group", "2")
         gameObject3 = Entity("node3", "Group", "3")
@@ -167,15 +167,71 @@ class TestTransformUpdate(unittest.TestCase):
                     
                     #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
                     traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
-                
-                    nodePath.append(traversedComp)
-        
+                    #nodePath.append(traversedComp) #no need for this now
         #print("".join(str(nodePath)))
         
+        print("TestTransformSySystem() END")
         
+
+class TestCameraSystem(unittest.TestCase):
+    
+    def test_CameraSystem_use(self):
+        """
+        TestCameraSystem() use case test
+        """
+        print("test_CameraSystem_use() START")
+        gameObject = Entity("root", "Group", "1")
+        gameObject2 = Entity("node2", "Group", "2")
+        gameObject3 = Entity("node3", "Group", "3")
+        gameObject4 = Entity("node4", "Group", "4")
+        gameObject5 = Entity("node5", "Group", "5")
+        gameObject6 = Entity("node6", "Group", "6")
+        gameObject7 = Entity("node7", "Group", "7")
+        trans4 = BasicTransform("trans4", "Transform", "7")
+        trans5 = BasicTransform("trans5", "Transform", "8")
+        trans6 = BasicTransform("trans6", "Transform", "9")
+        gameObject.add(gameObject2)
+        gameObject.add(gameObject4)
+        gameObject.add(gameObject7)
+        gameObject2.add(gameObject3)
+        gameObject2.add(gameObject5)
+        gameObject3.add(gameObject6)
+        gameObject4.add(trans4)
+        gameObject5.add(trans5)
+        gameObject6.add(trans6)
         
-        print("TestTransformUpdate:test_TransformUpdate_use() END")
+        self.assertIn(gameObject2, gameObject._children)
+        self.assertIn(gameObject4, gameObject._children)
+        self.assertIn(trans4, gameObject4._children)
+        self.assertIn(gameObject3, gameObject2._children)
+        self.assertIn(trans5, gameObject5._children)
         
+        #test the EntityDfsIterator to traverse the above ECS scenegraph
+        dfsIterator = iter(gameObject)
+        print(gameObject)
+        
+        #instantiate a new TransformSystem System to visit all scenegraph componets
+        transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
+        camUpdate = CameraSystem("camUpdate", "CameraUpdate", "200")
+        
+        nodePath = []
+        done_traversing = False
+        while(not done_traversing):
+            try:
+                traversedComp = next(dfsIterator)
+            except StopIteration:
+                print("\n-------- end of Scene reached, traversed all Components!")
+                done_traversing = True
+            else:
+                if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedComp)
+                    
+                    #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
+                    traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                    #nodePath.append(traversedComp) #no need for this now
+        #print("".join(str(nodePath)))
+        
+        print("test_CameraSystem_use() END")
 
 class TestRenderSystem(unittest.TestCase):
     def test_init(self):

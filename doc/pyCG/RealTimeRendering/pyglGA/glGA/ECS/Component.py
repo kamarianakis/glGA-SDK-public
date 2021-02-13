@@ -131,7 +131,17 @@ class Component(ABC, Iterable):
         return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}"
 
 
-class CompNullIterator(Iterator):
+class ComponentIterator(ABC):
+    """Abstract component Iterator class
+
+    :param ABC: [description]
+    :type ABC: [type]
+    :return: [description]
+    :rtype: [type]
+    """
+    pass
+
+class CompNullIterator(Iterator, ComponentIterator):
     """
     The Default Null iterator for a Concrete Component class
 
@@ -144,8 +154,6 @@ class CompNullIterator(Iterator):
     def __next__(self):
         return None
     
-    def hasNext(self)->bool:
-        return False
 
 class BasicTransform(Component):
     """
@@ -164,6 +172,7 @@ class BasicTransform(Component):
         self._id = id
         self._trs = identity()
         self._l2world = identity()
+        self._l2cam = identity()
         self._parent = self
         self._children = []
          
@@ -177,11 +186,19 @@ class BasicTransform(Component):
 
     @property #l2world
     def l2world(self):
-        """ Get Component's transform: translation, rotation ,scale """
+        """ Get Component's local to world transform: translation, rotation ,scale """
         return self._l2world
     @l2world.setter
     def l2world(self, value):
-        self._l2world = value                 
+        self._l2world = value
+        
+    @property #l2cam
+    def l2cam(self):
+        """ Get Component's local to camera transform: translation, rotation ,scale, projection """
+        return self._l2cam
+    @l2cam.setter
+    def l2cam(self, value):
+        self._l2cam = value                 
     
     def update(self, **kwargs):
         """ Local 2 world transformation calculation
@@ -200,9 +217,6 @@ class BasicTransform(Component):
             self._trs = kwargs[arg1]
         
        
-        
-    
-    
     def accept(self, system: System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
@@ -224,6 +238,90 @@ class BasicTransform(Component):
         """
         return CompNullIterator(self) 
 
+
+class Camera(Component):
+    """
+    An example of a concrete Component Camera class
+    
+    Contains a basic Projection matrices (otrhographic or perspective)
+    
+    :param Component: [description]
+    :type Component: [type]
+    """
+   
+    def __init__(self, name=None, type=None, id=None):
+        self._name = name
+        self._type = type
+        self._id = id
+        self._perspMat = perspective(90.0, 1, 0.1, 100)
+        self._orthoMat = ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+        self._root2cam = identity()
+        self._parent = self
+         
+    @property #perspMat
+    def perspMat(self):
+        """ Get Component's camera perspectiveProjection matrix """
+        return self._perspMat
+    @perspMat.setter
+    def perspMat(self, value):
+        self._perspMat = value
+
+    @property #orthoMat
+    def orthoMat(self):
+        """ Get Component's camera orthographic Projection matrix """
+        return self._orthoMat
+    @orthoMat.setter
+    def orthoMat(self, value):
+        self._orthoMat = value
+    
+    @property #_root2cam
+    def root2cam(self):
+        """ Get Component's camera orthographic Projection matrix """
+        return self._root2cam
+    @root2cam.setter
+    def orthoroot2camMat(self, value):
+        self._root2cam = value                   
+    
+    def update(self, **kwargs):
+        """ Update Camera matrices
+        
+        Arguments could be "root2cam=" "perspMat=" or "orthoMat=" to set respective matrices 
+        """
+        print(self.getClassName(), ": update() called")
+        arg1 = "root2cam"
+        arg2 = "perspMat"
+        arg3 = "orthoMat"
+        if arg1 in kwargs:
+            print("Setting: ", arg1," with: ", kwargs[arg1])
+            self._root2cam = kwargs[arg1]
+        if arg2 in kwargs:
+            print("Setting: ", arg2," with: ", kwargs[arg2])
+            self._perspMat = kwargs[arg1]
+        if arg2 in kwargs:
+            print("Setting: ", arg3," with: ", kwargs[arg3])
+            self._orthoMat = kwargs[arg1]
+        
+       
+    def accept(self, system: System):
+        """
+        Accepts a class object to operate on the Component, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
+        system.apply(self)
+    
+    
+    def init(self):
+        """
+        abstract method to be subclassed for extra initialisation
+        """
+        pass
+    
+    def __iter__(self) ->CompNullIterator:
+        """ A component does not have children to iterate, thus a NULL iterator
+        """
+        return CompNullIterator(self) 
 
 class RenderMesh(Component):
     """

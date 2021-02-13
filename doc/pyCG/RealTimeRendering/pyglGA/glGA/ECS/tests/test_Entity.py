@@ -272,7 +272,6 @@ class TestBasicTransform(unittest.TestCase):
         myIter = iter(myTrans)
         
         self.assertIsInstance(myIter, CompNullIterator)
-        self.assertEqual(myIter.hasNext(), False)
         self.assertEqual(next(myIter), None)
         
         print(myTrans)
@@ -304,11 +303,52 @@ class TestRenderMesh(unittest.TestCase):
         myIter = iter(myMesh)
         
         self.assertIsInstance(myIter, CompNullIterator)
-        self.assertEqual(myIter.hasNext(), False)
         self.assertEqual(next(myIter), None)
         
         print(myMesh)
         print("\nTestRenderMesh:test_RenderMesh_compNullIterator() END")
+
+
+class TestCamera(unittest.TestCase):
+    
+    def test_init(self):
+        #default constructor of Component class
+        print("\TestCamera:test_init() START")
+        
+        myComponent = Camera()
+        myComponent.name = "baseCamera"
+        myComponent.type = "perspCam"
+        myComponent.id = 100
+        
+        self.assertEqual(myComponent.name, "baseCamera")
+        self.assertEqual(myComponent.type,"perspCam")
+        self.assertEqual(myComponent.id, 100)
+        np.testing.assert_array_equal(myComponent.root2cam,identity())
+        np.testing.assert_array_equal(myComponent.orthoMat,ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
+        np.testing.assert_array_equal(myComponent.perspMat,perspective(90.0, 1, 0.1, 100))
+        
+        print("TestCamera:test_init() END")
+
+    def test_update(self):
+        #default update
+        print("\TestCamera:test_update() START")
+        
+        myComponent = Camera()
+        myComponent.name = "baseCamera"
+        myComponent.type = "perspCam"
+        myComponent.id = 100
+        
+        self.assertEqual(myComponent.name, "baseCamera")
+        self.assertEqual(myComponent.type,"perspCam")
+        self.assertEqual(myComponent.id, 100)
+        
+        myComponent.update(root2cam=identity(), perspMat=identity(), orthoMat=identity())
+        
+        np.testing.assert_array_equal(myComponent.root2cam,identity())
+        np.testing.assert_array_equal(myComponent.orthoMat,identity())
+        np.testing.assert_array_equal(myComponent.perspMat,identity())
+        
+        print("TestCamera:test_update() END")
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

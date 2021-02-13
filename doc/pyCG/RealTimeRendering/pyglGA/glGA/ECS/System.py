@@ -178,6 +178,77 @@ class TransformSystem(System):
         basicTransform.update(l2world=l2worldTRS) 
 
 
+class CameraSystem(System):
+    """
+
+    :param System: [description]
+    :type System: [type]
+    :return: [description]
+    :rtype: [type]
+    """
+    
+    def __init__(self, name=None, type=None, id=None, cameraComponent=None):
+        self._name = name
+        self._type = type
+        self._id = id
+        self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
+        
+    
+    def update(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components of an EntityNode. 
+        
+        """
+        pass
+    
+    def getLocal2Camera(self, leafComp: Component, topComp=None):
+        """Calculate the l2world BasicTransform matrix
+
+        :param leafComp: [description]
+        :type leafComp: Component
+        :param topComp: [description], defaults to None
+        :type topComp: [type], optional
+        :return: the local2world matrix of the visited BasicTransform
+        :rtype: numpy.array
+        """
+        
+        #return l2camMat
+        
+    #then this
+    def apply(self, basicTransform: BasicTransform):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        In this case calculate the l2w BasicTransform component matrix
+        
+        """
+        print(self.getClassName(), ": apply(BasicTransform) called")
+        
+        # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
+        #l2worldTRS = self.getLocal2World(basicTransform)
+        #update l2world of basicTransform
+        #basicTransform.update(l2world=l2worldTRS) 
+        
+    #first this     
+    def apply(self, cam: Camera):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        In this case calculate the l2w BasicTransform component matrix
+        
+        """
+        print(self.getClassName(), ": apply(BasicTransform) called")
+        
+        # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
+        #l2worldTRS = self.getLocal2World(basicTransform)
+        #update l2world of basicTransform
+        #basicTransform.update(l2world=l2worldTRS) 
+
+
+
 class RenderSystem(System):
     """
     A basic forward rendering system based on GPU shaders

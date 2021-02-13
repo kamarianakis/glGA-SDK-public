@@ -23,7 +23,7 @@ from System import *
 import copy
 
 
-class EntityDfsIterator(Iterator):
+class EntityDfsIterator(Iterator, ComponentIterator):
     """
     This is a depth-first-iterator for Hierarchical Entities (Iterables) and their Components, 
     based on the Iterator design pattern
