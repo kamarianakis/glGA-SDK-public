@@ -111,8 +111,7 @@ class System(ABC):
         
         """
         pass
-
-
+    
 class TransformSystem(System):
     """
 
@@ -233,7 +232,7 @@ class CameraSystem(System):
         return r2c
         
     #then this
-    def apply(self, basicTransform: BasicTransform):
+    def applyCamera(self, basicTransform: BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 

@@ -215,10 +215,10 @@ class BasicTransform(Component):
             self._l2world = kwargs[arg1]
         if arg2 in kwargs:
             print("Setting: ", arg2," with: ", kwargs[arg2])
-            self._trs = kwargs[arg1]
+            self._trs = kwargs[arg2]
         if arg3 in kwargs:
             print("Setting: ", arg3," with: ", kwargs[arg3])
-            self._l2cam = kwargs[arg1]
+            self._l2cam = kwargs[arg3]
         
        
     def accept(self, system: System):
@@ -230,6 +230,9 @@ class BasicTransform(Component):
         """
         if (isinstance(system, System.TransformSystem)):
             system.apply(self)
+        
+        if (isinstance(system, System.CameraSystem)):
+            system.applyCamera(self)
     
     
     def init(self):
