@@ -228,12 +228,16 @@ class BasicTransform(Component):
         :param system: [a System object]
         :type system: [System]
         """
+        
+        system.apply(self) #from TransformSystem
+        system.applyCamera(self) #from CameraSystem
+        """
         if (isinstance(system, System.TransformSystem)):
             system.apply(self)
         
         if (isinstance(system, System.CameraSystem)):
             system.applyCamera(self)
-    
+        """
     
     def init(self):
         """

@@ -112,6 +112,14 @@ class System(ABC):
         """
         pass
     
+    def applyCamera(self, basicTransform: BasicTransform):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
+    
 class TransformSystem(System):
     """
 
