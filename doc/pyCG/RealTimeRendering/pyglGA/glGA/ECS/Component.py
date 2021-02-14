@@ -204,17 +204,21 @@ class BasicTransform(Component):
         """ Local 2 world transformation calculation
         Traverses upwards whole scenegraph and multiply all transformations along this path
         
-        Arguments could be "l2world=" or "trs=" to set respective matrices 
+        Arguments could be "l2world=" or "trs=" or "l2cam=" to set respective matrices 
         """
         print(self.getClassName(), ": update() called")
         arg1 = "l2world"
         arg2 = "trs"
+        arg3 = "l2cam"
         if arg1 in kwargs:
             print("Setting: ", arg1," with: ", kwargs[arg1])
             self._l2world = kwargs[arg1]
         if arg2 in kwargs:
             print("Setting: ", arg2," with: ", kwargs[arg2])
             self._trs = kwargs[arg1]
+        if arg3 in kwargs:
+            print("Setting: ", arg3," with: ", kwargs[arg3])
+            self._l2cam = kwargs[arg1]
         
        
     def accept(self, system: System):
@@ -249,34 +253,25 @@ class Camera(Component):
     :type Component: [type]
     """
    
-    def __init__(self, name=None, type=None, id=None):
+    def __init__(self, projMatrix, name=None, type=None, id=None):
         self._name = name
         self._type = type
         self._id = id
-        self._perspMat = perspective(90.0, 1, 0.1, 100)
-        self._orthoMat = ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+        self._projMat = projMatrix
         self._root2cam = identity()
         self._parent = self
          
-    @property #perspMat
-    def perspMat(self):
-        """ Get Component's camera perspectiveProjection matrix """
-        return self._perspMat
-    @perspMat.setter
-    def perspMat(self, value):
-        self._perspMat = value
-
-    @property #orthoMat
-    def orthoMat(self):
-        """ Get Component's camera orthographic Projection matrix """
-        return self._orthoMat
-    @orthoMat.setter
-    def orthoMat(self, value):
-        self._orthoMat = value
+    @property #projMat
+    def projMat(self):
+        """ Get Component's camera Projection matrix """
+        return self._projMat
+    @projMat.setter
+    def projMat(self, value):
+        self._projMat = value
     
     @property #_root2cam
     def root2cam(self):
-        """ Get Component's camera orthographic Projection matrix """
+        """ Get Component's root to camera matrix """
         return self._root2cam
     @root2cam.setter
     def orthoroot2camMat(self, value):
@@ -285,22 +280,14 @@ class Camera(Component):
     def update(self, **kwargs):
         """ Update Camera matrices
         
-        Arguments could be "root2cam=" "perspMat=" or "orthoMat=" to set respective matrices 
+        Arguments could be "root2cam=" to set respective matrices 
         """
         print(self.getClassName(), ": update() called")
         arg1 = "root2cam"
-        arg2 = "perspMat"
-        arg3 = "orthoMat"
         if arg1 in kwargs:
             print("Setting: ", arg1," with: ", kwargs[arg1])
             self._root2cam = kwargs[arg1]
-        if arg2 in kwargs:
-            print("Setting: ", arg2," with: ", kwargs[arg2])
-            self._perspMat = kwargs[arg1]
-        if arg2 in kwargs:
-            print("Setting: ", arg3," with: ", kwargs[arg3])
-            self._orthoMat = kwargs[arg1]
-        
+       
        
     def accept(self, system: System):
         """
@@ -309,6 +296,11 @@ class Camera(Component):
         :param system: [a System object]
         :type system: [System]
         """
+        
+        # In Python due to ducktyping, either call a System concrete method
+        # or leave it generic as is and check within System apply() if the 
+        #correct node is visited (there is no automatic inference which System to call 
+        # due to its type. We need to call a System specific concrete method otherwise)
         system.apply(self)
     
     

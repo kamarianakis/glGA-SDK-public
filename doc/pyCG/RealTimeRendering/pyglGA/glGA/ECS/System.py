@@ -25,22 +25,25 @@ class System(ABC):
     """
     Main abstract class of the System part of our ECS
     
-    Typically involves all logic involving operations such as Rendering, Local2World, Physics
-
+    Typically involves all logic involving operations such as: 
+    Transform, Physics, Animation (simulation), Camera (cull), Rendering (draw) 
+    traversals and logic operationls on Components and Entities
+   
     :param ABC: [description]
     :type ABC: [type]
     """
     
-    def __init__(self, name=None, type=None, id=None):
+    def __init__(self, name=None, type=None, id=None, priority=0):
         self._name = name
         self._type = type
         self._id = id
+        self._priority = priority
     
-    #define properties for id, name, type
+    #define properties for id, name, type, priority
      
     @property #name
     def name(self) -> str:
-        """ Get Component's name """
+        """ Get Systems's name """
         return self._name
     @name.setter
     def name(self, value):
@@ -48,7 +51,7 @@ class System(ABC):
         
     @property #type
     def type(self) -> str:
-        """ Get Component's type """
+        """ Get Systems's type """
         return self._type
     @type.setter
     def type(self, value):
@@ -56,11 +59,19 @@ class System(ABC):
         
     @property #id
     def id(self) -> str:
-        """ Get Component's id """
+        """ Get Systems's id """
         return self._id
     @id.setter
     def id(self, value):
         self._id = value
+        
+    @property #priority
+    def priority(self) -> str:
+        """ Get Systems's priority """
+        return self._priority
+    @priority.setter
+    def priority(self, value):
+        self._priority = value
     
     @classmethod
     def getClassName(cls):
@@ -170,6 +181,10 @@ class TransformSystem(System):
         In this case calculate the l2w BasicTransform component matrix
         
         """
+        
+        #check if the visitor visits a node that it should not
+        if (isinstance(basicTransform,BasicTransform)) == False:
+            return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called")
         
         # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
@@ -192,7 +207,6 @@ class CameraSystem(System):
         self._type = type
         self._id = id
         self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
-        
     
     def update(self):
         """
@@ -201,19 +215,21 @@ class CameraSystem(System):
         
         """
         pass
-    
-    def getLocal2Camera(self, leafComp: Component, topComp=None):
-        """Calculate the l2world BasicTransform matrix
+        
+    def getRoot2Camera(self, leafComp: Component, topComp=None):
+        """Calculate the root to camera matrix
 
         :param leafComp: [description]
         :type leafComp: Component
         :param topComp: [description], defaults to None
         :type topComp: [type], optional
-        :return: the local2world matrix of the visited BasicTransform
-        :rtype: numpy.array
+        :return: [description]
+        :rtype: [type]
         """
         
-        #return l2camMat
+        r2c = leafComp.root2cam
+        
+        return r2c
         
     #then this
     def apply(self, basicTransform: BasicTransform):
@@ -224,28 +240,37 @@ class CameraSystem(System):
         In this case calculate the l2w BasicTransform component matrix
         
         """
-        print(self.getClassName(), ": apply(BasicTransform) called")
+        if (isinstance(basicTransform,BasicTransform)) == False:
+            return #in Python due to duck typing we need to check this!
+        print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Local2Cam")
         
-        # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
-        #l2worldTRS = self.getLocal2World(basicTransform)
-        #update l2world of basicTransform
-        #basicTransform.update(l2world=l2worldTRS) 
+        #l2world of basicTransform has been calculated by the TransformSystem before this System
+        l2w = basicTransform.l2world
+        r2c = self._camera.root2cam
+        proj = self._camera.projMat
+        l2c = l2w @ r2c @ proj
+        basicTransform.update(l2cam=l2c) 
         
     #first this     
     def apply(self, cam: Camera):
         """
         method to be subclassed for  behavioral or logic computation 
-        when visits Components. 
+        when visits Camera Components. 
         
-        In this case calculate the l2w BasicTransform component matrix
+        In this case ths sole purpose is to calculate the 
+        the r2c (root to camera) matrix
         
         """
-        print(self.getClassName(), ": apply(BasicTransform) called")
+        if (isinstance(cam,Camera)) == False:
+            return #in Python due to duck typing we need to check this!
+        print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Root2Cam")
         
-        # getLocal2World returns result to be set in BasicTransform::update(**kwargs) below
-        #l2worldTRS = self.getLocal2World(basicTransform)
-        #update l2world of basicTransform
-        #basicTransform.update(l2world=l2worldTRS) 
+        # getRoot2Cam returns the one component of the Local2Cam = Local2World * Root2Cam
+        r2cam = self.getRoot2Camera(cam)
+        #update root2cam of Camera
+        cam.update(root2cam=r2cam)
+        #save camera component if not specified on constructor
+        self._camera = cam 
 
 
 

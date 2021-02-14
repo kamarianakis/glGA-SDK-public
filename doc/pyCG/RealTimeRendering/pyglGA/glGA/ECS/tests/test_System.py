@@ -180,31 +180,47 @@ class TestCameraSystem(unittest.TestCase):
         TestCameraSystem() use case test
         """
         print("test_CameraSystem_use() START")
-        gameObject = Entity("root", "Group", "1")
-        gameObject2 = Entity("node2", "Group", "2")
+        #use uuid to generate unique ID for Entities in ECSSManager
+        gameObject = Entity("root", "Group", "0")
+        gameObject1 = Entity("entityCam1", "Group", "1")
+        gameObject2 = Entity("entityCam2", "Group", "2")
         gameObject3 = Entity("node3", "Group", "3")
         gameObject4 = Entity("node4", "Group", "4")
         gameObject5 = Entity("node5", "Group", "5")
         gameObject6 = Entity("node6", "Group", "6")
         gameObject7 = Entity("node7", "Group", "7")
-        trans4 = BasicTransform("trans4", "Transform", "7")
-        trans5 = BasicTransform("trans5", "Transform", "8")
-        trans6 = BasicTransform("trans6", "Transform", "9")
-        gameObject.add(gameObject2)
-        gameObject.add(gameObject4)
-        gameObject.add(gameObject7)
-        gameObject2.add(gameObject3)
-        gameObject2.add(gameObject5)
-        gameObject3.add(gameObject6)
-        gameObject4.add(trans4)
-        gameObject5.add(trans5)
-        gameObject6.add(trans6)
+        trans1 = BasicTransform("trans1", "Transform", "8")
+        trans2 = BasicTransform("trans2", "Transform", "9")
+        trans4 = BasicTransform("trans4", "Transform", "10")
+        trans5 = BasicTransform("trans5", "Transform", "11")
+        trans7 = BasicTransform("trans7", "Transform", "12")
+        perspCam = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
         
-        self.assertIn(gameObject2, gameObject._children)
+        #camera sub-tree
+        gameObject.add(gameObject1)
+        gameObject1.add(trans1)
+        gameObject1.add(gameObject2)
+        gameObject2.add(perspCam)
+        gameObject2.add(trans2)
+        
+        gameObject.add(gameObject4)
+        gameObject4.add(trans4)
+        
+        gameObject.add(gameObject3)
+        gameObject3.add(gameObject5)
+        gameObject5.add(trans5)
+        
+        gameObject3.add(gameObject6)
+        gameObject6.add(gameObject7)
+        gameObject7.add(trans7)
+        
+        self.assertIn(gameObject1, gameObject._children)
         self.assertIn(gameObject4, gameObject._children)
         self.assertIn(trans4, gameObject4._children)
-        self.assertIn(gameObject3, gameObject2._children)
+        self.assertIn(gameObject3, gameObject._children)
         self.assertIn(trans5, gameObject5._children)
+        self.assertIn(trans7, gameObject7._children)
+        self.assertIn(perspCam, gameObject2._children)
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         dfsIterator = iter(gameObject)
@@ -214,7 +230,10 @@ class TestCameraSystem(unittest.TestCase):
         transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
         camUpdate = CameraSystem("camUpdate", "CameraUpdate", "200")
         
-        nodePath = []
+        #accept the CameraSystem directly first on the Camera to calculate is L2C matrix
+        perspCam.accept(camUpdate)
+        
+        #nodePath = []
         done_traversing = False
         while(not done_traversing):
             try:
@@ -228,6 +247,10 @@ class TestCameraSystem(unittest.TestCase):
                     
                     #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
                     traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                    
+                    #having calculated R2C and L2W, accept a CameraVisitor to calculate L2C (L2C=L2W*R2C)
+                    traversedComp.accept(camUpdate)
+                    
                     #nodePath.append(traversedComp) #no need for this now
         #print("".join(str(nodePath)))
         
