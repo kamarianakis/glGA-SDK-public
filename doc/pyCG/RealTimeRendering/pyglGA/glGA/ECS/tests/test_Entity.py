@@ -315,7 +315,7 @@ class TestCamera(unittest.TestCase):
         #default constructor of Component class
         print("\TestCamera:test_init() START")
         
-        myComponent = Camera()
+        myComponent = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
         myComponent.name = "baseCamera"
         myComponent.type = "perspCam"
         myComponent.id = 100
@@ -324,8 +324,8 @@ class TestCamera(unittest.TestCase):
         self.assertEqual(myComponent.type,"perspCam")
         self.assertEqual(myComponent.id, 100)
         np.testing.assert_array_equal(myComponent.root2cam,identity())
-        np.testing.assert_array_equal(myComponent.orthoMat,ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
-        np.testing.assert_array_equal(myComponent.perspMat,perspective(90.0, 1, 0.1, 100))
+        np.testing.assert_array_equal(myComponent.projMat,ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
+        #np.testing.assert_array_equal(myComponent.perspMat,perspective(90.0, 1, 0.1, 100))
         
         print("TestCamera:test_init() END")
 
@@ -333,7 +333,7 @@ class TestCamera(unittest.TestCase):
         #default update
         print("\TestCamera:test_update() START")
         
-        myComponent = Camera()
+        myComponent = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
         myComponent.name = "baseCamera"
         myComponent.type = "perspCam"
         myComponent.id = 100
@@ -342,11 +342,12 @@ class TestCamera(unittest.TestCase):
         self.assertEqual(myComponent.type,"perspCam")
         self.assertEqual(myComponent.id, 100)
         
-        myComponent.update(root2cam=identity(), perspMat=identity(), orthoMat=identity())
+        myComponent.update(root2cam=identity())
+        myComponent.projMat = identity()
         
-        np.testing.assert_array_equal(myComponent.root2cam,identity())
-        np.testing.assert_array_equal(myComponent.orthoMat,identity())
-        np.testing.assert_array_equal(myComponent.perspMat,identity())
+        np.testing.assert_array_almost_equal(myComponent.root2cam,identity())
+        np.testing.assert_array_almost_equal(myComponent.projMat,identity())
+        #np.testing.assert_array_equal(myComponent.perspMat,identity())
         
         print("TestCamera:test_update() END")
 
