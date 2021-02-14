@@ -7,10 +7,12 @@ glGA SDK v2020.1 ECS (EntityI Component System)
 """
 
 import unittest
+import numpy as np
+
 from Entity import *
 from Component import *
 
-
+import utilities as util
 
 class TestEntity(unittest.TestCase):
     
@@ -247,7 +249,7 @@ class TestBasicTransform(unittest.TestCase):
         myComponent.name = "myComponent"
         myComponent.type = "BasicTransform"
         myComponent.id = 101
-        myComponent.trs = translate(1.0, 2.0, 3.0)
+        myComponent.trs = util.translate(1.0, 2.0, 3.0)
         mT = np.array([
             [1.0,0.0,0.0,1.0],
             [0.0,1.0,0.0,2.0],
@@ -315,7 +317,7 @@ class TestCamera(unittest.TestCase):
         #default constructor of Component class
         print("\TestCamera:test_init() START")
         
-        myComponent = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
+        myComponent = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
         myComponent.name = "baseCamera"
         myComponent.type = "perspCam"
         myComponent.id = 100
@@ -323,8 +325,8 @@ class TestCamera(unittest.TestCase):
         self.assertEqual(myComponent.name, "baseCamera")
         self.assertEqual(myComponent.type,"perspCam")
         self.assertEqual(myComponent.id, 100)
-        np.testing.assert_array_equal(myComponent.root2cam,identity())
-        np.testing.assert_array_equal(myComponent.projMat,ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
+        np.testing.assert_array_equal(myComponent.root2cam,util.identity())
+        np.testing.assert_array_equal(myComponent.projMat,util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
         #np.testing.assert_array_equal(myComponent.perspMat,perspective(90.0, 1, 0.1, 100))
         
         print("TestCamera:test_init() END")
@@ -333,7 +335,7 @@ class TestCamera(unittest.TestCase):
         #default update
         print("\TestCamera:test_update() START")
         
-        myComponent = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
+        myComponent = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0))
         myComponent.name = "baseCamera"
         myComponent.type = "perspCam"
         myComponent.id = 100
@@ -342,11 +344,11 @@ class TestCamera(unittest.TestCase):
         self.assertEqual(myComponent.type,"perspCam")
         self.assertEqual(myComponent.id, 100)
         
-        myComponent.update(root2cam=identity())
-        myComponent.projMat = identity()
+        myComponent.update(root2cam=util.identity())
+        myComponent.projMat = util.identity()
         
-        np.testing.assert_array_almost_equal(myComponent.root2cam,identity())
-        np.testing.assert_array_almost_equal(myComponent.projMat,identity())
+        np.testing.assert_array_almost_equal(myComponent.root2cam,util.identity())
+        np.testing.assert_array_almost_equal(myComponent.projMat,util.identity())
         #np.testing.assert_array_equal(myComponent.perspMat,identity())
         
         print("TestCamera:test_update() END")

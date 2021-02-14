@@ -8,7 +8,11 @@ glGA SDK v2020.1 ECS (Entity Component System)
 
 
 import unittest
-from System import *
+import numpy as np
+import utilities as util
+from System import System, TransformSystem, CameraSystem, RenderSystem
+from Entity import Entity
+from Component import BasicTransform, Camera
 
 
 class TestSystem(unittest.TestCase):
@@ -72,8 +76,8 @@ class TestTransformSystem(unittest.TestCase):
         
         myComponent.l2world = mT
         
-        trans4.trs = translate(1.0, 2.0, 3.0)
-        trans6.trs = translate(2.0, 3.0, 4.0)
+        trans4.trs = util.translate(1.0, 2.0, 3.0)
+        trans6.trs = util.translate(2.0, 3.0, 4.0)
         gameObject.add(gameObject1)
         gameObject.add(transRoot)
         gameObject1.add(gameObject2)
@@ -194,7 +198,7 @@ class TestCameraSystem(unittest.TestCase):
         trans4 = BasicTransform("trans4", "Transform", "10")
         trans5 = BasicTransform("trans5", "Transform", "11")
         trans7 = BasicTransform("trans7", "Transform", "12")
-        perspCam = Camera(ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
+        perspCam = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
         
         #camera sub-tree
         gameObject.add(gameObject1)

@@ -19,8 +19,8 @@ from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
 
-from System     import *
-from utilities  import *
+import System  
+import utilities as util
 
 
 class Component(ABC, Iterable):
@@ -170,9 +170,9 @@ class BasicTransform(Component):
         self._name = name
         self._type = type
         self._id = id
-        self._trs = identity()
-        self._l2world = identity()
-        self._l2cam = identity()
+        self._trs = util.identity()
+        self._l2world = util.identity()
+        self._l2cam = util.identity()
         self._parent = self
         self._children = []
          
@@ -228,7 +228,8 @@ class BasicTransform(Component):
         :param system: [a System object]
         :type system: [System]
         """
-        system.apply(self)
+        if (isinstance(system, System.TransformSystem)):
+            system.apply(self)
     
     
     def init(self):
@@ -258,7 +259,7 @@ class Camera(Component):
         self._type = type
         self._id = id
         self._projMat = projMatrix
-        self._root2cam = identity()
+        self._root2cam = util.identity()
         self._parent = self
          
     @property #projMat
@@ -326,7 +327,7 @@ class RenderMesh(Component):
         self._name = name
         self._type = type
         self._id = id
-        self._trs = identity()
+        self._trs = util.identity()
         self._parent = self
         self._children = []
     

@@ -20,6 +20,7 @@ from typing import List
 
 from Component import *
 from Entity import *
+import utilities as util
 
 class System(ABC):
     """
@@ -150,7 +151,7 @@ class TransformSystem(System):
         # get parent Entity this BasicTransform Component belongs to
         componentEntity = leafComp.parent
         topAccessedEntity = componentEntity
-        parentTRS = identity()
+        parentTRS = util.identity()
         l2worldTRS = leafComp.l2world
         # while (p1._parent is not None)
         while(componentEntity is not topComp):
