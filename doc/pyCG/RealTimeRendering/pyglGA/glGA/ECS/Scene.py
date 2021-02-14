@@ -18,9 +18,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Dict
 
-from Entity import *
-from Component import *
-from System import *
+from Entity import Entity
+
 
 class SingletonI(ABC):
     pass

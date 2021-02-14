@@ -18,8 +18,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
-from Component import *
-from Entity import *
+import Component
 import utilities as util
 
 class System(ABC):
@@ -95,7 +94,7 @@ class System(ABC):
         pass
     
     
-    def apply(self, renderMesh: RenderMesh):
+    def apply(self, renderMesh: Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -104,7 +103,7 @@ class System(ABC):
         pass
     
     
-    def apply(self, basicTransform: BasicTransform):
+    def apply(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -112,7 +111,7 @@ class System(ABC):
         """
         pass
     
-    def applyCamera(self, basicTransform: BasicTransform):
+    def applyCamera(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -191,7 +190,7 @@ class TransformSystem(System):
         """
         
         #check if the visitor visits a node that it should not
-        if (isinstance(basicTransform,BasicTransform)) == False:
+        if (isinstance(basicTransform,Component.BasicTransform)) == False:
             return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called")
         
@@ -240,7 +239,7 @@ class CameraSystem(System):
         return r2c
         
     #then this
-    def applyCamera(self, basicTransform: BasicTransform):
+    def applyCamera(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -248,7 +247,7 @@ class CameraSystem(System):
         In this case calculate the l2w BasicTransform component matrix
         
         """
-        if (isinstance(basicTransform,BasicTransform)) == False:
+        if (isinstance(basicTransform,Component.BasicTransform)) == False:
             return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Local2Cam")
         
@@ -260,7 +259,7 @@ class CameraSystem(System):
         basicTransform.update(l2cam=l2c) 
         
     #first this     
-    def apply(self, cam: Camera):
+    def apply(self, cam: Component.Camera):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Camera Components. 
@@ -269,7 +268,7 @@ class CameraSystem(System):
         the r2c (root to camera) matrix
         
         """
-        if (isinstance(cam,Camera)) == False:
+        if (isinstance(cam,Component.Camera)) == False:
             return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Root2Cam")
         
