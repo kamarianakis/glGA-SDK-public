@@ -7,10 +7,10 @@ glGA SDK v2020.1 ECS (Entity Component System)
 """
 
 import unittest
-from Entity import *
-from Component import *
-from System import *
-from Scene import *
+from Entity import Entity
+from Component import BasicTransform, Camera
+from System import System, TransformSystem, CameraSystem, RenderSystem
+from Scene import Scene
 
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class

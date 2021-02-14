@@ -8,9 +8,10 @@ glGA SDK v2020.1 ECS (EntityI Component System)
 
 import unittest
 import numpy as np
+from typing import List
 
-from Entity import *
-from Component import *
+from Entity import Entity
+from Component import BasicTransform, Camera, RenderMesh, CompNullIterator
 
 import utilities as util
 
