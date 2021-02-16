@@ -19,7 +19,8 @@ from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
 
-import System  
+import System
+import uuid  
 import utilities as util
 
 
@@ -169,7 +170,10 @@ class BasicTransform(Component):
     def __init__(self, name=None, type=None, id=None):
         self._name = name
         self._type = type
-        self._id = id
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Entity
+        else:
+            self._id = id
         self._trs = util.identity()
         self._l2world = util.identity()
         self._l2cam = util.identity()
@@ -229,8 +233,8 @@ class BasicTransform(Component):
         :type system: [System]
         """
         
-        system.apply(self) #from TransformSystem
-        system.applyCamera(self) #from CameraSystem
+        system.apply2BasicTransform(self) #from TransformSystem
+        system.applyCamera2BasicTransform(self) #from CameraSystem
         """
         if (isinstance(system, System.TransformSystem)):
             system.apply(self)
@@ -264,7 +268,10 @@ class Camera(Component):
     def __init__(self, projMatrix, name=None, type=None, id=None):
         self._name = name
         self._type = type
-        self._id = id
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Entity
+        else:
+            self._id = id
         self._projMat = projMatrix
         self._root2cam = util.identity()
         self._parent = self
@@ -309,7 +316,7 @@ class Camera(Component):
         # or leave it generic as is and check within System apply() if the 
         #correct node is visited (there is no automatic inference which System to call 
         # due to its type. We need to call a System specific concrete method otherwise)
-        system.apply(self)
+        system.apply2Camera(self)
     
     
     def init(self):
@@ -333,7 +340,10 @@ class RenderMesh(Component):
     def __init__(self, name=None, type=None, id=None):
         self._name = name
         self._type = type
-        self._id = id
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Entity
+        else:
+            self._id = id
         self._trs = util.identity()
         self._parent = self
         self._children = []
@@ -352,7 +362,7 @@ class RenderMesh(Component):
         :param system: [a System object]
         :type system: [System]
         """
-        system.apply(self)
+        system.apply2RenderMesh(self)
     
     def init(self):
         """

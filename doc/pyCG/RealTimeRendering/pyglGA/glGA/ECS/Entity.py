@@ -17,6 +17,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from typing import Any, List
+import uuid
 
 from Component import Component, ComponentIterator
 from System import System
@@ -83,9 +84,11 @@ class Entity(Component):
         self._children: List[Component]=[]
         self._name = name
         self._type = type
-        self._id = id
         self._parent = None
-    
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Entity
+        else:
+            self._id = id
     
     def print(self):
         """

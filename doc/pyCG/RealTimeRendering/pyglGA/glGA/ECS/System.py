@@ -94,7 +94,7 @@ class System(ABC):
         pass
     
     
-    def apply(self, renderMesh: Component.RenderMesh):
+    def apply2RenderMesh(self, renderMesh: Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -103,7 +103,7 @@ class System(ABC):
         pass
     
     
-    def apply(self, basicTransform: Component.BasicTransform):
+    def apply2BasicTransform(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -111,7 +111,15 @@ class System(ABC):
         """
         pass
     
-    def applyCamera(self, basicTransform: Component.BasicTransform):
+    def applyCamera2BasicTransform(self, basicTransform: Component.BasicTransform):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
+    
+    def apply2Camera(self, basicTransform: Component.Camera):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -180,7 +188,7 @@ class TransformSystem(System):
         
         
     
-    def apply(self, basicTransform: Component.BasicTransform):
+    def apply2BasicTransform(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -239,7 +247,7 @@ class CameraSystem(System):
         return r2c
         
     #then this
-    def applyCamera(self, basicTransform: Component.BasicTransform):
+    def applyCamera2BasicTransform(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -259,7 +267,7 @@ class CameraSystem(System):
         basicTransform.update(l2cam=l2c) 
         
     #first this     
-    def apply(self, cam: Component.Camera):
+    def apply2Camera(self, cam: Component.Camera):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Camera Components. 
@@ -297,7 +305,7 @@ class RenderSystem(System):
         pass
     
     
-    def apply(self, renderMesh: Component.RenderMesh):
+    def apply2RenderMesh(self, renderMesh: Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
