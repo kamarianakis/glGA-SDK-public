@@ -180,7 +180,7 @@ class TransformSystem(System):
         
         
     
-    def apply(self, basicTransform: BasicTransform):
+    def apply(self, basicTransform: Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -297,7 +297,7 @@ class RenderSystem(System):
         pass
     
     
-    def apply(self, renderMesh: RenderMesh):
+    def apply(self, renderMesh: Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
