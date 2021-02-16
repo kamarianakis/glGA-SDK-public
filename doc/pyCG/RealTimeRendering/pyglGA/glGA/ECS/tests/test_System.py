@@ -8,6 +8,7 @@ glGA SDK v2020.1 ECS (Entity Component System)
 
 
 import unittest
+import time
 import numpy as np
 
 import utilities as util
@@ -259,7 +260,8 @@ class TestCameraSystem(unittest.TestCase):
         transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
         camUpdate = CameraSystem("camUpdate", "CameraUpdate", "200")
         
-        # ------------------ This is the Scene:: l2w update traversal -----------------
+        tic1 = time.perf_counter()
+        # ------------------ This is the Scene:: l2w update traversal start-----------------
         nodePath = []
         done_traversing_for_l2w_update = False
         while(not done_traversing_for_l2w_update):
@@ -275,9 +277,12 @@ class TestCameraSystem(unittest.TestCase):
                     traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
                     nodePath.append(traversedComp) #no need for this now
         #print("".join(str(nodePath)))
-        
-        
-        # ----------------- This is the Scene:: camera traversal --------------------
+        # ------------------ This is the Scene:: l2w update traversal end-----------------
+        toc1 = time.perf_counter()
+        print(f"\n\tScene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs")
+
+        tic2 = time.perf_counter()
+        # ----------------- This is the Scene:: camera traversal start--------------------
         done_traversing_for_camera = False
         #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
         # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
@@ -295,6 +300,9 @@ class TestCameraSystem(unittest.TestCase):
                     
                     #having calculated R2C and L2W, accept a CameraVisitor to calculate L2C (L2C=L2W*R2C)
                     traversedComp.accept(camUpdate)
+        # ----------------- This is the Scene:: camera traversal end --------------------
+        toc2 = time.perf_counter()
+        print(f"\n\tScene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs")
                     
         print("test_CameraSystem_use() END")
 
