@@ -231,7 +231,7 @@ class CameraSystem(System):
         """
         pass
         
-    def getRoot2Camera(self, leafComp: Component, topComp=None):
+    def getRoot2Camera(self, camComp: Component, topComp=None):
         """Calculate the root to camera matrix
 
         :param leafComp: [description]
@@ -241,8 +241,15 @@ class CameraSystem(System):
         :return: [description]
         :rtype: [type]
         """
-        
-        r2c = leafComp.root2cam
+        r2c = util.identity()
+        # Root2Camera is to get all parent BasicTransforms till root node (as usual)
+        # then get their inverse, since Mr2c = Inv(Ti) * Inv(Ti+1) * Proj = Inv(Ti+1 * Ti) *Proj
+        componentEntity = camComp.parent
+        parentBasicTrans = componentEntity.getChildByType("BasicTransform")
+        if(parentBasicTrans is not None):
+            parentTRS = parentBasicTrans.trs
+            inv_parentTRS = util.inverse(parentTRS)
+            r2c = inv_parentTRS @ camComp.projMat
         
         return r2c
         
@@ -277,8 +284,8 @@ class CameraSystem(System):
         
         """
         if (isinstance(cam,Component.Camera)) == False:
-            return #in Python due to duck typing we need to check this!
-        print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Root2Cam")
+            return #in Python due to duck typing we need to verify this!
+        print(self.getClassName(), ": apply2Camera called from CameraSystem - Calc: Root2Cam")
         
         # getRoot2Cam returns the one component of the Local2Cam = Local2World * Root2Cam
         r2cam = self.getRoot2Camera(cam)

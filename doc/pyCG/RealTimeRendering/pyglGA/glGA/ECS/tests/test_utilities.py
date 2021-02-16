@@ -96,6 +96,36 @@ class TestUtilities(unittest.TestCase):
     
         print("TestUtilities:test_identity() END")
         
+    def test_inverse(self):
+        """
+        test_inverse function, 
+        https://numpy.org/doc/stable/reference/generated/numpy.linalg.inv.html
+        """
+        print("\TestUtilities:test_rotate() START")
+        
+        mLat = np.array([
+            [1,0,0,1],
+            [0,1,0,2],
+            [0,0,1,3],
+            [0,0,0,1]
+        ],dtype=np.float,order='F') 
+        
+        mLatInv = np.array([
+            [1,0,0,-1],
+            [0,1,0,-2],
+            [0,0,1,-3],
+            [0,0,0,1]
+        ],dtype=np.float,order='F') 
+        
+        utilmLatInv = inverse(mLat)
+        np.testing.assert_array_almost_equal(utilmLatInv,mLatInv,decimal=5)
+       
+        print(utilmLatInv)
+        print(mLatInv)
+
+    
+        print("TestUtilities:test_inverse() END")
+    
     def test_ortho(self):
         """
         test_ortho function, 

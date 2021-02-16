@@ -17,6 +17,7 @@ The following is example restructured text doc example
 # Python built-in modules
 import math
 from numbers import Number
+from numpy.linalg import inv
 
 # Python external modules
 import numpy as np
@@ -80,6 +81,15 @@ def identity(rank=4):
         return np.identity(2)
     elif (rank < 2 and rank > 4):
         return np.identity(4)
+    
+def inverse(matrix):
+    """call numpy linalg.inv(a)[source] to compute the inverse of a numpy matrix
+
+    :param matrix: [description]
+    :type matrix: [type]
+    """
+    if isinstance(matrix, np.ndarray):
+        return inv(matrix)
     
 def ortho(left, right, bottom, top, near, far):
     """ Orthographic projection matrix creation function, where 
