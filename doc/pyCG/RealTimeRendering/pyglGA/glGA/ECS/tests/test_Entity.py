@@ -1,5 +1,5 @@
 """
-Test EntityI Unit tests, part of the glGA SDK ECS
+Test Entity & Component Unit tests, part of the glGA SDK ECS
     
 glGA SDK v2020.1 ECS (EntityI Component System)
 @Coopyright 2020-2021 George Papagiannakis

@@ -253,8 +253,9 @@ class TestCameraSystem(unittest.TestCase):
         
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         dfsIterator = iter(self.gameObject)
-        #print(self.gameObject)
-        #print(self.trans7)
+        self.gameObject.print()
+        self.trans7.print()
+        
         
         #instantiate a new TransformSystem System to visit all scenegraph componets
         transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
