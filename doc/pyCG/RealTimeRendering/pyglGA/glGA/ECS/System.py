@@ -129,7 +129,9 @@ class System(ABC):
     
 class TransformSystem(System):
     """
-
+    System that operates on BasicTransform Components and calculates Local2World matrices
+    that are needed in a Scenegraph DAG hierarchy
+    
     :param System: [description]
     :type System: [type]
     :return: [description]
@@ -210,7 +212,12 @@ class TransformSystem(System):
 
 class CameraSystem(System):
     """
-
+    System that operates on both BasicTransform Components as well as Camera Components
+    For the BasicTransform ones, it calculates the Local2camera matrix. For the Camera Component
+    it calculates the Root2camera matrix, which is a necessary component for the Local2camera,
+    hence it needs to be calculated first: Ml2c = Mr2c * Ml2w * V
+    Like that we can be having many camera and re-calculating all Ml2c transformations accordingly
+    
     :param System: [description]
     :type System: [type]
     :return: [description]
@@ -233,6 +240,12 @@ class CameraSystem(System):
         
     def getRoot2Camera(self, camComp: Component, topComp=None):
         """Calculate the root to camera matrix
+        
+        Root2Camera is to get all parent BasicTransforms till root node (as usual)
+        then get their inverse, since Mr2c = Inv(Ti) * Inv(Ti+1) * Proj = Inv(Ti+1 * Ti) *Proj
+        since we run first the System on a camera node, it is enough to get its Entity'w BasicTrasform
+        and from there just retrieve its l2world camera, which was calculated before from the scenegraph 
+        l2world traversal (always first system that one to run)
 
         :param leafComp: [description]
         :type leafComp: Component
@@ -242,14 +255,12 @@ class CameraSystem(System):
         :rtype: [type]
         """
         r2c = util.identity()
-        # Root2Camera is to get all parent BasicTransforms till root node (as usual)
-        # then get their inverse, since Mr2c = Inv(Ti) * Inv(Ti+1) * Proj = Inv(Ti+1 * Ti) *Proj
         componentEntity = camComp.parent
         parentBasicTrans = componentEntity.getChildByType("BasicTransform")
         if(parentBasicTrans is not None):
-            parentTRS = parentBasicTrans.trs
-            inv_parentTRS = util.inverse(parentTRS)
-            r2c = inv_parentTRS @ camComp.projMat
+            parentl2world = parentBasicTrans.l2world
+            inv_parentl2world = util.inverse(parentl2world)
+            r2c = inv_parentl2world @ camComp.projMat
         
         return r2c
         

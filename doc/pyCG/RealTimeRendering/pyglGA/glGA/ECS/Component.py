@@ -215,13 +215,13 @@ class BasicTransform(Component):
         arg2 = "trs"
         arg3 = "l2cam"
         if arg1 in kwargs:
-            print("Setting: ", arg1," with: ", kwargs[arg1])
+            print("Setting: ", arg1," with: \n", kwargs[arg1])
             self._l2world = kwargs[arg1]
         if arg2 in kwargs:
-            print("Setting: ", arg2," with: ", kwargs[arg2])
+            print("Setting: ", arg2," with: \n", kwargs[arg2])
             self._trs = kwargs[arg2]
         if arg3 in kwargs:
-            print("Setting: ", arg3," with: ", kwargs[arg3])
+            print("Setting: ", arg3," with: \n", kwargs[arg3])
             self._l2cam = kwargs[arg3]
         
        
@@ -248,6 +248,9 @@ class BasicTransform(Component):
         abstract method to be subclassed for extra initialisation
         """
         pass
+    
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \nl2world: \n{self.l2world}, \nl2cam: \n{self.l2cam}, \ntrs:\n {self.trs}"
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
@@ -300,7 +303,7 @@ class Camera(Component):
         print(self.getClassName(), ": update() called")
         arg1 = "root2cam"
         if arg1 in kwargs:
-            print("Setting: ", arg1," with: ", kwargs[arg1])
+            print("Setting: ", arg1," with: \n", kwargs[arg1])
             self._root2cam = kwargs[arg1]
        
        
@@ -324,6 +327,11 @@ class Camera(Component):
         abstract method to be subclassed for extra initialisation
         """
         pass
+    
+    
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \n projMat: \n{self.projMat},\n root2cam: \n{self.root2cam}"
+    
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator

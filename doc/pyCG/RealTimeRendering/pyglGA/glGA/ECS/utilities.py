@@ -244,12 +244,12 @@ def rotate(axis=(1.0,0.0,0.0), angle=0.0, radians=None):
     http://www.glprogramming.com/red/appendixf.html and axis-angle theoretical matrix specification:
     https://en.wikipedia.org/wiki/Rotation_matrix  
 
-    :param axis: [description], defaults to (1.0,0.0,0.0)
+    :param axis: [vector3], defaults to (1.0,0.0,0.0)
     :type axis: tuple, optional
-    :param angle: [description], defaults to 0.0
+    :param angle: [degrees], defaults to 0.0
     :type angle: float, optional
-    :param radians: [description], defaults to None
-    :type radians: [type], optional
+    :param radians: [rads], defaults to None
+    :type radians: [float], optional
     """
     x, y, z = normalise(vec(axis))
     s, c = sincos(angle, radians)

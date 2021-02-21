@@ -11,7 +11,7 @@ import numpy as np
 from typing import List
 
 from Entity import Entity
-from Component import BasicTransform, Camera, RenderMesh, CompNullIterator
+from Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator
 
 import utilities as util
 

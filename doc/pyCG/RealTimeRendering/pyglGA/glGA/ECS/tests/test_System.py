@@ -204,12 +204,16 @@ class TestCameraSystem(unittest.TestCase):
         self.gameObject5 = Entity("node5", "Group", 5)
         self.gameObject6 = Entity("node6", "Group", 6)
         self.gameObject7 = Entity("node7", "Group", 7)
-        self.trans1 = BasicTransform("trans1", "Transform")
-        self.trans2 = BasicTransform("trans2", "Transform")
-        self.trans4 = BasicTransform("trans4", "Transform")
-        self.trans5 = BasicTransform("trans5", "Transform")
-        self.trans7 = BasicTransform("trans7", "Transform")
+        self.trans1 = BasicTransform("trans1", "BasicTransform")
+        self.trans2 = BasicTransform("trans2", "BasicTransform")
+        self.trans4 = BasicTransform("trans4", "BasicTransform")
+        self.trans5 = BasicTransform("trans5", "BasicTransform")
+        self.trans7 = BasicTransform("trans7", "BasicTransform")
         self.perspCam = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
+        
+        #setup transformations
+        self.trans1.trs = util.translate(1.0,2.0,3.0)
+        self.trans2.trs = util.translate(2.0,3.0,4.0)
         
         #camera sub-tree
         self.gameObject.add(self.gameObject1)
@@ -282,12 +286,17 @@ class TestCameraSystem(unittest.TestCase):
         toc1 = time.perf_counter()
         print(f"\n\n------------------ Scene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs -----------------")
 
+
         tic2 = time.perf_counter()
         print("\n\n------------------ This is the Scene:: camera traversal start-----------------")
         done_traversing_for_camera = False
         #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
         # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
+        # M2lc = Mr2c * Ml2w * V
+        print("\n-- BEFORE calculating Mr2c camera matrix--")
         self.perspCam.accept(camUpdate)
+        print(self.perspCam)
+        print("\n-- AFTER calculating Mr2c camera matrix--")
         
         while(not done_traversing_for_camera):
             try:
