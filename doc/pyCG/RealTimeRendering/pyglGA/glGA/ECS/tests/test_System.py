@@ -262,14 +262,14 @@ class TestCameraSystem(unittest.TestCase):
         camUpdate = CameraSystem("camUpdate", "CameraUpdate", "200")
         
         tic1 = time.perf_counter()
-        # ------------------ This is the Scene:: l2w update traversal start-----------------
+        print("------------------ This is the Scene:: l2w update traversal start-----------------")
         nodePath = []
         done_traversing_for_l2w_update = False
         while(not done_traversing_for_l2w_update):
             try:
                 traversedComp = next(dfsIterator)
             except StopIteration:
-                print("\n-------- end of Scene reached, traversed all Components!")
+                print("\n--- end of Scene reached, traversed all Components!---")
                 done_traversing_for_l2w_update = True
             else:
                 if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
@@ -280,10 +280,10 @@ class TestCameraSystem(unittest.TestCase):
         #print("".join(str(nodePath)))
         # ------------------ This is the Scene:: l2w update traversal end-----------------
         toc1 = time.perf_counter()
-        print(f"\n\tScene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs")
+        print(f"\n\n------------------ Scene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs -----------------")
 
         tic2 = time.perf_counter()
-        # ----------------- This is the Scene:: camera traversal start--------------------
+        print("\n\n------------------ This is the Scene:: camera traversal start-----------------")
         done_traversing_for_camera = False
         #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
         # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
@@ -293,7 +293,7 @@ class TestCameraSystem(unittest.TestCase):
             try:
                 traversedComp = next(dfsIterator)
             except StopIteration:
-                print("\n-------- end of Scene reached, traversed all Components!")
+                print("\n--- end of Scene reached, traversed all Components!---")
                 done_traversing_for_camera = True
             else:
                 if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
@@ -303,7 +303,7 @@ class TestCameraSystem(unittest.TestCase):
                     traversedComp.accept(camUpdate)
         # ----------------- This is the Scene:: camera traversal end --------------------
         toc2 = time.perf_counter()
-        print(f"\n\tScene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs")
+        print(f"\n\n----------------- Scene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
                     
         print("test_CameraSystem_use() END")
 
