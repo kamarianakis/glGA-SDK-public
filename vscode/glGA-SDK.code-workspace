@@ -27,6 +27,9 @@
 				}
 			]
 		},
-		"python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA/bin/python"
+		"python.pythonPath": "/Users/Giwrgakis/opt/anaconda3/envs/glGA37/bin/python",
+		"python.dataScience.jupyterServerURI": "local",
+		"jupyter.jupyterServerType": "local",
+		"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 	}
 }

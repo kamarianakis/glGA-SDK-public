@@ -114,7 +114,7 @@
 	path = extern/cSharp/GI/cs-smallpt
 	url = git@github.com:papagiannakis/cs-smallpt.git
 	branch = master
-[submodule "ganga.js"]
-	path = extern/python/GA/ganja.js
-	url = git@github.com:papagiannakis/ganja.js.git
+[submodule "extern/cSharp/GI/Ray-tracing-in-one-weekend-CSharp"]
+	path = extern/cSharp/GI/Ray-tracing-in-one-weekend-CSharp
+	url = git@github.com:papagiannakis/Ray-tracing-in-one-weekend-CSharp.git
 	branch = master
