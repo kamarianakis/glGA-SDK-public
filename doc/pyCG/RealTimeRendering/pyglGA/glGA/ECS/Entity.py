@@ -94,13 +94,9 @@ class Entity(Component):
         """
         Print out contents of Entity for Debug purposes only
         """
-        #print out name, type, id of this Entity
-        if (self._parent is not None): #in case this is not the root node
-            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
-        else:
-            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: None (root node)")
-
-        print(f" --------------------------------------------------- ")
+        #print out name, type, id of this Entity and its components
+        
+        print(f" _______________________________________________________________ ")
         #create a local iterator of Entity's children
         debugIterator = iter(self._children)
         #call print() on all children (Concrete Components or Entities) while there are more children to traverse
@@ -111,7 +107,8 @@ class Entity(Component):
             except StopIteration:
                 done_traversing = True
             else:
-                comp.print()
+                print(comp) #calls the component's __str__()
+                comp.print() # recursive call of this method to traverse hierarchy
 
     def add(self, object: Component) ->None:
         self._children.append(object)

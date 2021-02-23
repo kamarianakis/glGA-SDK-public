@@ -322,6 +322,7 @@ class Camera(Component):
         system.apply2Camera(self)
     
     
+    
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
