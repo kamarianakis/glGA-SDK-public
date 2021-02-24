@@ -287,6 +287,8 @@ class TestCameraSystem(unittest.TestCase):
         tic2 = time.perf_counter()
         print("\n\n------------------ This is the Scene:: camera traversal start-----------------")
         done_traversing_for_camera = False
+        # new iterator to DFS scenegraph from root
+        dfsIteratorCamera = iter(self.gameObject)
         #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
         # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
         # M2lc = Mr2c * Ml2w * V
@@ -297,22 +299,22 @@ class TestCameraSystem(unittest.TestCase):
         
         while(not done_traversing_for_camera):
             try:
-                traversedComp = next(dfsIterator)
+                traversedCom = next(dfsIteratorCamera)
             except StopIteration:
                 print("\n--- end of Scene reached, traversed all Components!---")
                 done_traversing_for_camera = True
             else:
-                if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
-                    print(traversedComp)
+                if (traversedCom is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedCom)
                     
                     #having calculated R2C and L2W, accept a CameraVisitor to calculate L2C (L2C=L2W*R2C)
-                    traversedComp.accept(camUpdate)
+                    traversedCom.accept(camUpdate)
         # ----------------- This is the Scene:: camera traversal end --------------------
         toc2 = time.perf_counter()
         print(f"\n\n----------------- Scene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
         
-        print(f"\n\n----------------- Scene after all traversals: -----------------")
-        self.gameObject.print()
+        #print(f"\n\n----------------- Scene after all traversals: -----------------")
+        #self.gameObject.print()
         
         #setup matrices for the unit tests
         camOrthoMat = util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
@@ -350,7 +352,7 @@ class TestCameraSystem(unittest.TestCase):
         np.testing.assert_array_almost_equal(self.perspCam.projMat,camOrthoMat, decimal=5)
         np.testing.assert_array_almost_equal(self.perspCam.root2cam,mr2c,decimal=5)
         np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=5)
-        #np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=5)
+        np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=5)
                     
         print("test_CameraSystem_use() END")
 
