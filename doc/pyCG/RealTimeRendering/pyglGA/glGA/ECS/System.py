@@ -281,7 +281,7 @@ class CameraSystem(System):
         l2w = basicTransform.l2world
         r2c = self._camera.root2cam
         proj = self._camera.projMat
-        l2c = l2w @ r2c @ proj
+        l2c = l2w @ r2c
         basicTransform.update(l2cam=l2c) 
         
     #first this     

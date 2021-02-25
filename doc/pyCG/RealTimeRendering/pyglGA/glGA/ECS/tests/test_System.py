@@ -212,6 +212,9 @@ class TestCameraSystem(unittest.TestCase):
         self.trans6 = BasicTransform("trans6", "BasicTransform")
         self.trans7 = BasicTransform("trans7", "BasicTransform")
         self.perspCam = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
+        #for debug cam below
+        #self.perspCam = Camera(util.translate(10.0,10.0,10.0), "perspCam","Camera","500")
+        
         
         #setup transformations
         self.trans1.trs = util.translate(1.0,2.0,3.0)
@@ -311,13 +314,14 @@ class TestCameraSystem(unittest.TestCase):
                     traversedCom.accept(camUpdate)
         # ----------------- This is the Scene:: camera traversal end --------------------
         toc2 = time.perf_counter()
-        print(f"\n\n----------------- Scene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
+        print(f"\n\n----------------- Scene camera traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
         
         #print(f"\n\n----------------- Scene after all traversals: -----------------")
         #self.gameObject.print()
         
         #setup matrices for the unit tests
         camOrthoMat = util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+        #camOrthoMat = util.translate(10.0,10.0,10.0)
         trans1Mat = util.translate(1.0,2.0,3.0)
         trans2Mat = util.translate(2.0,3.0,4.0)
         trans3Mat = util.translate(3.0,3.0,3.0)
@@ -349,11 +353,15 @@ class TestCameraSystem(unittest.TestCase):
         self.assertIn(self.perspCam, self.gameObject2._children)
         self.assertEqual(self.gameObject._id,0)
         # here are tests on r2cam, l2cam, l2world
-        np.testing.assert_array_almost_equal(self.perspCam.projMat,camOrthoMat, decimal=5)
-        np.testing.assert_array_almost_equal(self.perspCam.root2cam,mr2c,decimal=5)
-        np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=5)
-        np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=5)
-                    
+        np.testing.assert_array_almost_equal(self.perspCam.projMat,camOrthoMat, decimal=3)
+        np.testing.assert_array_almost_equal(self.perspCam.root2cam,mr2c,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=3)
+
+        print(f"trans7.l2cam: \n{self.trans7.l2cam}")
+        print(f"m7l2c: \n{m7l2c}")
+        
+        
         print("test_CameraSystem_use() END")
 
 class TestRenderSystem(unittest.TestCase):
