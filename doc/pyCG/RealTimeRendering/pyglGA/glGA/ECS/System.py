@@ -20,6 +20,7 @@ from typing import List
 
 import Component
 import utilities as util
+import uuid  
 
 class System(ABC):
     """
@@ -34,9 +35,20 @@ class System(ABC):
     """
     
     def __init__(self, name=None, type=None, id=None, priority=0):
-        self._name = name
-        self._type = type
-        self._id = id
+        if (name is None):
+            self._name = self.getClassName()
+        else:
+            self._name = name
+        
+        if (type is None):
+            self._type = self.getClassName()
+        else:
+            self._type = type
+        
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Component
+        else:
+            self._id = id
         self._priority = priority
     
     #define properties for id, name, type, priority
@@ -139,9 +151,7 @@ class TransformSystem(System):
     """
     
     def __init__(self, name=None, type=None, id=None, cameraComponent=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        super().__init__(name, type, id)
         self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
         
     
@@ -225,9 +235,7 @@ class CameraSystem(System):
     """
     
     def __init__(self, name=None, type=None, id=None, cameraComponent=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        super().__init__(name, type, id)
         self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
     
     def update(self):
@@ -313,6 +321,9 @@ class RenderSystem(System):
     :param System: [description]
     :type System: [type]
     """
+    def __init__(self, name=None, type=None, id=None, cameraComponent=None):
+        super().__init__(name, type, id)
+        self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
     
     def update(self):
         """
