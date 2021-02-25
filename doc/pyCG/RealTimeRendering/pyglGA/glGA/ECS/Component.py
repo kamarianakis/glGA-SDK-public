@@ -34,9 +34,22 @@ class Component(ABC, Iterable):
     """
     
     def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        
+        if (name is None):
+            self._name = self.getClassName()
+        else:
+            self._name = name
+        
+        if (type is None):
+            self._type = self.getClassName()
+        else:
+            self._type = type
+        
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Component
+        else:
+            self._id = id
+        
         self._parent = self
         self._children = None
     
@@ -168,12 +181,9 @@ class BasicTransform(Component):
     """
    
     def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        
+        super().__init__(name, type, id)
+            
         self._trs = util.identity()
         self._l2world = util.identity()
         self._l2cam = util.identity()
@@ -269,12 +279,8 @@ class Camera(Component):
     """
    
     def __init__(self, projMatrix, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        super().__init__(name, type, id)
+        
         self._projMat = projMatrix
         self._root2cam = util.identity()
         self._parent = self
@@ -347,12 +353,8 @@ class RenderMesh(Component):
     :type Component: [type]
     """
     def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        super().__init__(name, type, id)
+        
         self._trs = util.identity()
         self._parent = self
         self._children = []
