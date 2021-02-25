@@ -22,25 +22,31 @@ class TestEntity(unittest.TestCase):
         Entity init() test
         """
         print("TestEntity:test_init() START")
-        gameObject = Entity() 
+        gameObject = Entity("root") 
         gameObject2 = Entity("gameObject2", "Group", 10)
         gameComponent = BasicTransform("Transform", "TRS", 200)
+        gameComponent2 = BasicTransform()
         
+        gameObject.add(gameObject2)
         gameObject2.add(gameComponent)
+        gameObject.add(gameComponent2)
+        
+        print(gameObject) #prints root
+        gameObject.print() #prints recursively all root children
         
         self.assertIsInstance(gameObject,Entity)
         self.assertIsInstance(gameObject._children, List)
         self.assertEqual(gameObject2._id,10)
         self.assertEqual(gameObject2.getChild(0),gameComponent)
-        
         self.assertEqual(gameObject2.name, "gameObject2")
         self.assertEqual(gameObject2.type,"Group")
         self.assertEqual(gameObject2.id, 10)
+        self.assertEqual(gameComponent2.type, "BasicTransform")
         
         gameObject2.remove(gameComponent)
         self.assertEqual(gameObject2.getChild(0), None)
         
-        print(gameObject._children)
+        
         print("TestEntity:test_init() END")
 
     def test_add(self):

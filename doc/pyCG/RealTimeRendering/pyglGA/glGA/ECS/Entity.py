@@ -81,14 +81,11 @@ class Entity(Component):
         note this is how we declare the type of variables in Phython 3.6 and later.
         e.g. x: int=1 or x: List[int] = [1] 
         """
+        super().__init__(name, type, id)
+        
         self._children: List[Component]=[]
-        self._name = name
-        self._type = type
         self._parent = None
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        
     
     def print(self):
         """
