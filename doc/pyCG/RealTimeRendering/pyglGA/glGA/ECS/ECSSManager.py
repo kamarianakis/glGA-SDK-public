@@ -48,7 +48,7 @@ class ECSSManager():
         pass
     
     
-    def addEntityChild(self):
+    def addEntityChild(self, entity_parent: Entity, entity_child: Entity):
         pass
 
 
