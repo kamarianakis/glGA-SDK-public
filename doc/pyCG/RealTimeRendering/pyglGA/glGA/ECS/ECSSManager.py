@@ -30,14 +30,17 @@ class ECSSManager():
         return cls._instance
 
     def __init__(self):
-        self._systems = []
-        self._entities = {}
-        self._components = {}
+        self._systems = [] #list for all systems
+        self._entities = {} #dict with keys entities and values list of components per entity
+        self._components = {} #dict with keys component types and values component
         self._next_entity_id = 0
 
 
-    def createEntity(self):
-        pass
+    def createEntity(self, name=None)->Entity:
+        if (name != None):
+            return Entity()
+        else:
+            return Entity(name)
     
     
     def addComponent(self):
