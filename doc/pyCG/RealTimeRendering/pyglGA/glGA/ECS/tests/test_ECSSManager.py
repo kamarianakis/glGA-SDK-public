@@ -28,9 +28,17 @@ class TestECSSManager(unittest.TestCase):
         self.WorldManager2 = ECSSManager()
         
         
+        
     def test_init(self):
         """
+        ECSSManager init components
         
         """
+        
+        self.WorldManager.createEntity(Entity(name="root"))
+        
+        for key in self.WorldManager._entities.keys():
+            print("\n entity: ",key, ":: with components: ", self.WorldManager._entities[key])
+        
         print(self.WorldManager._next_entity_id)
         self.assertEqual(id(self.WorldManager), id(self.WorldManager2))

@@ -36,12 +36,10 @@ class ECSSManager():
         self._next_entity_id = 0
 
 
-    def createEntity(self, name=None)->Entity:
-        if (name != None):
-            return Entity()
-        else:
-            return Entity(name)
-    
+    def createEntity(self, entity: Entity)->bool:
+        self._entities[entity] = [None] #add an empty list for components with the new Entity
+        
+        return True
     
     def addComponent(self):
         pass
