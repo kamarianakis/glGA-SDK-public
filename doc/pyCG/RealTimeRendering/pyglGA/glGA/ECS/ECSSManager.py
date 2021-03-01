@@ -8,6 +8,7 @@ glGA SDK v2020.1 ECS (Entity Component System)
 
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Iterator
 from typing import List, Dict
 
 from Entity import Entity
@@ -93,7 +94,7 @@ class ECSSManager():
             if dfs:
                 return iter(entity)
         
-        
+
     
     def addComponent(self, entity: Entity, component: Component.Component):
         """
@@ -112,7 +113,13 @@ class ECSSManager():
         :param component: The component to be added to this Entity
         :type component: Component
         """
-        pass
+        if isinstance(entity, Entity) and issubclass(component, Component.Component):
+            if isinstance(component, Component.Camera):
+                self._cameras.append(component)
+            # loop through all dictionary elements of _entities_components
+            # find key [entity]
+            # check if the value list() of that entity has already that component type
+            # if it has it, replace previous component with same type, otherwise add it
     
     
     def addEntityChild(self, entity_parent: Entity, entity_child: Entity):
@@ -128,7 +135,26 @@ class ECSSManager():
         :param entity_child: [description]
         :type entity_child: Entity
         """
-        pass
+        if isinstance(entity_parent, Entity) and isinstance(entity_child, Entity):
+            # check if there is already a parent-child relationship between the Entities
+            # if not, create one
+            entity_parent.add(entity_child)
+            # add entity_child in the _entities_components dictionary
+            
+
+
+    def traverse_visit(self, system: System.System, iterator: Iterator):
+        """
+        Traverse whole scenegraph by iterating every Entity/Component and calling 
+        a specific System on each different element.   
+
+        :param system: [description]
+        :type system: System.System
+        :param iterator: [description]
+        :type iterator: Iterator
+        """
+        if isinstance(system, System.System) and issubclass(iterator, Iterator):
+            pass
 
 
 if __name__ == "__main__":
