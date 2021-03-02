@@ -35,6 +35,23 @@ class TestECSSManager(unittest.TestCase):
         self.WorldManager = ECSSManager()
         self.WorldManager2 = ECSSManager()
         
+        """
+        Rebuild the same scenegraph from test_System::TestCameraSystem class,
+        via the ECSSManager:
+        Scenegraph:
+        
+        root
+            |                           |           |
+            entityCam1,                 node4,      node3
+            |-------|                    |           |----------|-----------|
+            trans1, entityCam2           trans4     node5,      node6       trans3
+            |       |                               |           |--------|
+                    perspCam, trans2                trans5      node7    trans6
+                                                                |
+                                                                trans7
+            
+        """ 
+        
         
         
     def test_init(self):
