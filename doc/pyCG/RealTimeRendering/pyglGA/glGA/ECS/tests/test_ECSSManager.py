@@ -118,6 +118,8 @@ class TestECSSManager(unittest.TestCase):
         self.assertIn(self.trans7, self.node7._children)
         self.assertIn(self.perspCam, self.entityCam2._children)
         
+        self.WorldManager._root.print()
+        self.WorldManager.print()
         
         print("TestECSSManager:test_init END".center(100, '-'))
     

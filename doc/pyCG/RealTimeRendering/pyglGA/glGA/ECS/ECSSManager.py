@@ -10,6 +10,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from typing import List, Dict
+import pprint
 
 from Entity import Entity
 import Component
@@ -174,6 +175,23 @@ class ECSSManager():
         """
         if isinstance(system, System.System) and issubclass(iterator, Iterator):
             pass
+
+    
+    def print(self):
+        """
+        pretty print the contents of the ECSS
+        """
+        print("_entities_components {}".center(100, '-'))
+        pprint.pprint(self._entities_components)
+        print("_entities []".center(100, '-'))
+        pprint.pprint(self._entities)
+        print("_components []".center(100, '-'))
+        pprint.pprint(self._components)
+        print("_systems []".center(100, '-'))
+        pprint.pprint(self._systems)
+        print("_cameras []".center(100, '-'))
+        pprint.pprint(self._cameras)
+
 
 
 if __name__ == "__main__":
