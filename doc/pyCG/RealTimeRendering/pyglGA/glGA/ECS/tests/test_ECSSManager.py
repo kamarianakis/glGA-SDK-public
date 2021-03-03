@@ -7,6 +7,7 @@ glGA SDK v2020.1 ECS (Entity Component System)
 """
 
 import unittest
+import utilities as util
 from Entity import Entity, EntityDfsIterator
 from Component import BasicTransform, Camera
 from System import System, TransformSystem, CameraSystem, RenderSystem
@@ -51,13 +52,42 @@ class TestECSSManager(unittest.TestCase):
                                                                 trans7
             
         """ 
+        # Scenegraph with Entities, Components
         self.rootEntity = self.WorldManager.createEntity(Entity(name="RooT"))
         self.entityCam1 = self.WorldManager.createEntity(Entity(name="entityCam1"))
         self.WorldManager.addEntityChild(self.rootEntity, self.entityCam1)
-        self.trans1 = self.WorldManager.addComponent(self.entityCam1, BasicTransform(name="trans1"))
+        self.trans1 = self.WorldManager.addComponent(self.entityCam1, BasicTransform(name="trans1", trs=util.translate(1.0,2.0,3.0)))
         
+        self.entityCam2 = self.WorldManager.createEntity(Entity(name="entityCam2"))
+        self.WorldManager.addEntityChild(self.entityCam1, self.entityCam2)
+        self.trans2 = self.WorldManager.addComponent(self.entityCam2, BasicTransform(name="trans2", trs=util.translate(2.0,3.0,4.0)))
+        self.perspCam = self.WorldManager.addComponent(self.entityCam2, Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500"))
+        
+        self.node4 = self.WorldManager.createEntity(Entity(name="node4"))
+        self.WorldManager.addEntityChild(self.rootEntity, self.node4)
+        self.trans4 = self.WorldManager.addComponent(self.node4, BasicTransform(name="trans4"))
+        
+        self.node3 = self.WorldManager.createEntity(Entity(name="node3"))
+        self.WorldManager.addEntityChild(self.rootEntity, self.node3)
+        self.trans3 = self.WorldManager.addComponent(self.node3, BasicTransform(name="trans3", trs=util.translate(3.0,3.0,3.0)))
+        
+        self.node5 = self.WorldManager.createEntity(Entity(name="node5"))
+        self.WorldManager.addEntityChild(self.node3, self.node5)
+        self.trans5 = self.WorldManager.addComponent(self.node5, BasicTransform(name="trans5"))
+        
+        self.node6 = self.WorldManager.createEntity(Entity(name="node6"))
+        self.WorldManager.addEntityChild(self.node3, self.node6)
+        self.trans6 = self.WorldManager.addComponent(self.node6, BasicTransform(name="trans6", trs=util.translate(6.0,6.0,6.0)))
+        
+        self.node7 = self.WorldManager.createEntity(Entity(name="node7"))
+        self.WorldManager.addEntityChild(self.node6, self.node7)
+        self.trans7 = self.WorldManager.addComponent(self.node7, BasicTransform(name="trans7", trs=util.translate(7.0,7.0,7.0)))
+        
+        # Systems
         self.transUpdate = self.WorldManager.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.WorldManager.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
+        
+        # Iterators
         self.dfsIterator = self.WorldManager.createIterator(self.rootEntity)
         
         
@@ -79,6 +109,14 @@ class TestECSSManager(unittest.TestCase):
         self.assertIsInstance(self.transUpdate, TransformSystem)
         self.assertIsInstance(self.camUpdate, CameraSystem)
         self.assertIsInstance(self.dfsIterator, EntityDfsIterator)
+        
+        self.assertIn(self.entityCam1, self.rootEntity._children)
+        self.assertIn(self.node4, self.rootEntity._children)
+        self.assertIn(self.trans4, self.node4._children)
+        self.assertIn(self.node3, self.rootEntity._children)
+        self.assertIn(self.trans5, self.node5._children)
+        self.assertIn(self.trans7, self.node7._children)
+        self.assertIn(self.perspCam, self.entityCam2._children)
         
         
         print("TestECSSManager:test_init END".center(100, '-'))
