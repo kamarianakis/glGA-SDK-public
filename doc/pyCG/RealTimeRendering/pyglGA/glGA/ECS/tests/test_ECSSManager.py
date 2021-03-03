@@ -53,6 +53,8 @@ class TestECSSManager(unittest.TestCase):
         """ 
         self.rootEntity = self.WorldManager.createEntity(Entity(name="RooT"))
         self.entityCam1 = self.WorldManager.createEntity(Entity(name="entityCam1"))
+        self.WorldManager.addEntityChild(self.rootEntity, self.entityCam1)
+        self.trans1 = self.WorldManager.addComponent(self.entityCam1, BasicTransform(name="trans1"))
         
         self.transUpdate = self.WorldManager.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.WorldManager.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
@@ -89,7 +91,13 @@ class TestECSSManager(unittest.TestCase):
         
         print("TestECSSManager:test_addComponent START".center(100, '-'))
         
-        self.WorldManager.addComponent(self.entityCam1, BasicTransform(name="trans1"))
+        compTrans = self.entityCam1.getChildByType(BasicTransform.getClassName())
+        
+        self.assertEqual(self.rootEntity, self.entityCam1.parent)
+        self.assertEqual(compTrans.parent, self.entityCam1)
+        self.assertEqual(self.trans1.parent, self.entityCam1)
+        self.assertEqual(compTrans, self.trans1)
+        self.assertIsInstance(self.trans1, BasicTransform)
         
         
         

@@ -180,11 +180,15 @@ class BasicTransform(Component):
     :type Component: [type]
     """
    
-    def __init__(self, name=None, type=None, id=None):
+    def __init__(self, name=None, type=None, id=None, trs=None):
         
         super().__init__(name, type, id)
+        
+        if (trs is None):
+            self._trs = util.identity()
+        else:
+            self._trs = trs
             
-        self._trs = util.identity()
         self._l2world = util.identity()
         self._l2cam = util.identity()
         self._parent = self

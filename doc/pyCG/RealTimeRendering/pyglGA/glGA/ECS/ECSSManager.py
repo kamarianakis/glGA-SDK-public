@@ -133,6 +133,7 @@ class ECSSManager():
                                 value.append(component)
                             else:
                                 value = list(component)
+                            return component
                                 
             
             
@@ -153,9 +154,11 @@ class ECSSManager():
         """
         if isinstance(entity_parent, Entity) and isinstance(entity_child, Entity):
             # check if there is already a parent-child relationship between the Entities
-            # if not, create one
-            entity_parent.add(entity_child)
+            if entity_child.getParent() is not entity_parent:
+                # if not, create one
+                entity_parent.add(entity_child)
             # add entity_child in the _entities_components dictionary
+            # GPTODO
             
 
 
