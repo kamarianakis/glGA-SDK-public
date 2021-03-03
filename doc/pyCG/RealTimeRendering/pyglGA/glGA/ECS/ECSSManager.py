@@ -113,13 +113,29 @@ class ECSSManager():
         :param component: The component to be added to this Entity
         :type component: Component
         """
-        if isinstance(entity, Entity) and issubclass(component, Component.Component):
+        if isinstance(entity, Entity) and isinstance(component, Component.Component):
             if isinstance(component, Component.Camera):
                 self._cameras.append(component)
             # loop through all dictionary elements of _entities_components
-            # find key [entity]
-            # check if the value list() of that entity has already that component type
-            # if it has it, replace previous component with same type, otherwise add it
+            for key, value in self._entities_components.items():
+                if key is entity: # find key [entity]
+                    for el in value: #el are Components
+                        # check if the value list() of that entity has already that component type
+                        if isinstance(el, type(component)): # el.type == component.type
+                            # if it has it, replace previous component with same type
+                            # bur first remove previous from scenegraph and add new one
+                            # GPTODO 
+                            el = component
+                        else: #otherwise add it in ECSSManager and in Scenegraph
+                            key.add(component)
+                            #check if there is a list of components and add it there otherwise create one
+                            if isinstance(value, list):
+                                value.append(component)
+                            else:
+                                value = list(component)
+                                
+            
+            
     
     
     def addEntityChild(self, entity_parent: Entity, entity_child: Entity):

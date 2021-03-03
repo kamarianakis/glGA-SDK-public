@@ -51,7 +51,12 @@ class TestECSSManager(unittest.TestCase):
                                                                 trans7
             
         """ 
+        self.rootEntity = self.WorldManager.createEntity(Entity(name="RooT"))
+        self.entityCam1 = self.WorldManager.createEntity(Entity(name="entityCam1"))
         
+        self.transUpdate = self.WorldManager.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
+        self.camUpdate = self.WorldManager.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
+        self.dfsIterator = self.WorldManager.createIterator(self.rootEntity)
         
         
     def test_init(self):
@@ -62,23 +67,30 @@ class TestECSSManager(unittest.TestCase):
         
         print("TestECSSManager:test_init START".center(100, '-'))
         
-        rootEntity = self.WorldManager.createEntity(Entity(name="RooT"))
-        
-        transUpdate = self.WorldManager.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
-        camUpdate = self.WorldManager.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
-        dfsIterator = self.WorldManager.createIterator(rootEntity)
-        
-        
         
         for key, value in self.WorldManager._entities_components.items():
             print("\n entity: ",key, ":: with components: ", value)
         
         print(self.WorldManager._next_entity_id)
         self.assertEqual(id(self.WorldManager), id(self.WorldManager2))
-        self.assertEqual(rootEntity, self.WorldManager._root)
-        self.assertIsInstance(transUpdate, TransformSystem)
-        self.assertIsInstance(camUpdate, CameraSystem)
-        self.assertIsInstance(dfsIterator, EntityDfsIterator)
+        self.assertEqual(self.rootEntity, self.WorldManager._root)
+        self.assertIsInstance(self.transUpdate, TransformSystem)
+        self.assertIsInstance(self.camUpdate, CameraSystem)
+        self.assertIsInstance(self.dfsIterator, EntityDfsIterator)
         
         
         print("TestECSSManager:test_init END".center(100, '-'))
+    
+    
+    def test_addComponent(self):
+        """
+        ECSSManager addComponent
+        """
+        
+        print("TestECSSManager:test_addComponent START".center(100, '-'))
+        
+        self.WorldManager.addComponent(self.entityCam1, BasicTransform(name="trans1"))
+        
+        
+        
+        print("TestECSSManager:test_addComponent END".center(100, '-'))
