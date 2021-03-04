@@ -123,9 +123,9 @@ class ECSSManager():
             # loop through all dictionary elements of _entities_components
             for key, value in self._entities_components.items():
                 if key is entity: # find key [entity]
-                    for el in value: #el are Components
+                    for el in value: #el are Components (but can also be Entities)
                         # check if the value list() of that entity has already that component type
-                        if isinstance(el, type(component)): # el.type == component.type
+                        if isinstance(el, type(component)) and not isinstance(el, Entity): # we only add Components here and not Entities
                             # if it has it, replace previous component with same type
                             # bur first remove previous from scenegraph and add new one
                             # GPTODO 
@@ -144,9 +144,6 @@ class ECSSManager():
                             return component
                                 
             
-            
-    
-    
     def addEntityChild(self, entity_parent: Entity, entity_child: Entity):
         """
         Adds a child Enity to a parent one and thus establishes a hierarchy 
@@ -166,7 +163,13 @@ class ECSSManager():
                 # if not, create one
                 entity_parent.add(entity_child)
             # add entity_child in the _entities_components dictionary
-            # GPTODO
+            # loop through all dictionary elements of _entities_components
+            for key, value in self._entities_components.items():
+                if key is entity_parent: # find key [entity]
+                    if (value[0] == None):
+                        value[0] = entity_child #replace None with the entity_child
+                    else:
+                        value.append(entity_child) #just add entity_child in the children's components list
             
 
 
