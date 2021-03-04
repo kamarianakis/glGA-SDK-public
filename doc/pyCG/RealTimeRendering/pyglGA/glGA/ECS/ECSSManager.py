@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from typing import List, Dict
 import pprint
+import time
 
 from Entity import Entity
 import Component
@@ -48,10 +49,16 @@ class ECSSManager():
         self._entities: List[Entity]=[] #list of all scenegraph entities
         self._cameras: List[Component.Component]=[] # list of all scenegraph camera components
         self._entities_components = {} #dict with keys entities and values list of components per entity
-        self._next_entity_id = 0
         self._root = None
 
-        
+    #define properties for root
+    @property #root
+    def root(self) -> Entity:
+        """ Get ECSS's root node """
+        return self._root
+    @root.setter
+    def root(self, value):
+        self._root = value        
 
     def createEntity(self, entity: Entity):
         """
@@ -94,6 +101,8 @@ class ECSSManager():
         if isinstance(entity, Entity):
             if dfs:
                 return iter(entity)
+        else:
+            raise RuntimeError
         
 
     
@@ -173,7 +182,7 @@ class ECSSManager():
             
 
 
-    def traverse_visit(self, system: System.System, iterator: Iterator):
+    def traverse_visit(self, system: System.System, entity: Entity, dfs=True):
         """
         Traverse whole scenegraph by iterating every Entity/Component and calling 
         a specific System on each different element.   
@@ -183,8 +192,34 @@ class ECSSManager():
         :param iterator: [description]
         :type iterator: Iterator
         """
-        if isinstance(system, System.System) and issubclass(iterator, Iterator):
-            pass
+        
+        iterator = None
+        try:
+            if dfs:
+                iterator = self.createIterator(entity)
+        except RuntimeError:
+            print("ECSSManager::traverse_visit() Could Not Create Iterator")
+        
+        if isinstance(system, System.System) and iterator is not None:
+            tic1 = time.perf_counter()
+            print(f"\nthis is the {system.name} traversal START".center(100, '-'))
+            done_traversing_for_l2w_update = False
+            while(not done_traversing_for_l2w_update):
+                try:
+                    traversedComp = next(iterator)
+                except StopIteration:
+                    print("\n--- end of Scene reached, traversed all Components!---")
+                    done_traversing_for_l2w_update = True
+                else:
+                    if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
+                        print(traversedComp)
+                        #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
+                        traversedComp.accept(system) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                        
+            toc1 = time.perf_counter()
+            print(f"\n{system.name} traversal took {(toc1 - tic1)*1000:0.4f} msecs".center(100, '-'))
+
+
 
     
     def print(self):

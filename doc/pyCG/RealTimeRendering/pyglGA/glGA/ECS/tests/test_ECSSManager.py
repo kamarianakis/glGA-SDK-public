@@ -87,9 +87,6 @@ class TestECSSManager(unittest.TestCase):
         self.transUpdate = self.WorldManager.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.WorldManager.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
         
-        # Iterators
-        self.dfsIterator = self.WorldManager.createIterator(self.rootEntity)
-        
         
     def test_init(self):
         """
@@ -103,12 +100,11 @@ class TestECSSManager(unittest.TestCase):
         for key, value in self.WorldManager._entities_components.items():
             print("\n entity: ",key, ":: with components: ", value)
         
-        print(self.WorldManager._next_entity_id)
         self.assertEqual(id(self.WorldManager), id(self.WorldManager2))
         self.assertEqual(self.rootEntity, self.WorldManager._root)
         self.assertIsInstance(self.transUpdate, TransformSystem)
         self.assertIsInstance(self.camUpdate, CameraSystem)
-        self.assertIsInstance(self.dfsIterator, EntityDfsIterator)
+        
         
         self.assertIn(self.entityCam1, self.rootEntity._children)
         self.assertIn(self.node4, self.rootEntity._children)
@@ -142,3 +138,22 @@ class TestECSSManager(unittest.TestCase):
         
         
         print("TestECSSManager:test_addComponent END".center(100, '-'))
+        
+    def test_traverse_visit(self):
+        """
+        ECSSManager traverse_visit
+        """
+        
+        print("TestECSSManager:test_traverse_visit START".center(100, '-'))
+        
+        #run a l2w traversal
+        self.WorldManager.traverse_visit(self.transUpdate, self.rootEntity)
+        
+        #run a camera traversal
+        print("\n-- BEFORE calculating Mr2c camera matrix--")
+        self.perspCam.accept(self.camUpdate)
+        print(self.perspCam)
+        print("\n-- AFTER calculating Mr2c camera matrix--")
+        self.WorldManager.traverse_visit(self.camUpdate, self.rootEntity)
+        
+        print("TestECSSManager:test_traverse_visit END".center(100, '-'))
