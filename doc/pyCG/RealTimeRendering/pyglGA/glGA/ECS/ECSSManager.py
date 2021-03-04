@@ -117,6 +117,9 @@ class ECSSManager():
         if isinstance(entity, Entity) and isinstance(component, Component.Component):
             if isinstance(component, Component.Camera):
                 self._cameras.append(component)
+            else: #add the component in the _components []
+                self._components.append(component)
+                
             # loop through all dictionary elements of _entities_components
             for key, value in self._entities_components.items():
                 if key is entity: # find key [entity]
@@ -131,7 +134,11 @@ class ECSSManager():
                             key.add(component)
                             #check if there is a list of components and add it there otherwise create one
                             if isinstance(value, list):
-                                value.append(component)
+                                #check if first element is None
+                                if (value[0] == None):
+                                    value[0] = component 
+                                else:
+                                    value.append(component)
                             else:
                                 value = list(component)
                             return component
@@ -182,15 +189,25 @@ class ECSSManager():
         pretty print the contents of the ECSS
         """
         print("_entities_components {}".center(100, '-'))
-        pprint.pprint(self._entities_components)
+        #pprint.pprint(self._entities_components)
+        for en, co in self._entities_components.items():
+            print(f"{en.name}")
+            for comp in co:
+                if comp is not None:
+                    print(f"\t :: {comp.name}")
+        
         print("_entities []".center(100, '-'))
-        pprint.pprint(self._entities)
+        for ent in self._entities:
+            print(ent)
         print("_components []".center(100, '-'))
-        pprint.pprint(self._components)
+        for com in self._components:
+            print(com.name,"--> ", com.parent.name)
         print("_systems []".center(100, '-'))
-        pprint.pprint(self._systems)
+        for sys in self._systems:
+            print(sys)
         print("_cameras []".center(100, '-'))
-        pprint.pprint(self._cameras)
+        for cam in self._cameras:
+            print(cam)
 
 
 
