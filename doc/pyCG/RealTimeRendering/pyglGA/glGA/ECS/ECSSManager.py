@@ -1,8 +1,8 @@
 """
 ECSSManager, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (Entity Component System)
-@Coopyright 2020 George Papagiannakis
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
+@Coopyright 2020-2021 George Papagiannakis
 
 """
 

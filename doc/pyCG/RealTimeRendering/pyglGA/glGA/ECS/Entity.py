@@ -1,7 +1,7 @@
-""" EntityI classes, part of the glGA SDK ECS
+""" EntityI classes, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (EntityI Component System)
-@Coopyright 2020 George Papagiannakis
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
+@Coopyright 2020-2021 George Papagiannakis
     
 The EntityI class is the based aggregation of Components in the glGA ECS.
 
