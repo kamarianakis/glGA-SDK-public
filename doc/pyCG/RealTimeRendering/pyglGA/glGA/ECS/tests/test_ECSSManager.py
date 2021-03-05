@@ -7,6 +7,8 @@ glGA SDK v2020.1 ECS (Entity Component System)
 """
 
 import unittest
+import numpy as np
+
 import utilities as util
 from Entity import Entity, EntityDfsIterator
 from Component import BasicTransform, Camera
@@ -47,7 +49,7 @@ class TestECSSManager(unittest.TestCase):
             |-------|                    |           |----------|-----------|
             trans1, entityCam2           trans4     node5,      node6       trans3
             |       |                               |           |--------|
-                    perspCam, trans2                trans5      node7    trans6
+            ortho, trans2                trans5      node7    trans6
                                                                 |
                                                                 trans7
             
@@ -61,7 +63,7 @@ class TestECSSManager(unittest.TestCase):
         self.entityCam2 = self.WorldManager.createEntity(Entity(name="entityCam2"))
         self.WorldManager.addEntityChild(self.entityCam1, self.entityCam2)
         self.trans2 = self.WorldManager.addComponent(self.entityCam2, BasicTransform(name="trans2", trs=util.translate(2.0,3.0,4.0)))
-        self.perspCam = self.WorldManager.addComponent(self.entityCam2, Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500"))
+        self.orthoCam = self.WorldManager.addComponent(self.entityCam2, Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "orthoCam","Camera","500"))
         
         self.node4 = self.WorldManager.createEntity(Entity(name="node4"))
         self.WorldManager.addEntityChild(self.rootEntity, self.node4)
@@ -112,7 +114,7 @@ class TestECSSManager(unittest.TestCase):
         self.assertIn(self.node3, self.rootEntity._children)
         self.assertIn(self.trans5, self.node5._children)
         self.assertIn(self.trans7, self.node7._children)
-        self.assertIn(self.perspCam, self.entityCam2._children)
+        self.assertIn(self.orthoCam, self.entityCam2._children)
         
         self.WorldManager._root.print()
         self.WorldManager.print()
@@ -151,9 +153,42 @@ class TestECSSManager(unittest.TestCase):
         
         #run a camera traversal
         print("\n-- BEFORE calculating Mr2c camera matrix--")
-        self.perspCam.accept(self.camUpdate)
-        print(self.perspCam)
+        self.orthoCam.accept(self.camUpdate)
+        print(self.orthoCam)
         print("\n-- AFTER calculating Mr2c camera matrix--")
         self.WorldManager.traverse_visit(self.camUpdate, self.rootEntity)
+        
+        # ----- integration tests on the ECSSManager traversals and results ------
+        
+        #setup matrices for the unit tests
+        camOrthoMat = util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+        #camOrthoMat = util.translate(10.0,10.0,10.0)
+        trans1Mat = util.translate(1.0,2.0,3.0)
+        trans2Mat = util.translate(2.0,3.0,4.0)
+        trans3Mat = util.translate(3.0,3.0,3.0)
+        trans6Mat = util.translate(6.0,6.0,6.0)
+        trans7Mat = util.translate(7.0,7.0,7.0)
+        
+        # T2local2world = T2 @ T1
+        trans2l2w = trans2Mat @ trans1Mat
+        # Mroot2cam = (T1)^-1 @ (T2)^-1 @ P = (T2 @ T1)^-1 @ P = (T2local2world)^-1 @ P
+        mr2c = util.inverse(trans2l2w) @ camOrthoMat
+        # M7local2world = trans7 @ trans6 @ trans3
+        m7l2w = trans7Mat @ trans6Mat @ trans3Mat
+        #M7local2camera = Mroot2cam @ M2local2world @ Vertex (right to left)
+        m7l2c = m7l2w @ mr2c
+        
+        self.assertIn(self.entityCam1, self.rootEntity._children)
+        self.assertIn(self.node4, self.rootEntity._children)
+        self.assertIn(self.trans4, self.node4._children)
+        self.assertIn(self.node3, self.rootEntity._children)
+        self.assertIn(self.trans5, self.node5._children)
+        self.assertIn(self.trans7, self.node7._children)
+        self.assertIn(self.orthoCam, self.entityCam2._children)
+        # here are tests on r2cam, l2cam, l2world
+        np.testing.assert_array_almost_equal(self.orthoCam.projMat,camOrthoMat, decimal=3)
+        np.testing.assert_array_almost_equal(self.orthoCam.root2cam,mr2c,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=3)
         
         print("TestECSSManager:test_traverse_visit END".center(100, '-'))

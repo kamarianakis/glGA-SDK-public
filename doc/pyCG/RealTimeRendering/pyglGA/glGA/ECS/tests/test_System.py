@@ -338,11 +338,11 @@ class TestCameraSystem(unittest.TestCase):
         m7l2c = m7l2w @ mr2c
         
         #setup transformations
-        self.trans1.trs = util.translate(1.0,2.0,3.0)
-        self.trans2.trs = util.translate(2.0,3.0,4.0)
-        self.trans3.trs = util.translate(3.0,3.0,3.0)
-        self.trans6.trs = util.translate(6.0,6.0,6.0)
-        self.trans7.trs = util.translate(7.0,7.0,7.0)
+        #self.trans1.trs = util.translate(1.0,2.0,3.0)
+        #self.trans2.trs = util.translate(2.0,3.0,4.0)
+        #self.trans3.trs = util.translate(3.0,3.0,3.0)
+        #self.trans6.trs = util.translate(6.0,6.0,6.0)
+        #self.trans7.trs = util.translate(7.0,7.0,7.0)
         
         self.assertIn(self.gameObject1, self.gameObject._children)
         self.assertIn(self.gameObject4, self.gameObject._children)
