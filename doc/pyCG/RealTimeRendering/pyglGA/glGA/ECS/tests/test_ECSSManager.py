@@ -49,7 +49,7 @@ class TestECSSManager(unittest.TestCase):
             |-------|                    |           |----------|-----------|
             trans1, entityCam2           trans4     node5,      node6       trans3
             |       |                               |           |--------|
-            ortho, trans2                trans5      node7    trans6
+                    ortho, trans2                   trans5      node7    trans6
                                                                 |
                                                                 trans7
             
@@ -131,13 +131,17 @@ class TestECSSManager(unittest.TestCase):
         
         compTrans = self.entityCam1.getChildByType(BasicTransform.getClassName())
         
+        #add a new basicComponent at an Entity that already has one
+        self.trans2 = self.WorldManager.addComponent(self.entityCam2, BasicTransform(name="trans8", trs=util.translate(20.0,30.0,40.0)))
+        
+        
         self.assertEqual(self.rootEntity, self.entityCam1.parent)
         self.assertEqual(compTrans.parent, self.entityCam1)
         self.assertEqual(self.trans1.parent, self.entityCam1)
         self.assertEqual(compTrans, self.trans1)
         self.assertIsInstance(self.trans1, BasicTransform)
         
-        
+        self.WorldManager.print()
         
         print("TestECSSManager:test_addComponent END".center(100, '-'))
         
@@ -190,5 +194,7 @@ class TestECSSManager(unittest.TestCase):
         np.testing.assert_array_almost_equal(self.orthoCam.root2cam,mr2c,decimal=3)
         np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=3)
         np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=3)
+        
+        self.WorldManager.print()
         
         print("TestECSSManager:test_traverse_visit END".center(100, '-'))

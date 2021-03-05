@@ -132,13 +132,16 @@ class ECSSManager():
             # loop through all dictionary elements of _entities_components
             for key, value in self._entities_components.items():
                 if key is entity: # find key [entity]
-                    for el in value: #el are Components (but can also be Entities)
+                    for index, el in enumerate(value): #el are Components (but can also be Entities)
                         # check if the value list() of that entity has already that component type
                         if isinstance(el, type(component)) and not isinstance(el, Entity): # we only add Components here and not Entities
                             # if it has it, replace previous component with same type
                             # bur first remove previous from scenegraph and add new one
-                            # GPTODO 
-                            el = component
+                            key.remove(el) #remove it from scenegraph Entity's children list
+                            value.remove(el) # remove previous component from _entities_components list
+                            self._components.remove(el) #remove component from ECSSManager _components list
+                            value.insert(index, component) #insert new component at same index
+                            key.add(component) #add it in the scenegraph as child of the Entity
                         else: #otherwise add it in ECSSManager and in Scenegraph
                             key.add(component)
                             #check if there is a list of components and add it there otherwise create one
@@ -146,7 +149,7 @@ class ECSSManager():
                                 #check if first element is None
                                 if (value[0] == None):
                                     value[0] = component 
-                                else:
+                                elif component not in value:
                                     value.append(component)
                             else:
                                 value = list(component)
@@ -239,7 +242,7 @@ class ECSSManager():
             print(ent)
         print("_components []".center(100, '-'))
         for com in self._components:
-            print(com.name,"--> ", com.parent.name)
+            print(com.name,"<--", com.parent.name)
         print("_systems []".center(100, '-'))
         for sys in self._systems:
             print(sys)
