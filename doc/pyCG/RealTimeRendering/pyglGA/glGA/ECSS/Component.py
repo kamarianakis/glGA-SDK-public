@@ -1,8 +1,8 @@
 """
-Component classes, part of the glGA SDK ECS
+Component classes, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (Entity Component System)
-@Coopyright 2020 George Papagiannakis
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
+@Coopyright 2020-2021 George Papagiannakis
     
 The Compoment class is the dedicated to a specific type of data container in the glGA ECS.
 
@@ -34,9 +34,22 @@ class Component(ABC, Iterable):
     """
     
     def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        
+        if (name is None):
+            self._name = self.getClassName()
+        else:
+            self._name = name
+        
+        if (type is None):
+            self._type = self.getClassName()
+        else:
+            self._type = type
+        
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Component
+        else:
+            self._id = id
+        
         self._parent = self
         self._children = None
     
@@ -167,14 +180,15 @@ class BasicTransform(Component):
     :type Component: [type]
     """
    
-    def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
+    def __init__(self, name=None, type=None, id=None, trs=None):
+        
+        super().__init__(name, type, id)
+        
+        if (trs is None):
+            self._trs = util.identity()
         else:
-            self._id = id
-        self._trs = util.identity()
+            self._trs = trs
+            
         self._l2world = util.identity()
         self._l2cam = util.identity()
         self._parent = self
@@ -215,13 +229,13 @@ class BasicTransform(Component):
         arg2 = "trs"
         arg3 = "l2cam"
         if arg1 in kwargs:
-            print("Setting: ", arg1," with: ", kwargs[arg1])
+            print("Setting: ", arg1," with: \n", kwargs[arg1])
             self._l2world = kwargs[arg1]
         if arg2 in kwargs:
-            print("Setting: ", arg2," with: ", kwargs[arg2])
+            print("Setting: ", arg2," with: \n", kwargs[arg2])
             self._trs = kwargs[arg2]
         if arg3 in kwargs:
-            print("Setting: ", arg3," with: ", kwargs[arg3])
+            print("Setting: ", arg3," with: \n", kwargs[arg3])
             self._l2cam = kwargs[arg3]
         
        
@@ -249,6 +263,9 @@ class BasicTransform(Component):
         """
         pass
     
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \nl2world: {self.l2world}, l2cam: {self.l2cam}, trs: {self.trs}"
+    
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
         """
@@ -266,12 +283,8 @@ class Camera(Component):
     """
    
     def __init__(self, projMatrix, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        super().__init__(name, type, id)
+        
         self._projMat = projMatrix
         self._root2cam = util.identity()
         self._parent = self
@@ -300,7 +313,7 @@ class Camera(Component):
         print(self.getClassName(), ": update() called")
         arg1 = "root2cam"
         if arg1 in kwargs:
-            print("Setting: ", arg1," with: ", kwargs[arg1])
+            print("Setting: ", arg1," with: \n", kwargs[arg1])
             self._root2cam = kwargs[arg1]
        
        
@@ -319,11 +332,17 @@ class Camera(Component):
         system.apply2Camera(self)
     
     
+    
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
         """
         pass
+    
+    
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \n projMat: \n{self.projMat},\n root2cam: \n{self.root2cam}"
+    
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
@@ -338,12 +357,8 @@ class RenderMesh(Component):
     :type Component: [type]
     """
     def __init__(self, name=None, type=None, id=None):
-        self._name = name
-        self._type = type
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        super().__init__(name, type, id)
+        
         self._trs = util.identity()
         self._parent = self
         self._children = []

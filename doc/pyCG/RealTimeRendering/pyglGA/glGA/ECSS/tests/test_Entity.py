@@ -1,7 +1,7 @@
 """
-Test Entity & Component Unit tests, part of the glGA SDK ECS
+Test Entity & Component Unit tests, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (EntityI Component System)
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 @Coopyright 2020-2021 George Papagiannakis
 
 """
@@ -11,7 +11,7 @@ import numpy as np
 from typing import List
 
 from Entity import Entity
-from Component import BasicTransform, Camera, RenderMesh, CompNullIterator
+from Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator
 
 import utilities as util
 
@@ -22,25 +22,31 @@ class TestEntity(unittest.TestCase):
         Entity init() test
         """
         print("TestEntity:test_init() START")
-        gameObject = Entity() 
+        gameObject = Entity("root") 
         gameObject2 = Entity("gameObject2", "Group", 10)
         gameComponent = BasicTransform("Transform", "TRS", 200)
+        gameComponent2 = BasicTransform()
         
+        gameObject.add(gameObject2)
         gameObject2.add(gameComponent)
+        gameObject.add(gameComponent2)
+        
+        print(gameObject) #prints root
+        gameObject.print() #prints recursively all root children
         
         self.assertIsInstance(gameObject,Entity)
         self.assertIsInstance(gameObject._children, List)
         self.assertEqual(gameObject2._id,10)
         self.assertEqual(gameObject2.getChild(0),gameComponent)
-        
         self.assertEqual(gameObject2.name, "gameObject2")
         self.assertEqual(gameObject2.type,"Group")
         self.assertEqual(gameObject2.id, 10)
+        self.assertEqual(gameComponent2.type, "BasicTransform")
         
         gameObject2.remove(gameComponent)
         self.assertEqual(gameObject2.getChild(0), None)
         
-        print(gameObject._children)
+        
         print("TestEntity:test_init() END")
 
     def test_add(self):

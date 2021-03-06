@@ -1,8 +1,8 @@
 """
-System classes, part of the glGA SDK ECS
+System classes, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (Entity Component System)
-@Coopyright 2020 George Papagiannakis
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
+@Coopyright 2020-2021 George Papagiannakis
     
 The System class is the logic-specific processor of different Components in the glGA ECS.
 
@@ -20,6 +20,7 @@ from typing import List
 
 import Component
 import utilities as util
+import uuid  
 
 class System(ABC):
     """
@@ -34,9 +35,20 @@ class System(ABC):
     """
     
     def __init__(self, name=None, type=None, id=None, priority=0):
-        self._name = name
-        self._type = type
-        self._id = id
+        if (name is None):
+            self._name = self.getClassName()
+        else:
+            self._name = name
+        
+        if (type is None):
+            self._type = self.getClassName()
+        else:
+            self._type = type
+        
+        if id is None:
+            self._id = uuid.uuid1().int #assign unique ID on Component
+        else:
+            self._id = id
         self._priority = priority
     
     #define properties for id, name, type, priority
@@ -129,7 +141,9 @@ class System(ABC):
     
 class TransformSystem(System):
     """
-
+    System that operates on BasicTransform Components and calculates Local2World matrices
+    that are needed in a Scenegraph DAG hierarchy
+    
     :param System: [description]
     :type System: [type]
     :return: [description]
@@ -137,9 +151,7 @@ class TransformSystem(System):
     """
     
     def __init__(self, name=None, type=None, id=None, cameraComponent=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        super().__init__(name, type, id)
         self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
         
     
@@ -210,7 +222,12 @@ class TransformSystem(System):
 
 class CameraSystem(System):
     """
-
+    System that operates on both BasicTransform Components as well as Camera Components
+    For the BasicTransform ones, it calculates the Local2camera matrix. For the Camera Component
+    it calculates the Root2camera matrix, which is a necessary component for the Local2camera,
+    hence it needs to be calculated first: Ml2c = Mr2c * Ml2w * V
+    Like that we can be having many camera and re-calculating all Ml2c transformations accordingly
+    
     :param System: [description]
     :type System: [type]
     :return: [description]
@@ -218,9 +235,7 @@ class CameraSystem(System):
     """
     
     def __init__(self, name=None, type=None, id=None, cameraComponent=None):
-        self._name = name
-        self._type = type
-        self._id = id
+        super().__init__(name, type, id)
         self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
     
     def update(self):
@@ -233,6 +248,12 @@ class CameraSystem(System):
         
     def getRoot2Camera(self, camComp: Component, topComp=None):
         """Calculate the root to camera matrix
+        
+        Root2Camera is to get all parent BasicTransforms till root node (as usual)
+        then get their inverse, since Mr2c = Inv(Ti) * Inv(Ti+1) * Proj = Inv(Ti+1 * Ti) *Proj
+        since we run first the System on a camera node, it is enough to get its Entity'w BasicTrasform
+        and from there just retrieve its l2world camera, which was calculated before from the scenegraph 
+        l2world traversal (always first system that one to run)
 
         :param leafComp: [description]
         :type leafComp: Component
@@ -242,14 +263,12 @@ class CameraSystem(System):
         :rtype: [type]
         """
         r2c = util.identity()
-        # Root2Camera is to get all parent BasicTransforms till root node (as usual)
-        # then get their inverse, since Mr2c = Inv(Ti) * Inv(Ti+1) * Proj = Inv(Ti+1 * Ti) *Proj
         componentEntity = camComp.parent
         parentBasicTrans = componentEntity.getChildByType("BasicTransform")
         if(parentBasicTrans is not None):
-            parentTRS = parentBasicTrans.trs
-            inv_parentTRS = util.inverse(parentTRS)
-            r2c = inv_parentTRS @ camComp.projMat
+            parentl2world = parentBasicTrans.l2world
+            inv_parentl2world = util.inverse(parentl2world)
+            r2c = inv_parentl2world @ camComp.projMat
         
         return r2c
         
@@ -270,7 +289,7 @@ class CameraSystem(System):
         l2w = basicTransform.l2world
         r2c = self._camera.root2cam
         proj = self._camera.projMat
-        l2c = l2w @ r2c @ proj
+        l2c = l2w @ r2c
         basicTransform.update(l2cam=l2c) 
         
     #first this     
@@ -302,6 +321,9 @@ class RenderSystem(System):
     :param System: [description]
     :type System: [type]
     """
+    def __init__(self, name=None, type=None, id=None, cameraComponent=None):
+        super().__init__(name, type, id)
+        self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
     
     def update(self):
         """

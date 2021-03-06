@@ -1,7 +1,7 @@
 """
-Test System Unit tests, part of the glGA SDK ECS
+Test System Unit tests, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (Entity Component System)
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 @Coopyright 2020-2021 George Papagiannakis
 
 """
@@ -188,10 +188,10 @@ class TestCameraSystem(unittest.TestCase):
         root
             |                           |           |
             entityCam1,                 node4,      node3
-            |       |                    |           |          |
-            trans1, entityCam2           trans4     node5,      node6
-            |       |                               |           |
-                    perspCam, trans2                trans5      node7
+            |-------|                    |           |----------|-----------|
+            trans1, entityCam2           trans4     node5,      node6       trans3
+            |       |                               |           |--------|
+                    perspCam, trans2                trans5      node7    trans6
                                                                 |
                                                                 trans7
             
@@ -204,12 +204,24 @@ class TestCameraSystem(unittest.TestCase):
         self.gameObject5 = Entity("node5", "Group", 5)
         self.gameObject6 = Entity("node6", "Group", 6)
         self.gameObject7 = Entity("node7", "Group", 7)
-        self.trans1 = BasicTransform("trans1", "Transform")
-        self.trans2 = BasicTransform("trans2", "Transform")
-        self.trans4 = BasicTransform("trans4", "Transform")
-        self.trans5 = BasicTransform("trans5", "Transform")
-        self.trans7 = BasicTransform("trans7", "Transform")
+        self.trans1 = BasicTransform("trans1", "BasicTransform")
+        self.trans2 = BasicTransform("trans2", "BasicTransform")
+        self.trans3 = BasicTransform("trans3", "BasicTransform")
+        self.trans4 = BasicTransform("trans4", "BasicTransform")
+        self.trans5 = BasicTransform("trans5", "BasicTransform")
+        self.trans6 = BasicTransform("trans6", "BasicTransform")
+        self.trans7 = BasicTransform("trans7", "BasicTransform")
         self.perspCam = Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "perspCam","Camera","500")
+        #for debug cam below
+        #self.perspCam = Camera(util.translate(10.0,10.0,10.0), "perspCam","Camera","500")
+        
+        
+        #setup transformations
+        self.trans1.trs = util.translate(1.0,2.0,3.0)
+        self.trans2.trs = util.translate(2.0,3.0,4.0)
+        self.trans3.trs = util.translate(3.0,3.0,3.0)
+        self.trans6.trs = util.translate(6.0,6.0,6.0)
+        self.trans7.trs = util.translate(7.0,7.0,7.0)
         
         #camera sub-tree
         self.gameObject.add(self.gameObject1)
@@ -222,10 +234,12 @@ class TestCameraSystem(unittest.TestCase):
         self.gameObject4.add(self.trans4)
         
         self.gameObject.add(self.gameObject3)
+        self.gameObject3.add(self.trans3)
         self.gameObject3.add(self.gameObject5)
         self.gameObject5.add(self.trans5)
         
         self.gameObject3.add(self.gameObject6)
+        self.gameObject6.add(self.trans6)
         self.gameObject6.add(self.gameObject7)
         self.gameObject7.add(self.trans7)
         
@@ -241,20 +255,10 @@ class TestCameraSystem(unittest.TestCase):
         """
         print("test_CameraSystem_use() START")
         
-        
-        self.assertIn(self.gameObject1, self.gameObject._children)
-        self.assertIn(self.gameObject4, self.gameObject._children)
-        self.assertIn(self.trans4, self.gameObject4._children)
-        self.assertIn(self.gameObject3, self.gameObject._children)
-        self.assertIn(self.trans5, self.gameObject5._children)
-        self.assertIn(self.trans7, self.gameObject7._children)
-        self.assertIn(self.perspCam, self.gameObject2._children)
-        self.assertEqual(self.gameObject._id,0)
-        
         #test the EntityDfsIterator to traverse the above ECS scenegraph
         dfsIterator = iter(self.gameObject)
-        self.gameObject.print()
-        self.trans7.print()
+        #self.gameObject.print()
+        #self.trans7.print()
         
         
         #instantiate a new TransformSystem System to visit all scenegraph componets
@@ -282,29 +286,82 @@ class TestCameraSystem(unittest.TestCase):
         toc1 = time.perf_counter()
         print(f"\n\n------------------ Scene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs -----------------")
 
+
         tic2 = time.perf_counter()
         print("\n\n------------------ This is the Scene:: camera traversal start-----------------")
         done_traversing_for_camera = False
+        # new iterator to DFS scenegraph from root
+        dfsIteratorCamera = iter(self.gameObject)
         #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
         # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
+        # M2lc = Mr2c * Ml2w * V
+        print("\n-- BEFORE calculating Mr2c camera matrix--")
         self.perspCam.accept(camUpdate)
+        print(self.perspCam)
+        print("\n-- AFTER calculating Mr2c camera matrix--")
         
         while(not done_traversing_for_camera):
             try:
-                traversedComp = next(dfsIterator)
+                traversedCom = next(dfsIteratorCamera)
             except StopIteration:
                 print("\n--- end of Scene reached, traversed all Components!---")
                 done_traversing_for_camera = True
             else:
-                if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
-                    print(traversedComp)
+                if (traversedCom is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedCom)
                     
                     #having calculated R2C and L2W, accept a CameraVisitor to calculate L2C (L2C=L2W*R2C)
-                    traversedComp.accept(camUpdate)
+                    traversedCom.accept(camUpdate)
         # ----------------- This is the Scene:: camera traversal end --------------------
         toc2 = time.perf_counter()
-        print(f"\n\n----------------- Scene l2w traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
-                    
+        print(f"\n\n----------------- Scene camera traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
+        
+        #print(f"\n\n----------------- Scene after all traversals: -----------------")
+        #self.gameObject.print()
+        
+        #setup matrices for the unit tests
+        camOrthoMat = util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+        #camOrthoMat = util.translate(10.0,10.0,10.0)
+        trans1Mat = util.translate(1.0,2.0,3.0)
+        trans2Mat = util.translate(2.0,3.0,4.0)
+        trans3Mat = util.translate(3.0,3.0,3.0)
+        trans6Mat = util.translate(6.0,6.0,6.0)
+        trans7Mat = util.translate(7.0,7.0,7.0)
+        
+        # T2local2world = T2 @ T1
+        trans2l2w = trans2Mat @ trans1Mat
+        # Mroot2cam = (T1)^-1 @ (T2)^-1 @ P = (T2 @ T1)^-1 @ P = (T2local2world)^-1 @ P
+        mr2c = util.inverse(trans2l2w) @ camOrthoMat
+        # M7local2world = trans7 @ trans6 @ trans3
+        m7l2w = trans7Mat @ trans6Mat @ trans3Mat
+        #M7local2camera = Mroot2cam @ M2local2world @ Vertex (right to left)
+        m7l2c = m7l2w @ mr2c
+        
+        #setup transformations
+        #self.trans1.trs = util.translate(1.0,2.0,3.0)
+        #self.trans2.trs = util.translate(2.0,3.0,4.0)
+        #self.trans3.trs = util.translate(3.0,3.0,3.0)
+        #self.trans6.trs = util.translate(6.0,6.0,6.0)
+        #self.trans7.trs = util.translate(7.0,7.0,7.0)
+        
+        self.assertIn(self.gameObject1, self.gameObject._children)
+        self.assertIn(self.gameObject4, self.gameObject._children)
+        self.assertIn(self.trans4, self.gameObject4._children)
+        self.assertIn(self.gameObject3, self.gameObject._children)
+        self.assertIn(self.trans5, self.gameObject5._children)
+        self.assertIn(self.trans7, self.gameObject7._children)
+        self.assertIn(self.perspCam, self.gameObject2._children)
+        self.assertEqual(self.gameObject._id,0)
+        # here are tests on r2cam, l2cam, l2world
+        np.testing.assert_array_almost_equal(self.perspCam.projMat,camOrthoMat, decimal=3)
+        np.testing.assert_array_almost_equal(self.perspCam.root2cam,mr2c,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2world,m7l2w,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans7.l2cam,m7l2c,decimal=3)
+
+        print(f"trans7.l2cam: \n{self.trans7.l2cam}")
+        print(f"m7l2c: \n{m7l2c}")
+        
+        
         print("test_CameraSystem_use() END")
 
 class TestRenderSystem(unittest.TestCase):

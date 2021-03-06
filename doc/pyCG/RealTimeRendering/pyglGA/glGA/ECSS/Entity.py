@@ -1,7 +1,7 @@
-""" EntityI classes, part of the glGA SDK ECS
+""" EntityI classes, part of the glGA SDK ECSS
     
-glGA SDK v2020.1 ECS (EntityI Component System)
-@Coopyright 2020 George Papagiannakis
+glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
+@Coopyright 2020-2021 George Papagiannakis
     
 The EntityI class is the based aggregation of Components in the glGA ECS.
 
@@ -81,26 +81,19 @@ class Entity(Component):
         note this is how we declare the type of variables in Phython 3.6 and later.
         e.g. x: int=1 or x: List[int] = [1] 
         """
+        super().__init__(name, type, id)
+        
         self._children: List[Component]=[]
-        self._name = name
-        self._type = type
         self._parent = None
-        if id is None:
-            self._id = uuid.uuid1().int #assign unique ID on Entity
-        else:
-            self._id = id
+        
     
     def print(self):
         """
         Print out contents of Entity for Debug purposes only
         """
-        #print out name, type, id of this Entity
-        if (self._parent is not None): #in case this is not the root node
-            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}")
-        else:
-            print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: None (root node)")
-
-        print(f" --------------------------------------------------- ")
+        #print out name, type, id of this Entity and its components
+        
+        print(f" _______________________________________________________________ ")
         #create a local iterator of Entity's children
         debugIterator = iter(self._children)
         #call print() on all children (Concrete Components or Entities) while there are more children to traverse
@@ -111,7 +104,8 @@ class Entity(Component):
             except StopIteration:
                 done_traversing = True
             else:
-                comp.print()
+                print(comp) #calls the component's __str__()
+                comp.print() # recursive call of this method to traverse hierarchy
 
     def add(self, object: Component) ->None:
         self._children.append(object)

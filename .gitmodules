@@ -10,10 +10,6 @@
 	path = SDK/frameworks/python/MR-GRAIL
 	url = ssh://git@github.com/papagiannakis/MR-GRAIL.git
 	branch = master
-[submodule "UnityXR-edu"]
-	path = SDK/frameworks/unity/UnityXR-edu
-	url = ssh://git@github.com/papagiannakis/UnityXR-edu.git
-	branch = master
 [submodule "pybind11"]
 	path = extern/python/computing/pybind11
 	url = git@github.com:papagiannakis/pybind11.git
