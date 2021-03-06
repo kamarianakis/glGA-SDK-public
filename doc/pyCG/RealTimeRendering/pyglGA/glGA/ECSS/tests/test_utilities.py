@@ -20,7 +20,7 @@ class TestUtilities(unittest.TestCase):
         """
         test_vec function
         """
-        print("\TestUtilities:test_vec() START")
+        print("\nTestUtilities:test_vec() START")
         a = [1.0,0.0,0.0,1.0]
         vec_a = vec(a)  
         np_a = np.array([1.0,0.0,0.0,1.0],dtype=np.float,order='F')
@@ -36,7 +36,7 @@ class TestUtilities(unittest.TestCase):
         """
         test_normalised function
         """
-        print("\TestUtilities:test_normalised() START")
+        print("\nTestUtilities:test_normalised() START")
         a = [2.0,2.0,0.0,1.0]
         vec_a = vec(a)  
         norm_vec = normalise(vec_a)
@@ -56,7 +56,7 @@ class TestUtilities(unittest.TestCase):
     
     def test_lerp(self):
         """Test linear interpolation between two points"""
-        print("\TestUtilities:test_lerp() START")
+        print("\nTestUtilities:test_lerp() START")
         
         # lerp between 0.0 to 1.0
         point0 = lerp(0.0, 1.0, 0.0)
@@ -76,7 +76,7 @@ class TestUtilities(unittest.TestCase):
         """
         test_identity function
         """
-        print("\TestUtilities:test_identity() START")
+        print("\nTestUtilities:test_identity() START")
         matI = identity(4)
         np_i1 = np.ones((4,4))
         np_i4 = np.identity(4)
@@ -101,7 +101,7 @@ class TestUtilities(unittest.TestCase):
         test_inverse function, 
         https://numpy.org/doc/stable/reference/generated/numpy.linalg.inv.html
         """
-        print("\TestUtilities:test_rotate() START")
+        print("\nTestUtilities:test_rotate() START")
         
         mLat = np.array([
             [1,0,0,1],
@@ -131,7 +131,7 @@ class TestUtilities(unittest.TestCase):
         test_ortho function, 
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
-        print("\TestUtilities:test_ortho() START")
+        print("\nTestUtilities:test_ortho() START")
         matOrtho = ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
         np_Ortho = np.array([
             [0.01,0.0,0.0,0.0],
@@ -152,7 +152,7 @@ class TestUtilities(unittest.TestCase):
         test_perspective function, 
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
-        print("\TestUtilities:test_perspective() START")
+        print("\nTestUtilities:test_perspective() START")
         matPersp = perspective(90.0, 1, 0.1, 100)
         np_Persp = np.array([
             [1.0,0.0,0.0,0.0],
@@ -174,7 +174,7 @@ class TestUtilities(unittest.TestCase):
         test_frustum function, 
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
-        print("\TestUtilities:test_frustum() START")
+        print("\nTestUtilities:test_frustum() START")
         matPersp = frustum(-10.0, 10.0,-10.0,10.0, 0.1, 100)
         np_Persp = np.array([
             [0.01,0.0,0.0,0.0],
@@ -195,7 +195,7 @@ class TestUtilities(unittest.TestCase):
         test_translate function, 
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
-        print("\TestUtilities:test_translate() START")
+        print("\nTestUtilities:test_translate() START")
         matTrans = translate(1.0, 2.0, 3.0)
         matTrans2 = translate(vec(1.0, 2.0, 3.0))
         mT = np.array([
@@ -222,7 +222,7 @@ class TestUtilities(unittest.TestCase):
         test_scale function, 
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         """
-        print("\TestUtilities:test_scale() START")
+        print("\nTestUtilities:test_scale() START")
         matTrans = scale(1.0, 2.0, 3.0)
         matTrans2 = scale(vec(1.0, 2.0, 3.0))
         matTrans3 = scale(10.0) #uniform scaling
@@ -256,7 +256,7 @@ class TestUtilities(unittest.TestCase):
         tested against results from https://glm.g-truc.net/0.9.4/api/a00136.html
         from GLM 0.9.5.1 radians are default and not degrees: GLM_FORCE_RADIANS 
         """
-        print("\TestUtilities:test_sincos() START")
+        print("\nTestUtilities:test_sincos() START")
         
         cos0 = 1.0
         cos45 = 0.7071067811865476
@@ -294,7 +294,7 @@ class TestUtilities(unittest.TestCase):
         tested against results from https://glm.g-truc.net/0.9.2/api/a00245.html
         and theory: https://en.wikipedia.org/wiki/Rotation_matrix 
         """
-        print("\TestUtilities:test_rotate() START")
+        print("\nTestUtilities:test_rotate() START")
         axis=(1.0, 1.0, 1.0)
         angle = 90.0
         matRot = rotate(axis, angle)
@@ -324,7 +324,7 @@ class TestUtilities(unittest.TestCase):
         https://github.com/g-truc/glm/blob/master/glm/ext/matrix_transform.inl
         and https://github.com/Zuzu-Typ/PyGLM/blob/master/wiki/function-reference/stable_extensions/matrix_transform.md#lookAt-function 
         """
-        print("\TestUtilities:test_rotate() START")
+        print("\nTestUtilities:test_rotate() START")
         eye = vec(1.0, 1.0, 1.0)
         target = vec(10,10,10)
         up = vec(0.0, 1.0, 0.0)
@@ -352,7 +352,7 @@ class TestUtilities(unittest.TestCase):
         tested against scipy.spatial.transform.Rotation (by default produces normalised quaternions)
         and glm.quat: NOTE GLM IS SCALAR-FIRST 
         """
-        print("\TestUtilities:test_quaternion() START")
+        print("\nTestUtilities:test_quaternion() START")
         
         quat_a = quaternion(1.0,1.0,1.0,1.0)
         vec_a = vec(1.0, 1.0, 1.0)  

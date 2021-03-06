@@ -26,7 +26,7 @@ class ECSSManager():
 
     """
     _instance = None
-    
+
     def __new__(cls):
         """
         Special singleton class method, returns single instance of ECSSManager
@@ -44,53 +44,57 @@ class ECSSManager():
         """
         Construct initial data structures for scenegraph elements
         """
-        self._systems: List[System.System]=[] #list for all systems
-        self._components: List[Component.Component]=[] #list with all scenegraph components
-        self._entities: List[Entity]=[] #list of all scenegraph entities
-        self._cameras: List[Component.Component]=[] # list of all scenegraph camera components
-        self._entities_components = {} #dict with keys entities and values list of components per entity
+        self._systems: List[System.System] = []  # list for all systems
+        # list with all scenegraph components
+        self._components: List[Component.Component] = []
+        self._entities: List[Entity] = []  # list of all scenegraph entities
+        # list of all scenegraph camera components
+        self._cameras: List[Component.Component] = []
+        # dict with keys entities and values list of components per entity
+        self._entities_components = {}
         self._root = None
 
-    #define properties for root
-    @property #root
+    # define properties for root
+    @property  # root
     def root(self) -> Entity:
         """ Get ECSS's root node """
         return self._root
+
     @root.setter
     def root(self, value):
-        self._root = value        
+        self._root = value
 
     def createEntity(self, entity: Entity):
         """
         Creates an Entity in the underlying scenegraph and adds it in the ECSS data structures.
-        
+
         Checks if the Entity's name is "root" to add it as root of the ECSS
-        
+
         :param entity: Entity to add in the Scenegraph
         :type entity: Entity
         """
         if isinstance(entity, Entity):
-            self._entities.append(entity) #add an empty list for components with the new Entity
-            self._entities_components[entity]=[None]
-        
+            # add an empty list for components with the new Entity
+            self._entities.append(entity)
+            self._entities_components[entity] = [None]
+
             if entity.name.lower() == "root":
                 self._root = entity
-        
-        return entity #if the method was called with an inline constructor e.g. 'createEntity(Entity())', 
-                        # we return that created Entity in case it is needed
-    
-    
+
+        # if the method was called with an inline constructor e.g. 'createEntity(Entity())',
+        return entity
+        # we return that created Entity in case it is needed
+
     def createSystem(self, system: System.System):
         """
         Creates a System and adds it in the ECSS data structures
-        
+
         """
         if isinstance(system, System.System):
             self._systems.append(system)
-        
+
         return system
-    
-    
+
     def createIterator(self, entity: Entity, dfs=True):
         """
         Creates and returns a scenegraph traversal node iterator
@@ -103,18 +107,16 @@ class ECSSManager():
                 return iter(entity)
         else:
             raise RuntimeError
-        
 
-    
     def addComponent(self, entity: Entity, component: Component.Component):
         """
         Adds a component to an Entity in a scenegraph and in the ECSS data structures
-        
+
         Checks if that Component is a Camera, to add it in the list of Cameras
-        
+
         Checks if that Entity has already such a component of that type and replaces 
         it with the new one
-        
+
         Checks that indeed only a component is added with this method. 
         If we need to add a child Entity to an Enity, we use addEntityChild()
 
@@ -126,41 +128,47 @@ class ECSSManager():
         if isinstance(entity, Entity) and isinstance(component, Component.Component):
             if isinstance(component, Component.Camera):
                 self._cameras.append(component)
-            else: #add the component in the _components []
+            else:  # add the component in the _components []
                 self._components.append(component)
-                
+
             # loop through all dictionary elements of _entities_components
             for key, value in self._entities_components.items():
-                if key is entity: # find key [entity]
-                    for index, el in enumerate(value): #el are Components (but can also be Entities)
+                if key is entity:  # find key [entity]
+                    # el are Components (but can also be Entities)
+                    for index, el in enumerate(value):
                         # check if the value list() of that entity has already that component type
-                        if isinstance(el, type(component)) and not isinstance(el, Entity): # we only add Components here and not Entities
+                        # we only add Components here and not Entities
+                        if isinstance(el, type(component)) and not isinstance(el, Entity):
                             # if it has it, replace previous component with same type
                             # bur first remove previous from scenegraph and add new one
-                            key.remove(el) #remove it from scenegraph Entity's children list
-                            value.remove(el) # remove previous component from _entities_components list
-                            self._components.remove(el) #remove component from ECSSManager _components list
-                            value.insert(index, component) #insert new component at same index
-                            key.add(component) #add it in the scenegraph as child of the Entity
-                        else: #otherwise add it in ECSSManager and in Scenegraph
+                            # remove it from scenegraph Entity's children list
+                            key.remove(el)
+                            # remove previous component from _entities_components list
+                            value.remove(el)
+                            # remove component from ECSSManager _components list
+                            self._components.remove(el)
+                            # insert new component at same index
+                            value.insert(index, component)
+                            # add it in the scenegraph as child of the Entity
                             key.add(component)
-                            #check if there is a list of components and add it there otherwise create one
+                        else:  # otherwise add it in ECSSManager and in Scenegraph
+                            key.add(component)
+                            # check if there is a list of components and add it there otherwise create one
                             if isinstance(value, list):
-                                #check if first element is None
+                                # check if first element is None
                                 if (value[0] == None):
-                                    value[0] = component 
+                                    value[0] = component
                                 elif component not in value:
                                     value.append(component)
                             else:
                                 value = list(component)
                             return component
-                                
-            
+
     def addEntityChild(self, entity_parent: Entity, entity_child: Entity):
         """
         Adds a child Enity to a parent one and thus establishes a hierarchy 
         in the underlying scenegraph.
-        
+
         Adds the child Entity also in the ECSS _entities_components dictionary 
         data structure, so that the hierarchy is also visible at ECSSManager level.
 
@@ -177,13 +185,13 @@ class ECSSManager():
             # add entity_child in the _entities_components dictionary
             # loop through all dictionary elements of _entities_components
             for key, value in self._entities_components.items():
-                if key is entity_parent: # find key [entity]
+                if key is entity_parent:  # find key [entity]
                     if (value[0] == None):
-                        value[0] = entity_child #replace None with the entity_child
+                        # replace None with the entity_child
+                        value[0] = entity_child
                     else:
-                        value.append(entity_child) #just add entity_child in the children's components list
-            
-
+                        # just add entity_child in the children's components list
+                        value.append(entity_child)
 
     def traverse_visit(self, system: System.System, entity: Entity, dfs=True):
         """
@@ -195,17 +203,18 @@ class ECSSManager():
         :param iterator: [description]
         :type iterator: Iterator
         """
-        
+
         iterator = None
         try:
             if dfs:
                 iterator = self.createIterator(entity)
         except RuntimeError:
             print("ECSSManager::traverse_visit() Could Not Create Iterator")
-        
+
         if isinstance(system, System.System) and iterator is not None:
             tic1 = time.perf_counter()
-            print(f"\nthis is the {system.name} traversal START".center(100, '-'))
+            print(
+                f"\nthis is the {system.name} traversal START".center(100, '-'))
             done_traversing_for_l2w_update = False
             while(not done_traversing_for_l2w_update):
                 try:
@@ -214,35 +223,35 @@ class ECSSManager():
                     print("\n--- end of Scene reached, traversed all Components!---")
                     done_traversing_for_l2w_update = True
                 else:
-                    if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
+                    # only if we reached end of Entity's children traversedComp is None
+                    if (traversedComp is not None):
                         print(traversedComp)
-                        #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
-                        traversedComp.accept(system) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
-                        
+                        # accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
+                        # calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                        traversedComp.accept(system)
+
             toc1 = time.perf_counter()
-            print(f"\n{system.name} traversal took {(toc1 - tic1)*1000:0.4f} msecs".center(100, '-'))
+            print(
+                f"\n{system.name} traversal took {(toc1 - tic1)*1000:0.4f} msecs".center(100, '-'))
 
-
-
-    
     def print(self):
         """
         pretty print the contents of the ECSS
         """
         print("_entities_components {}".center(100, '-'))
-        #pprint.pprint(self._entities_components)
+        # pprint.pprint(self._entities_components)
         for en, co in self._entities_components.items():
             print(f"{en.name}")
             for comp in co:
                 if comp is not None:
                     print(f"\t :: {comp.name}")
-        
+
         print("_entities []".center(100, '-'))
         for ent in self._entities:
             print(ent)
         print("_components []".center(100, '-'))
         for com in self._components:
-            print(com.name,"<--", com.parent.name)
+            print(com.name, "<--", com.parent.name)
         print("_systems []".center(100, '-'))
         for sys in self._systems:
             print(sys)
@@ -251,13 +260,12 @@ class ECSSManager():
             print(cam)
 
 
-
 if __name__ == "__main__":
     # The client code.
 
     s1 = ECSSManager()
     s2 = ECSSManager()
-    
+
     if id(s1) == id(s2):
         print("Singleton works, both variables contain the same instance.")
     else:

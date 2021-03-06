@@ -199,3 +199,8 @@ class TestECSSManager(unittest.TestCase):
         self.WorldManager.print()
         
         print("TestECSSManager:test_traverse_visit END".center(100, '-'))
+        
+        
+        
+if __name__ == "__main__":
+    unittest.main(argv=[''], verbosity=3, exit=False)
