@@ -131,15 +131,16 @@ class TestECSSManager(unittest.TestCase):
         
         compTrans = self.entityCam1.getChildByType(BasicTransform.getClassName())
         
-        #add a new basicComponent at an Entity that already has one
-        self.trans2 = self.WorldManager.addComponent(self.entityCam2, BasicTransform(name="trans8", trs=util.translate(20.0,30.0,40.0)))
+        #add a new basicComponent at an Entity that already has one i.e. replace previous with same type
+        self.trans8 = self.WorldManager.addComponent(self.entityCam2, BasicTransform(name="trans8", trs=util.translate(20.0,30.0,40.0)))
         
-        
-        self.assertEqual(self.rootEntity, self.entityCam1.parent)
-        self.assertEqual(compTrans.parent, self.entityCam1)
-        self.assertEqual(self.trans1.parent, self.entityCam1)
-        self.assertEqual(compTrans, self.trans1)
-        self.assertIsInstance(self.trans1, BasicTransform)
+        self.assertEqual(self.entityCam1, self.entityCam2.parent)
+        self.assertEqual(self.trans8.parent, self.entityCam2)
+        self.assertIn(self.trans8, self.entityCam2._children)
+        self.assertIn(self.trans8, self.WorldManager._components)
+        self.assertNotIn(self.trans2, self.entityCam2._children)
+        self.assertNotIn(self.trans2, self.WorldManager._components)
+        self.assertIsInstance(self.trans8, BasicTransform)
         
         self.WorldManager.print()
         
