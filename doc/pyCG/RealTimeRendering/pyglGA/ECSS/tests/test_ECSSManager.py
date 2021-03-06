@@ -13,7 +13,6 @@ import utilities as util
 from Entity import Entity, EntityDfsIterator
 from Component import BasicTransform, Camera
 from System import System, TransformSystem, CameraSystem, RenderSystem
-from Scene import Scene
 from ECSSManager import ECSSManager
 
 class TestECSSManager(unittest.TestCase):
