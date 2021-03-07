@@ -1,13 +1,13 @@
 [submodule "SDK/frameworks/cpp/glGA-5.0/glGA-5.0"]
-	path = SDK/frameworks/cpp/glGA-5.0/glGA-5.0
+	path = modules/cpp/glGA-5.0/glGA-5.0
 	url = https://github.com/papagiannakis/glGA-5.0.git
 	branch = dev
 [submodule "GAE"]
-	path = SDK/frameworks/cpp/GAE
+	path = modules/cpp/GAE
 	url = ssh://git@github.com/ovidVR/GAE.git
 	branch = master
 [submodule "GATE"]
-	path = SDK/frameworks/python/MR-GRAIL
+	path = modules/python/MR-GRAIL
 	url = ssh://git@github.com/papagiannakis/MR-GRAIL.git
 	branch = master
 [submodule "pybind11"]
