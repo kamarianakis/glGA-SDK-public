@@ -7,10 +7,10 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 """
 
 import unittest
-from Entity import Entity
-from Component import BasicTransform, Camera
-from System import System, TransformSystem, CameraSystem, RenderSystem
-from Scene import Scene
+from pyglGA.ECSS.Entity import Entity
+from pyglGA.ECSS.Component import BasicTransform, Camera
+from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
+from pyglGA.ext.Scene import Scene
 
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class

@@ -44,12 +44,12 @@ class ECSSManager():
         """
         Construct initial data structures for scenegraph elements
         """
-        self._systems: List[System.System] = []  # list for all systems
+        self._systems: List[pyglGA.ECSS.System.System] = []  # list for all systems
         # list with all scenegraph components
-        self._components: List[Component.Component] = []
+        self._components: List[pyglGA.ECSS.Component.Component] = []
         self._entities: List[Entity] = []  # list of all scenegraph entities
         # list of all scenegraph camera components
-        self._cameras: List[Component.Component] = []
+        self._cameras: List[pyglGA.ECSS.Component.Component] = []
         # dict with keys entities and values list of components per entity
         self._entities_components = {}
         self._root = None
@@ -85,12 +85,12 @@ class ECSSManager():
         return entity
         # we return that created Entity in case it is needed
 
-    def createSystem(self, system: System.System):
+    def createSystem(self, system: pyglGA.ECSS.System.System):
         """
         Creates a System and adds it in the ECSS data structures
 
         """
-        if isinstance(system, System.System):
+        if isinstance(system, pyglGA.ECSS.System.System):
             self._systems.append(system)
 
         return system
@@ -108,7 +108,7 @@ class ECSSManager():
         else:
             raise RuntimeError
 
-    def addComponent(self, entity: Entity, component: Component.Component):
+    def addComponent(self, entity: Entity, component: pyglGA.ECSS.Component.Component):
         """
         Adds a component to an Entity in a scenegraph and in the ECSS data structures
 
@@ -125,8 +125,8 @@ class ECSSManager():
         :param component: The component to be added to this Entity
         :type component: Component
         """
-        if isinstance(entity, Entity) and isinstance(component, Component.Component):
-            if isinstance(component, Component.Camera):
+        if isinstance(entity, Entity) and isinstance(component, pyglGA.ECSS.Component.Component):
+            if isinstance(component, pyglGA.ECSS.Component.Camera):
                 self._cameras.append(component)
             else:  # add the component in the _components []
                 self._components.append(component)
@@ -211,7 +211,7 @@ class ECSSManager():
         except RuntimeError:
             print("ECSSManager::traverse_visit() Could Not Create Iterator")
 
-        if isinstance(system, System.System) and iterator is not None:
+        if isinstance(system, pyglGA.ECSS.System.System) and iterator is not None:
             tic1 = time.perf_counter()
             print(
                 f"\nthis is the {system.name} traversal START".center(100, '-'))

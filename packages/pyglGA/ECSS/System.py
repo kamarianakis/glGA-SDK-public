@@ -106,7 +106,7 @@ class System(ABC):
         pass
     
     
-    def apply2RenderMesh(self, renderMesh: Component.RenderMesh):
+    def apply2RenderMesh(self, renderMesh: pyglGA.ECSS.Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -115,7 +115,7 @@ class System(ABC):
         pass
     
     
-    def apply2BasicTransform(self, basicTransform: Component.BasicTransform):
+    def apply2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -123,7 +123,7 @@ class System(ABC):
         """
         pass
     
-    def applyCamera2BasicTransform(self, basicTransform: Component.BasicTransform):
+    def applyCamera2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -131,7 +131,7 @@ class System(ABC):
         """
         pass
     
-    def apply2Camera(self, basicTransform: Component.Camera):
+    def apply2Camera(self, basicTransform: pyglGA.ECSS.Component.Camera):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -210,7 +210,7 @@ class TransformSystem(System):
         """
         
         #check if the visitor visits a node that it should not
-        if (isinstance(basicTransform,Component.BasicTransform)) == False:
+        if (isinstance(basicTransform,pyglGA.ECSS.Component.BasicTransform)) == False:
             return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called")
         
@@ -246,7 +246,7 @@ class CameraSystem(System):
         """
         pass
         
-    def getRoot2Camera(self, camComp: Component, topComp=None):
+    def getRoot2Camera(self, camComp: pyglGA.ECSS.Component, topComp=None):
         """Calculate the root to camera matrix
         
         Root2Camera is to get all parent BasicTransforms till root node (as usual)
@@ -273,7 +273,7 @@ class CameraSystem(System):
         return r2c
         
     #then this
-    def applyCamera2BasicTransform(self, basicTransform: Component.BasicTransform):
+    def applyCamera2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -281,7 +281,7 @@ class CameraSystem(System):
         In this case calculate the l2w BasicTransform component matrix
         
         """
-        if (isinstance(basicTransform,Component.BasicTransform)) == False:
+        if (isinstance(basicTransform,pyglGA.ECSS.Component.BasicTransform)) == False:
             return #in Python due to duck typing we need to check this!
         print(self.getClassName(), ": apply(BasicTransform) called from CameraSystem - Calc: Local2Cam")
         
@@ -293,7 +293,7 @@ class CameraSystem(System):
         basicTransform.update(l2cam=l2c) 
         
     #first this     
-    def apply2Camera(self, cam: Component.Camera):
+    def apply2Camera(self, cam: pyglGA.ECSS.Component.Camera):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Camera Components. 
@@ -302,7 +302,7 @@ class CameraSystem(System):
         the r2c (root to camera) matrix
         
         """
-        if (isinstance(cam,Component.Camera)) == False:
+        if (isinstance(cam,pyglGA.ECSS.Component.Camera)) == False:
             return #in Python due to duck typing we need to verify this!
         print(self.getClassName(), ": apply2Camera called from CameraSystem - Calc: Root2Cam")
         
@@ -334,7 +334,7 @@ class RenderSystem(System):
         pass
     
     
-    def apply2RenderMesh(self, renderMesh: Component.RenderMesh):
+    def apply2RenderMesh(self, renderMesh: pyglGA.ECSS.Component.RenderMesh):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 

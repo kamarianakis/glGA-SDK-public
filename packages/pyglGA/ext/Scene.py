@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 
-from ...pyglGA.ECSS.Entity import Entity
+from pyglGA.ECSS.Entity import Entity
 
 
 class SingletonI(ABC):
