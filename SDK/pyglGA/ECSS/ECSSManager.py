@@ -13,10 +13,10 @@ from typing import List, Dict
 import pprint
 import time
 
-from Entity import Entity
-import Component
-import System
-import utilities as util
+from pyglGA.ECSS.Entity import Entity
+import pyglGA.ECSS.Component
+import pyglGA.ECSS.System
+import pyglGA.ECSS.utilities as util
 
 
 class ECSSManager():

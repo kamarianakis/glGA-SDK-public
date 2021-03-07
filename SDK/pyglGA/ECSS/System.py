@@ -18,8 +18,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
-import Component
-import utilities as util
+import pyglGA.ECSS.Component
+import pyglGA.ECSS.utilities as util
 import uuid  
 
 class System(ABC):

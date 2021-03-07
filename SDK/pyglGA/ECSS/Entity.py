@@ -19,8 +19,8 @@ from collections.abc import Iterable, Iterator
 from typing import Any, List
 import uuid
 
-from Component import Component, ComponentIterator
-from System import System
+from pyglGA.ECSS.Component import Component, ComponentIterator
+from pyglGA.ECSS.System import System
 
 
 

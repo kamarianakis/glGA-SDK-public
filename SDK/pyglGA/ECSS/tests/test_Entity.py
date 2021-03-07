@@ -10,10 +10,10 @@ import unittest
 import numpy as np
 from typing import List
 
-from Entity import Entity
-from Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator
+from pyglGA.ECSS.Entity import Entity
+from pyglGA.ECSS.Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator
 
-import utilities as util
+import pyglGA.ECSS.utilities as util
 
 class TestEntity(unittest.TestCase):
     

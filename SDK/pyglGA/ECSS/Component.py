@@ -19,9 +19,9 @@ from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
 
-import System
+import pyglGA.ECSS.System
 import uuid  
-import utilities as util
+import pyglGA.ECSS.utilities as util
 
 
 class Component(ABC, Iterable):

@@ -11,10 +11,10 @@ import unittest
 import time
 import numpy as np
 
-import utilities as util
-from System import System, TransformSystem, CameraSystem, RenderSystem
-from Entity import Entity
-from Component import BasicTransform, Camera
+import pyglGA.ECSS.utilities as util
+from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
+from pyglGA.ECSS.Entity import Entity
+from pyglGA.ECSS.Component import BasicTransform, Camera
 
 
 class TestSystem(unittest.TestCase):
