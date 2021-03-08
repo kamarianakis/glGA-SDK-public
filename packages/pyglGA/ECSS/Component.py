@@ -119,7 +119,7 @@ class Component(ABC, Iterable):
         pass
     
     @abstractmethod
-    def accept(self, system: System):
+    def accept(self, system: pyglGA.ECSS.System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -239,7 +239,7 @@ class BasicTransform(Component):
             self._l2cam = kwargs[arg3]
         
        
-    def accept(self, system: System):
+    def accept(self, system: pyglGA.ECSS.System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -317,7 +317,7 @@ class Camera(Component):
             self._root2cam = kwargs[arg1]
        
        
-    def accept(self, system: System):
+    def accept(self, system: pyglGA.ECSS.System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -370,7 +370,7 @@ class RenderMesh(Component):
         print(self.getClassName(), ": update() called")
         self.draw()
    
-    def accept(self, system: System):
+    def accept(self, system: pyglGA.ECSS.System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 

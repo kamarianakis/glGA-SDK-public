@@ -163,7 +163,7 @@ class TransformSystem(System):
         """
         pass
     
-    def getLocal2World(self, leafComp: Component, topComp=None):
+    def getLocal2World(self, leafComp: pyglGA.ECSS.Component, topComp=None):
         """Calculate the l2world BasicTransform matrix
 
         :param leafComp: [description]
@@ -200,7 +200,7 @@ class TransformSystem(System):
         
         
     
-    def apply2BasicTransform(self, basicTransform: Component.BasicTransform):
+    def apply2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
