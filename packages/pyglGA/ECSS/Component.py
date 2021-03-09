@@ -4,7 +4,7 @@ Component classes, part of the glGA SDK ECSS
 glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 @Coopyright 2020-2021 George Papagiannakis
     
-The Compoment class is the dedicated to a specific type of data container in the glGA ECS.
+The Compoment class is the dedicated to a specific type of data container in the glGA ECSS.
 
 The following is example restructured text doc example
 :param file_loc: The file location of the spreadsheet
