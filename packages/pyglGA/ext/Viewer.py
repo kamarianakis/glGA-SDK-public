@@ -28,37 +28,144 @@ class RenderWindow(ABC):
         
     @abstractmethod
     def init(self):
-        pass
+        raise NotImplementedError
     
     @abstractmethod
     def display(self):
-        pass
+        raise NotImplementedError
     
     @abstractmethod
     def shutdown(self):
-        pass
+        raise NotImplementedError
+    
+    @classmethod
+    def getClassName(cls):
+        return cls.__name__
+
 
 class SDL2Window(RenderWindow):
-    pass
+    """[summary]
+
+    :param RenderWindow: [description]
+    :type RenderWindow: [type]
+    """
+    
+    def __init__(self):
+        pass
+    
+    def init(self):
+        """
+        [summary]
+        """
+        print(f'{self.getClassName()}: init()')
+        
+    def display(self):
+        """
+        [summary]
+        """
+        print(f'{self.getClassName()}: display()')
+        
+    
+    def shutdown(self):
+        """
+        [summary]
+        """
+        print(f'{self.getClassName()}: shutdown()')   
+
 
 class RenderDecorator(RenderWindow):
-    pass
+    """
+
+    :param RenderWindow: [description]
+    :type RenderWindow: [type]
+    """
+    
+    def __init__(self, wrapee: RenderWindow):
+        self._wrapee = wrapee
+    
+    def init(self):
+        """
+        [summary]
+        """
+        self._wrapee.init()
+        print(f'{self.getClassName()}: init()')
+        
+    def display(self):
+        """
+        [summary]
+        """
+        self._wrapee.display()
+        print(f'{self.getClassName()}: display()')
+        
+    def shutdown(self):
+        """
+        [summary]
+        """
+        print(f'{self.getClassName()}: shutdown()')   
 
 class SDL2Decorator(RenderDecorator):
-    pass
+    """
 
+    :param RenderDecorator: [description]
+    :type RenderDecorator: [type]
+    """
+    
+    def init(self):
+        """
+        [summary]
+        """
+        super().init()
+        print(f'{self.getClassName()}: init()')
+        
+    def display(self):
+        """
+        [summary]
+        """
+        super().display()
+        self.extra()
+        print(f'{self.getClassName()}: display()')
+        
+    def extra(self):
+        """[summary]
+        """
+        print(f'{self.getClassName()}: extra()')
+        
 
 class ImGuiDecorator(RenderDecorator):
-    pass
+    """
+    
+
+    :param RenderDecorator: [description]
+    :type RenderDecorator: [type]
+    """
+    def init(self):
+        """
+        [summary]
+        """
+        super().init()
+        print(f'{self.getClassName()}: init()')
+        
+    def display(self):
+        """
+        [summary]
+        """
+        self.extra()
+        super().display()
+        print(f'{self.getClassName()}: display()')
+        
+    def extra(self):
+        """[summary]
+        """
+        print(f'{self.getClassName()}: extra()')
 
 
 if __name__ == "__main__":
     # The client code.
     
-    # gWindow = SDL2Window()
-    # gContext = SDL2Decorator(gWindow)
-    # gGUI = ImGuiDecorator(gContext)
+    gWindow = SDL2Window()
+    gContext = SDL2Decorator(gWindow)
+    gGUI = ImGuiDecorator(gContext)
     
-    # gGui.init() # calls gContext.init() as well as ImGUI init stuff
+    gGUI.init() # calls gContext.init() as well as ImGUI init stuff
     # in a rendering while loop
         #gGui.display() # calls gContext.display()

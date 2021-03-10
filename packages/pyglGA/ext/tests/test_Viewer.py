@@ -16,5 +16,8 @@ import numpy as np
 
 class TestSDL2Window(unittest.TestCase):
     
+    def setUp(self):
+        pass
+    
     def test_init(self):
         pass
