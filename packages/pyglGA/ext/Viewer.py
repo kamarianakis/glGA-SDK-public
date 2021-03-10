@@ -131,7 +131,7 @@ class SDL2Decorator(RenderDecorator):
         print(f'{self.getClassName()}: extra()')
         
 
-class ImGuiDecorator(RenderDecorator):
+class ImGUIDecorator(RenderDecorator):
     """
     
 
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     
     gWindow = SDL2Window()
     gContext = SDL2Decorator(gWindow)
-    gGUI = ImGuiDecorator(gContext)
+    gGUI = ImGUIDecorator(gContext)
     
     gGUI.init() # calls gContext.init() as well as ImGUI init stuff
     # in a rendering while loop

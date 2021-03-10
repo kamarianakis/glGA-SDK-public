@@ -13,11 +13,24 @@ import unittest
 import time
 import numpy as np
 
-
+from pyglGA.ext.Viewer import SDL2Decorator, SDL2Window, ImGUIDecorator
 class TestSDL2Window(unittest.TestCase):
     
     def setUp(self):
-        pass
+        """[summary]
+        """
+        self.gWindow = SDL2Window()
+        self.gContext = SDL2Decorator(self.gWindow)
+        self.gGUI = ImGUIDecorator(self.gContext)
     
     def test_init(self):
-        pass
+        """
+        
+        """
+        print("TestSDL2Window:test_init START".center(100, '-'))
+        
+        self.gGUI.init()
+        
+        self.assertIsInstance(self.gGUI, ImGUIDecorator)
+        
+        print("TestSDL2Window:test_init START".center(100, '-'))
