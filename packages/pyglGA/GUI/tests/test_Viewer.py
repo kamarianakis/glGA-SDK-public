@@ -21,7 +21,7 @@ class TestSDL2Window(unittest.TestCase):
         """
         self.gWindow = SDL2Window()
         self.gContext = SDL2Decorator(self.gWindow)
-        self.gGUI = ImGUIDecorator(self.gContext)
+        #self.gGUI = ImGUIDecorator(self.gContext)
     
     def test_init(self):
         """
@@ -29,9 +29,14 @@ class TestSDL2Window(unittest.TestCase):
         """
         print("TestSDL2Window:test_init START".center(100, '-'))
         
-        self.gGUI.init()
+        self.gContext.init()
+        #self.gGUI.init()
         
-        self.assertIsInstance(self.gGUI, ImGUIDecorator)
+        self.assertIsNotNone(self.gWindow)
+        self.assertIsNotNone(self.gContext)
+        #self.assertIsNotNone(self.gGUI)
+        self.assertIsInstance(self.gContext, SDL2Decorator)
+        #self.assertIsInstance(self.gGUI, ImGUIDecorator)
         
         print("TestSDL2Window:test_init START".center(100, '-'))
         

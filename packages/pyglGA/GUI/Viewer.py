@@ -12,9 +12,14 @@ from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
 
+import sdl2
+import sdl2.ext
+
+
 import pyglGA.ECSS.System
 import uuid  
 import pyglGA.ECSS.utilities as util
+from sdl2.video import SDL_WINDOWPOS_CENTERED, SDL_WINDOW_ALLOW_HIGHDPI
 
 
 class RenderWindow(ABC):
@@ -23,8 +28,12 @@ class RenderWindow(ABC):
     based on the Decorator Pattern, this class is "wrapped" by decorators
     in order to provide extra cpapabilities e.g. SDL2 window, context and ImGUI widgets    
     """
-    def __init__(self):
-        pass
+    def __init__(self, gWindow = None, gContext = None):
+        if gWindow is not None:
+            self._gWindow = gWindow
+            
+        if gContext is not None:
+            self._gContext = gContext
         
     @abstractmethod
     def init(self):
@@ -50,14 +59,59 @@ class SDL2Window(RenderWindow):
     :type RenderWindow: [type]
     """
     
-    def __init__(self):
-        pass
+    def __init__(self, gWindow = None, gContext = None, windowWidth = None, windowHeight = None, windowTitle = None):
+        """[summary]
+
+        :param gWindow: [description], defaults to None
+        :type gWindow: [type], optional
+        :param gContext: [description], defaults to None
+        :type gContext: [type], optional
+        :param windowWidth: [description], defaults to None
+        :type windowWidth: [type], optional
+        :param windowHeight: [description], defaults to None
+        :type windowHeight: [type], optional
+        :param windowTitle: [description], defaults to None
+        :type windowTitle: [type], optional
+        """
+        super().__init__()
+        if windowWidth is None:
+            self._windowWidth = 1024
+        else:
+            self._windowWidth = windowWidth
+        
+        if windowHeight is None:
+            self._windowHeight = 768
+        else:
+            self._windowHeight = windowHeight
+            
+        if windowTitle is None:
+            self._windowTitle = "SDL2Window"
+        else:
+            self._windowTitle = windowTitle
+            
     
     def init(self):
         """
-        [summary]
+        Initialise an SDL2 RenderWindow
         """
         print(f'{self.getClassName()}: init()')
+        
+        sdl_initialised = sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO | sdl2.SDL_INIT_TIMER)
+        if sdl_initialised !=0:
+            print("SDL2 could not be initialised! SDL Error: ", sdl2.SDL_GetError())
+            exit(1)
+        
+        self._gWindow = sdl2.SDL_CreateWindow(self._windowTitle.encode(), 
+                                              sdl2.SDL_WINDOWPOS_CENTERED,
+                                              sdl2.SDL_WINDOWPOS_CENTERED,
+                                              self._windowWidth,
+                                              self._windowHeight,
+                                              sdl2.SDL_WINDOW_ALLOW_HIGHDPI)
+        
+        if self._gWindow is None:
+            print("Window could not be created! SDL Error: ", sdl2.SDL_GetError())
+            exit(1)
+        
         
     def display(self):
         """
@@ -88,20 +142,20 @@ class RenderDecorator(RenderWindow):
         [summary]
         """
         self._wrapee.init()
-        print(f'{self.getClassName()}: init()')
+        print(f'RenderDecorator: init()')
         
     def display(self):
         """
         [summary]
         """
         self._wrapee.display()
-        print(f'{self.getClassName()}: display()')
+        print(f'RenderDecorator: display()')
         
     def shutdown(self):
         """
         [summary]
         """
-        print(f'{self.getClassName()}: shutdown()')   
+        print(f'RenderDecorator: shutdown()')   
 
 class SDL2Decorator(RenderDecorator):
     """
