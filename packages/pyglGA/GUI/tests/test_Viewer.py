@@ -30,7 +30,16 @@ class TestSDL2Window(unittest.TestCase):
         print("TestSDL2Window:test_init START".center(100, '-'))
         
         self.gContext.init()
+        self.gContext.init_post()
         #self.gGUI.init()
+        
+        running = True
+        # MAIN RENDERING LOOP
+        while running:
+            self.gContext.display()
+            self.gContext.event_input_process(running)
+            self.gContext.display_post()
+        self.gContext.shutdown()
         
         self.assertIsNotNone(self.gWindow)
         self.assertIsNotNone(self.gContext)
