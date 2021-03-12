@@ -261,8 +261,10 @@ class SDL2Decorator(RenderDecorator):
                     running = False
             if event.type == sdl2.SDL_QUIT:
                 running = False
-            self._wrapeeWindow._gRenderer.process_event(event)
-        self._wrapeeWindow._gRenderer.process_inputs()
+                
+        return running
+            #self._wrapeeWindow._gRenderer.process_event(event)
+        #self._wrapeeWindow._gRenderer.process_inputs()
         
 
 class ImGUIDecorator(RenderDecorator):

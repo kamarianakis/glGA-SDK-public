@@ -37,7 +37,7 @@ class TestSDL2Window(unittest.TestCase):
         # MAIN RENDERING LOOP
         while running:
             self.gContext.display()
-            self.gContext.event_input_process(running)
+            running = self.gContext.event_input_process(running)
             self.gContext.display_post()
         self.gContext.shutdown()
         
