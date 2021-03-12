@@ -112,8 +112,9 @@ class SDL2Window(RenderWindow):
         
         #setting OpenGL attributes for the GL state and context 4.1
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_FLAGS,
-                                 sdl2.SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG,
-                                 sdl2.SDL_GL_CONTEXT_PROFILE_MASK,
+                                 sdl2.SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG
+                                 )
+        sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_CONTEXT_PROFILE_MASK,
                                  sdl2.SDL_GL_CONTEXT_PROFILE_CORE
                                  )
         sdl2.SDL_GL_SetAttribute(sdl2.SDL_GL_DOUBLEBUFFER, 1)
@@ -226,7 +227,7 @@ class SDL2Decorator(RenderDecorator):
         Post init method for SDL2
         this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
         """
-        self._wrapeeWindow._gRenderer = sdl2.SDL_Renderer(self._wrapeeWindow._gWindow)
+        #self._wrapeeWindow._gRenderer = sdl2.SDL2Renderer(self._wrapeeWindow._gWindow)
         
     def display(self):
         """
