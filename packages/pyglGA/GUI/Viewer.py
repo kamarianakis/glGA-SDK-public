@@ -162,7 +162,7 @@ class SDL2Window(RenderWindow):
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
         
-        print(f'{self.getClassName()}: display()')
+        #print(f'{self.getClassName()}: display()')
         
     
     
@@ -200,7 +200,7 @@ class RenderDecorator(RenderWindow):
         [summary]
         """
         self._wrapeeWindow.display()
-        print(f'RenderDecorator: display()')
+        #print(f'RenderDecorator: display()')
         
     def shutdown(self):
         """
@@ -235,7 +235,7 @@ class SDL2Decorator(RenderDecorator):
         """
         super().display()
         #self.extra()
-        print(f'{self.getClassName()}: display()')
+        #print(f'{self.getClassName()}: display()')
         
     def display_post(self):
         """
@@ -243,7 +243,7 @@ class SDL2Decorator(RenderDecorator):
         """
         
         sdl2.SDL_GL_SwapWindow(self._wrapeeWindow._gWindow)
-        print(f'{self.getClassName()}: display_post()')    
+        #print(f'{self.getClassName()}: display_post()')    
         
     def extra(self):
         """[summary]
@@ -287,12 +287,12 @@ class ImGUIDecorator(RenderDecorator):
         """
         self.extra()
         super().display()
-        print(f'{self.getClassName()}: display()')
+        #print(f'{self.getClassName()}: display()')
         
     def extra(self):
         """[summary]
         """
-        print(f'{self.getClassName()}: extra()')
+        #print(f'{self.getClassName()}: extra()')
 
 
 if __name__ == "__main__":
@@ -302,14 +302,13 @@ if __name__ == "__main__":
     gContext = SDL2Decorator(gWindow)
     #gGUI = ImGUIDecorator(gContext)
     
-    #gGUI.init() # calls gContext.init() as well as ImGUI init stuff
-    # in a rendering while loop
-        #gGui.display() # calls gContext.display()
+    gContext.init()
+    gContext.init_post()
     
     running = True
         # MAIN RENDERING LOOP
     while running:
         gContext.display()
-        gContext.event_input_process(running)
+        running = gContext.event_input_process(running)
         gContext.display_post()
     gContext.shutdown()
