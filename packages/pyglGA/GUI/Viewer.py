@@ -24,6 +24,8 @@ from sdl2.keycode import SDLK_ESCAPE
 from sdl2.video import SDL_WINDOWPOS_CENTERED, SDL_WINDOW_ALLOW_HIGHDPI
 import OpenGL.GL as gl
 from OpenGL.GL import shaders
+import imgui
+from imgui.integrations.sdl2 import SDL2Renderer
 
 class RenderWindow(ABC):
     """
@@ -207,6 +209,26 @@ class RenderDecorator(RenderWindow):
         [summary]
         """
         print(f'RenderDecorator: shutdown()')   
+        
+    def event_input_process(self, running = True):
+        """
+        extra decorator method to handle input events
+        
+        :param running: [description], defaults to True
+        :type running: bool, optional
+        """
+        pass
+    
+    def display_post(self):
+        pass
+    
+    def init_post(self):
+        """
+        Post init method for SDL2
+        this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
+        """
+        pass
+
 
 class SDL2Decorator(RenderDecorator):
     """
@@ -222,12 +244,6 @@ class SDL2Decorator(RenderDecorator):
         super().init()
         print(f'{self.getClassName()}: init()')
     
-    def init_post(self):
-        """
-        Post init method for SDL2
-        this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
-        """
-        #self._wrapeeWindow._gRenderer = sdl2.SDL2Renderer(self._wrapeeWindow._gWindow)
         
     def display(self):
         """
@@ -263,35 +279,93 @@ class SDL2Decorator(RenderDecorator):
                 running = False
                 
         return running
-            #self._wrapeeWindow._gRenderer.process_event(event)
-        #self._wrapeeWindow._gRenderer.process_inputs()
-        
+                    
 
 class ImGUIDecorator(RenderDecorator):
     """
-    
+    ImGUI decorator
 
     :param RenderDecorator: [description]
     :type RenderDecorator: [type]
     """
+    
+    def __init__(self, wrapee: RenderWindow, imguiContext = None):
+        super().__init__(wrapee)
+        
+        if imguiContext is None:
+            self._imguiContext = imgui.create_context()
+        else:
+            self._imguiContext = imguiContext
+        
+        self._imguiRenderer = None
+    
     def init(self):
         """
         [summary]
         """
         super().init()
+        if self._imguiContext is None:
+            print("Window could not be created! ImGUI Error: ")
+            exit(1)
+        else:
+            print("Yay! ImGUI context created successfully")
+            
+        self._imguiRenderer = SDL2Renderer(self._wrapeeWindow._gWindow)
+        
         print(f'{self.getClassName()}: init()')
+        
         
     def display(self):
         """
         [summary]
         """
-        self.extra()
         super().display()
+        self.extra()
         #print(f'{self.getClassName()}: display()')
         
-    def extra(self):
-        """[summary]
+        
+    def event_input_process(self, running = True):
         """
+        process SDL2 basic events and input
+        """
+        events = sdl2.ext.get_events()
+        for event in events:
+            if event.type == sdl2.SDL_KEYDOWN:
+                if event.key.keysym.sym == sdl2.SDLK_ESCAPE:
+                    running = False
+            if event.type == sdl2.SDL_QUIT:
+                running = False
+            #imgui event
+            self._wrapeeWindow._gRenderer.process_event(event)
+        #imgui input
+        self._wrapeeWindow._gRenderer.process_inputs()
+        return running
+        
+    def display_post(self):
+        super().display_post()
+        
+    def extra(self):
+        """sample ImGUI widget
+        """
+        imgui.set_next_window_size(300.0, 150.0)
+        
+        #start new ImGUI frame context
+        imgui.new_frame()
+        
+        #demo ImGUI window with all widgets
+        imgui.show_test_window()
+        #new custom imgui window
+        imgui.begin("pyglGA ImGUI window", True)
+        #labels inside the window
+        imgui.text("PyImgui + PySDL2 integration successful!")
+        imgui.text(self._wrapeeWindow._gVersionLabel)
+        #end imgui frame context
+        imgui.end()
+        #render imgui
+        imgui.render()
+        self._imguiRenderer.render(imgui.get_draw_data())
+        
+        
         #print(f'{self.getClassName()}: extra()')
 
 

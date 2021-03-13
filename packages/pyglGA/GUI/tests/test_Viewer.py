@@ -21,16 +21,17 @@ class TestSDL2Window(unittest.TestCase):
         """
         self.gWindow = SDL2Window()
         self.gContext = SDL2Decorator(self.gWindow)
-        #self.gGUI = ImGUIDecorator(self.gContext)
+        self.gGUI = ImGUIDecorator(self.gContext)
     
-    def test_init(self):
+    
+    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")
+    def test_initSDL2Decorator(self):
         """
         
         """
-        print("TestSDL2Window:test_init START".center(100, '-'))
+        print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
         self.gContext.init()
-        self.gContext.init_post()
         #self.gGUI.init()
         
         running = True
@@ -47,9 +48,32 @@ class TestSDL2Window(unittest.TestCase):
         self.assertIsInstance(self.gContext, SDL2Decorator)
         #self.assertIsInstance(self.gGUI, ImGUIDecorator)
         
-        print("TestSDL2Window:test_init START".center(100, '-'))
+        print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
+
+    def test_initImGUIDecorator(self):
+        """
         
+        """
+        print("TestSDL2Window:test_initImGUIDecorator START".center(100, '-'))
+        
+        self.gGUI.init()
+        
+        running = True
+        # MAIN RENDERING LOOP
+        while running:
+            self.gGUI.display()
+            running = self.gGUI.event_input_process(running)
+            self.gGUI.display_post()
+        self.gGUI.shutdown()
+        
+        self.assertIsNotNone(self.gWindow)
+        self.assertIsNotNone(self.gContext)
+        self.assertIsNotNone(self.gGUI)
+        self.assertIsInstance(self.gContext, SDL2Decorator)
+        self.assertIsInstance(self.gGUI, ImGUIDecorator)
+        
+        print("TestSDL2Window:test_initImGUIDecorator START".center(100, '-'))
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)
