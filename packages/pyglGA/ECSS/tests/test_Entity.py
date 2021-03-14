@@ -256,7 +256,7 @@ class TestComponentDecorator(unittest.TestCase):
         self.assertEqual(myDecComp.component.name, "BasicTransform")
         self.assertEqual(myDecComp.component.type,"BasicTransform")
         
-        print("TestComponentDecorator:test_ComponentDecorator START".center(100, '-'))
+        print("TestComponentDecorator:test_ComponentDecorator END".center(100, '-'))
 
 class TestBasicTransform(unittest.TestCase):
     
