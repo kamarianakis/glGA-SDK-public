@@ -32,7 +32,7 @@ pMesh = None
 
 if USE_MESH_STATIC:
     #fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/duck.dae"
-    fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/doc/pyCG/RealTimeRendering/pyglGA/models/testScene.dae"
+    fileNameS = "/Users/Giwrgakis/MyProjects/glGA-SDK/packages/pyglGA/models/testScene.dae"
     #fileNameS = "./models/testScene.dae"
     print('Model path:',fileNameS)
     positionS = glm.vec3(100.0, 0, 0)
@@ -40,7 +40,7 @@ if USE_MESH_STATIC:
     scaleS = 10.
     
 if USE_MESH_DYNAMIC:
-    fileNameD = './models/astroBoy_walk3.dae'
+    fileNameD = '../models/astroBoy_walk3.dae'
     print('Model path :', fileNameD)
     positionD = glm.vec3(0., 0., 0.)
     rotationD = glm.vec3(0., 0., 0.)
