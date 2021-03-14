@@ -83,6 +83,7 @@ class SDL2Window(RenderWindow):
         """
         self._gWindow = None
         self._gContext = None
+        self._gVersionLabel = "None"
         
         if windowWidth is None:
             self._windowWidth = 1024
@@ -98,12 +99,8 @@ class SDL2Window(RenderWindow):
             self._windowTitle = "SDL2Window"
         else:
             self._windowTitle = windowTitle
-        
-        #extra SDL2 members    
-        self._gVersionLabel = "none"
-        self._gRenderer = None
-        
-         
+             
+             
     @property
     def gWindow(self):
         return self._gWindow
@@ -200,11 +197,10 @@ class SDL2Window(RenderWindow):
         Shutdown and cleanup SDL2 operations
         """
         print(f'{self.getClassName()}: shutdown()')
-        if (self._gRenderer and self._gContext and self._gWindow is not None):
-            self._gRenderer.shutdown()
+        if (self._gContext and self._gWindow is not None):
             sdl2.SDL_GL_DeleteContext(self._gContext)
             sdl2.SDL_DestroyWindow(self._gWindow)
-            sdl2.SDL_QUIT()   
+            sdl2.SDL_Quit()   
 
 
     def event_input_process(self, running = True):
@@ -312,18 +308,19 @@ class ImGUIDecorator(RenderDecorator):
             print("Yay! ImGUI context created successfully")
         
         # GPTODO here is the problem: SDL2Decorator takes an SDLWindow as wrappee wheras
-        # ImGUIDEcorator takes and SDL2Decorator and decorates it!   
-        self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
-        #self._imguiRenderer = SDL2Renderer(super()._wrapeeWindow._gWindow)
+        # ImGUIDEcorator takes and SDL2Decorator and decorates it!
+        if isinstance(self.wrapeeWindow, SDL2Window):   
+            self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
         
         print(f'{self.getClassName()}: init()')
         
         
     def display(self):
         """
-        [summary]
+        ImGUI decorator display: calls wrapee (RenderWindow::display) as well as extra ImGUI widgets
         """
-        super().display()
+        self.wrapeeWindow.display()
+        #render the ImGUI widgets
         self.extra()
         #print(f'{self.getClassName()}: display()')
         
@@ -340,18 +337,18 @@ class ImGUIDecorator(RenderDecorator):
             if event.type == sdl2.SDL_QUIT:
                 running = False
             #imgui event
-            self._wrapeeWindow._gRenderer.process_event(event)
+            self._imguiRenderer.process_event(event)
         #imgui input
-        self._wrapeeWindow._gRenderer.process_inputs()
+        self._imguiRenderer.process_inputs()
         return running
         
         
     def display_post(self):
-        super().display_post()
+        self.wrapeeWindow.display_post()
         
         
     def extra(self):
-        """sample ImGUI widget
+        """sample ImGUI widgets to be rendered on a RenderWindow
         """
         imgui.set_next_window_size(300.0, 150.0)
         

@@ -22,7 +22,7 @@ class TestSDL2Window(unittest.TestCase):
         self.gWindow = SDL2Window()
         self.gGUI = ImGUIDecorator(self.gWindow)
     
-    
+    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")
     def test_initSDL2Decorator(self):
         """
         Running the basic RenderWindow with the concrete basic Compoment of the decorator
@@ -46,7 +46,6 @@ class TestSDL2Window(unittest.TestCase):
         
         print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
-    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")
     def test_initImGUIDecorator(self):
         """
         
