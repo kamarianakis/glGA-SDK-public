@@ -12,24 +12,23 @@ pyglGA ECSS package
 from __future__         import annotations
 import numpy as np
 
-from pyglGA.GUI.Viewer import SDL2Decorator, SDL2Window, ImGUIDecorator
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 
 
 def main():
     gWindow = SDL2Window()
-    gContext = SDL2Decorator(gWindow)
     #gGUI = ImGUIDecorator(gContext)
     
-    gContext.init()
-    gContext.init_post()
+    gWindow.init()
+    gWindow.init_post()
     
     # MAIN RENDERING LOOP
     running = True
     while running:
-        gContext.display()
-        running = gContext.event_input_process(running)
-        gContext.display_post()
-    gContext.shutdown()
+        gWindow.display()
+        running = gWindow.event_input_process(running)
+        gWindow.display_post()
+    gWindow.shutdown()
 
 
 if __name__ == "__main__":

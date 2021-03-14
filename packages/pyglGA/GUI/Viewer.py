@@ -2,9 +2,13 @@
 Viewer classes, part of the pyglGA SDK ECSS
     
 glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
-@Coopyright 2020-2021 George Papagiannakis
+@Copyright 2020-2021 George Papagiannakis
     
 The classes below are all related to the GUI and Display part of the SDK
+
+Basic design principles are based on the Decorator Design pattern:
+	• https://refactoring.guru/design-patterns/decorator
+	• https://github.com/faif/python-patterns/blob/master/patterns/structural/decorator.py
 """
 
 from __future__         import annotations
@@ -13,35 +17,30 @@ from typing             import List
 from collections.abc    import Iterable, Iterator
 
 import sdl2
-from sdl2.events import SDL_KEYDOWN
 import sdl2.ext
-
-
-import pyglGA.ECSS.System
-import uuid  
-import pyglGA.ECSS.utilities as util
 from sdl2.keycode import SDLK_ESCAPE
 from sdl2.video import SDL_WINDOWPOS_CENTERED, SDL_WINDOW_ALLOW_HIGHDPI
 import OpenGL.GL as gl
 from OpenGL.GL import shaders
 import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
+  
+import pyglGA.ECSS.utilities as util
+
 
 class RenderWindow(ABC):
     """
     The Abstract base class of the Viewer GUI/Display sub-system of pyglGA
     based on the Decorator Pattern, this class is "wrapped" by decorators
     in order to provide extra cpapabilities e.g. SDL2 window, context and ImGUI widgets    
-    """
-    def __init__(self, gWindow = None, gContext = None):
-        if gWindow is not None:
-            self._gWindow = gWindow
-            
-        if gContext is not None:
-            self._gContext = gContext
+    """     
         
     @abstractmethod
     def init(self):
+        raise NotImplementedError
+    
+    abstractmethod
+    def init_post(self):
         raise NotImplementedError
     
     @abstractmethod
@@ -49,7 +48,15 @@ class RenderWindow(ABC):
         raise NotImplementedError
     
     @abstractmethod
+    def display_post(self):
+        raise NotImplementedError
+    
+    @abstractmethod
     def shutdown(self):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def event_input_process(self, running = True):
         raise NotImplementedError
     
     @classmethod
@@ -58,19 +65,15 @@ class RenderWindow(ABC):
 
 
 class SDL2Window(RenderWindow):
-    """[summary]
+    """ The concrete subclass of RenderWindow for the SDL2 GUI API 
 
     :param RenderWindow: [description]
     :type RenderWindow: [type]
     """
     
-    def __init__(self, gWindow = None, gContext = None, windowWidth = None, windowHeight = None, windowTitle = None):
-        """[summary]
+    def __init__(self, windowWidth = None, windowHeight = None, windowTitle = None):
+        """Constructor SDL2Window for basic SDL2 parameters
 
-        :param gWindow: [description], defaults to None
-        :type gWindow: [type], optional
-        :param gContext: [description], defaults to None
-        :type gContext: [type], optional
         :param windowWidth: [description], defaults to None
         :type windowWidth: [type], optional
         :param windowHeight: [description], defaults to None
@@ -78,7 +81,8 @@ class SDL2Window(RenderWindow):
         :param windowTitle: [description], defaults to None
         :type windowTitle: [type], optional
         """
-        super().__init__()
+        self._gWindow = None
+        self._gContext = None
         
         if windowWidth is None:
             self._windowWidth = 1024
@@ -98,7 +102,17 @@ class SDL2Window(RenderWindow):
         #extra SDL2 members    
         self._gVersionLabel = "none"
         self._gRenderer = None
-            
+        
+         
+    @property
+    def gWindow(self):
+        return self._gWindow
+    
+    
+    @property
+    def gContext(self):
+        return self._gContext
+    
     
     def init(self):
         """
@@ -155,17 +169,30 @@ class SDL2Window(RenderWindow):
         print(self._gVersionLabel)
     
     
+    def init_post(self):
+        """
+        Post init method for SDL2
+        this should be ctypiically alled AFTER all other GL contexts have been created
+        """
+        pass
+    
     
     def display(self):
         """
-        [summary]
+        Main display window method to be called standalone or from within a concrete Decorator
         """
         #GPTODO make background clear color as parameter at class level
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
-        
         #print(f'{self.getClassName()}: display()')
-        
+    
+    
+    def display_post(self):
+        """
+        To be called at the end of each drawn frame to swap double buffers
+        """
+        sdl2.SDL_GL_SwapWindow(self._gWindow)
+        #print(f'{self.getClassName()}: display_post()')       
     
     
     def shutdown(self):
@@ -180,92 +207,6 @@ class SDL2Window(RenderWindow):
             sdl2.SDL_QUIT()   
 
 
-class RenderDecorator(RenderWindow):
-    """
-
-    :param RenderWindow: [description]
-    :type RenderWindow: [type]
-    """
-    
-    def __init__(self, wrapee: RenderWindow):
-        self._wrapeeWindow = wrapee
-    
-    def init(self):
-        """
-        [summary]
-        """
-        self._wrapeeWindow.init()
-        print(f'RenderDecorator: init()')
-        
-    def display(self):
-        """
-        [summary]
-        """
-        self._wrapeeWindow.display()
-        #print(f'RenderDecorator: display()')
-        
-    def shutdown(self):
-        """
-        [summary]
-        """
-        print(f'RenderDecorator: shutdown()')   
-        
-    def event_input_process(self, running = True):
-        """
-        extra decorator method to handle input events
-        
-        :param running: [description], defaults to True
-        :type running: bool, optional
-        """
-        pass
-    
-    def display_post(self):
-        pass
-    
-    def init_post(self):
-        """
-        Post init method for SDL2
-        this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
-        """
-        pass
-
-
-class SDL2Decorator(RenderDecorator):
-    """
-
-    :param RenderDecorator: [description]
-    :type RenderDecorator: [type]
-    """
-    
-    def init(self):
-        """
-        [summary]
-        """
-        super().init()
-        print(f'{self.getClassName()}: init()')
-    
-        
-    def display(self):
-        """
-        [summary]
-        """
-        super().display()
-        #self.extra()
-        #print(f'{self.getClassName()}: display()')
-        
-    def display_post(self):
-        """
-        To be called at the end of each drawn frame to swap double buffers
-        """
-        
-        sdl2.SDL_GL_SwapWindow(self._wrapeeWindow._gWindow)
-        #print(f'{self.getClassName()}: display_post()')    
-        
-    def extra(self):
-        """[summary]
-        """
-        print(f'{self.getClassName()}: extra()')
-    
     def event_input_process(self, running = True):
         """
         process SDL2 basic events and input
@@ -277,10 +218,72 @@ class SDL2Decorator(RenderDecorator):
                     running = False
             if event.type == sdl2.SDL_QUIT:
                 running = False
-                
         return running
-                    
 
+
+class RenderDecorator(RenderWindow):
+    """
+    Main Decorator class that wraps a RenderWindow so that all other Decorator classes can dynamically be
+    adding layered functionality on top of the wrapee (RenderWindow) e.g. ImGUI widgets etc.
+
+    :param RenderWindow: [description]
+    :type RenderWindow: [type]
+    """
+    def __init__(self, wrapee: RenderWindow):
+        self._wrapeeWindow = wrapee
+    
+    
+    @property
+    def wrapeeWindow(self):
+        return self._wrapeeWindow
+    
+    
+    def init(self):
+        """
+        [summary]
+        """
+        self._wrapeeWindow.init()
+        print(f'RenderDecorator: init()')
+        
+        
+    def display(self):
+        """
+        Main decorator display method
+        """
+        self._wrapeeWindow.display()
+        
+        
+    def shutdown(self):
+        """
+        [summary]
+        """
+        self._wrapeeWindow.shutdown()
+        print(f'RenderDecorator: shutdown()')   
+        
+        
+    def event_input_process(self, running = True):
+        """
+        extra decorator method to handle input events
+        :param running: [description], defaults to True
+        :type running: bool, optional
+        """
+        self._wrapeeWindow.event_input_process(running = True)
+    
+    
+    def display_post(self):
+        """
+        Post diplay method after all other display calls have been issued
+        """
+        self._wrapeeWindow.display_post()
+    
+    
+    def init_post(self):
+        """
+        Post init method
+        this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
+        """
+        self._wrapeeWindow.init_post()
+                    
 class ImGUIDecorator(RenderDecorator):
     """
     ImGUI decorator
@@ -288,29 +291,30 @@ class ImGUIDecorator(RenderDecorator):
     :param RenderDecorator: [description]
     :type RenderDecorator: [type]
     """
-    
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee)
-        
         if imguiContext is None:
             self._imguiContext = imgui.create_context()
         else:
             self._imguiContext = imguiContext
-        
         self._imguiRenderer = None
+    
     
     def init(self):
         """
         [summary]
         """
-        super().init()
+        self.wrapeeWindow.init()
         if self._imguiContext is None:
             print("Window could not be created! ImGUI Error: ")
             exit(1)
         else:
             print("Yay! ImGUI context created successfully")
-            
-        self._imguiRenderer = SDL2Renderer(self._wrapeeWindow._gWindow)
+        
+        # GPTODO here is the problem: SDL2Decorator takes an SDLWindow as wrappee wheras
+        # ImGUIDEcorator takes and SDL2Decorator and decorates it!   
+        self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
+        #self._imguiRenderer = SDL2Renderer(super()._wrapeeWindow._gWindow)
         
         print(f'{self.getClassName()}: init()')
         
@@ -341,8 +345,10 @@ class ImGUIDecorator(RenderDecorator):
         self._wrapeeWindow._gRenderer.process_inputs()
         return running
         
+        
     def display_post(self):
         super().display_post()
+        
         
     def extra(self):
         """sample ImGUI widget
@@ -365,7 +371,6 @@ class ImGUIDecorator(RenderDecorator):
         imgui.render()
         self._imguiRenderer.render(imgui.get_draw_data())
         
-        
         #print(f'{self.getClassName()}: extra()')
 
 
@@ -373,16 +378,12 @@ if __name__ == "__main__":
     # The client code.
     
     gWindow = SDL2Window()
-    gContext = SDL2Decorator(gWindow)
-    #gGUI = ImGUIDecorator(gContext)
-    
-    gContext.init()
-    gContext.init_post()
-    
+    gWindow.init()
+    gWindow.init_post()
     running = True
-        # MAIN RENDERING LOOP
+    # MAIN RENDERING LOOP
     while running:
-        gContext.display()
-        running = gContext.event_input_process(running)
-        gContext.display_post()
-    gContext.shutdown()
+        gWindow.display()
+        running = gWindow.event_input_process(running)
+        gWindow.display_post()
+    gWindow.shutdown()

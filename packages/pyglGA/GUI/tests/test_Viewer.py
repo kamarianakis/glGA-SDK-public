@@ -13,44 +13,40 @@ import unittest
 import time
 import numpy as np
 
-from pyglGA.GUI.Viewer import SDL2Decorator, SDL2Window, ImGUIDecorator
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 class TestSDL2Window(unittest.TestCase):
     
     def setUp(self):
         """[summary]
         """
         self.gWindow = SDL2Window()
-        self.gContext = SDL2Decorator(self.gWindow)
-        self.gGUI = ImGUIDecorator(self.gContext)
+        self.gGUI = ImGUIDecorator(self.gWindow)
     
     
-    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")
     def test_initSDL2Decorator(self):
         """
-        
+        Running the basic RenderWindow with the concrete basic Compoment of the decorator
+        patter, that is the SDL2Window, without any decorator on top
         """
         print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
-        self.gContext.init()
-        #self.gGUI.init()
+        self.gWindow.init()
+        
         
         running = True
         # MAIN RENDERING LOOP
         while running:
-            self.gContext.display()
-            running = self.gContext.event_input_process(running)
-            self.gContext.display_post()
-        self.gContext.shutdown()
+            self.gWindow.display()
+            running = self.gWindow.event_input_process(running)
+            self.gWindow.display_post()
+        self.gWindow.shutdown()
         
         self.assertIsNotNone(self.gWindow)
-        self.assertIsNotNone(self.gContext)
-        #self.assertIsNotNone(self.gGUI)
-        self.assertIsInstance(self.gContext, SDL2Decorator)
-        #self.assertIsInstance(self.gGUI, ImGUIDecorator)
+        self.assertIsInstance(self.gWindow, SDL2Window)
         
         print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
-
+    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")
     def test_initImGUIDecorator(self):
         """
         
@@ -68,9 +64,8 @@ class TestSDL2Window(unittest.TestCase):
         self.gGUI.shutdown()
         
         self.assertIsNotNone(self.gWindow)
-        self.assertIsNotNone(self.gContext)
         self.assertIsNotNone(self.gGUI)
-        self.assertIsInstance(self.gContext, SDL2Decorator)
+        self.assertIsInstance(self.gWindow, SDL2Window)
         self.assertIsInstance(self.gGUI, ImGUIDecorator)
         
         print("TestSDL2Window:test_initImGUIDecorator START".center(100, '-'))
