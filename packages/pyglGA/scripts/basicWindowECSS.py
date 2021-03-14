@@ -15,21 +15,26 @@ import numpy as np
 from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 
 
-def main():
+def main(imguiFlag = False):
     gWindow = SDL2Window()
-    #gGUI = ImGUIDecorator(gContext)
+    gGUI = ImGUIDecorator(gWindow)
     
-    gWindow.init()
-    gWindow.init_post()
+    if imguiFlag is True:
+        gContext = gGUI
+    else:
+        gContext = gWindow
+    
+    gContext.init()
+    gContext.init_post()
     
     # MAIN RENDERING LOOP
     running = True
     while running:
-        gWindow.display()
-        running = gWindow.event_input_process(running)
-        gWindow.display_post()
-    gWindow.shutdown()
+        gContext.display()
+        running = gContext.event_input_process(running)
+        gContext.display_post()
+    gContext.shutdown()
 
 
 if __name__ == "__main__":
-    main()
+    main(imguiFlag = True)

@@ -48,7 +48,7 @@ class TestSDL2Window(unittest.TestCase):
         
     def test_initImGUIDecorator(self):
         """
-        
+        Running the basic RenderWindow (SDL2Window) with an ImGUIDecorator on top
         """
         print("TestSDL2Window:test_initImGUIDecorator START".center(100, '-'))
         
