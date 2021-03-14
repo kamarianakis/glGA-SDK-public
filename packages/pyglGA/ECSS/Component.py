@@ -6,6 +6,12 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
     
 The Compoment class is the dedicated to a specific type of data container in the glGA ECSS.
 
+Based on the Composite and Iterator design patterns:
+	• https://refactoring.guru/design-patterns/composite
+    • https://github.com/faif/python-patterns/blob/master/patterns/structural/composite.py
+    • https://refactoring.guru/design-patterns/iterator
+    • https://github.com/faif/python-patterns/blob/master/patterns/behavioral/iterator.py
+
 The following is example restructured text doc example
 :param file_loc: The file location of the spreadsheet
 :type file_loc: str
@@ -126,7 +132,7 @@ class Component(ABC, Iterable):
         :param system: [a System object]
         :type system: [System]
         """
-        system.update()
+        #system.update()
         
     def print(self):
         """
@@ -144,6 +150,34 @@ class Component(ABC, Iterable):
     def __str__(self):
         return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}"
 
+
+class ComponentDecorator(Component):
+    """Basic Component Decorator, based on the Decorator design pattern
+
+    :param Component: [description]
+    :type Component: [type]
+    :return: [description]
+    :rtype: [type]
+    """
+    
+    def __init__(self, comp, name=None, type=None, id=None):
+        super().__init__(name, type, id)
+        self._component = comp
+    
+    @property
+    def component(self):
+        return self._component
+    
+    def init(self):
+        self._component.init()
+    
+    def update(self, **kwargs):
+        self._component.update(**kwargs)
+    
+
+    def accept(self, system: pyglGA.ECSS.System):
+         self._component.accept(system)
+    
 
 class ComponentIterator(ABC):
     """Abstract component Iterator class
@@ -332,7 +366,6 @@ class Camera(Component):
         system.apply2Camera(self)
     
     
-    
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
@@ -390,3 +423,17 @@ class RenderMesh(Component):
         """
         return CompNullIterator(self) 
     
+    
+class BasicTransformDecorator(ComponentDecorator):
+    """An example of a concrete Component Decorator that wraps the component (BasicTransform) 
+        and adds extra layered functionality 
+
+    :param ComponentDecorator: [description]
+    :type ComponentDecorator: [type]
+    """
+    def init(self):
+        """
+        example of a decorator
+        """
+        self.component.init()
+        #call any extra methods before or after

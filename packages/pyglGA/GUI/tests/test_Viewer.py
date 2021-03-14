@@ -46,13 +46,14 @@ class TestSDL2Window(unittest.TestCase):
         
         print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
+        
     def test_initImGUIDecorator(self):
         """
         Running the basic RenderWindow (SDL2Window) with an ImGUIDecorator on top
         """
         print("TestSDL2Window:test_initImGUIDecorator START".center(100, '-'))
         
-        self.gGUI.init()
+        self.gGUI.init() #calls ImGUIDecorator::init()-->SDL2Window::init()
         
         running = True
         # MAIN RENDERING LOOP
