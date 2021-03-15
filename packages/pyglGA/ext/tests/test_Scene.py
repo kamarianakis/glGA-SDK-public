@@ -15,25 +15,18 @@ from pyglGA.ext.Scene import Scene
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class
 
-    :param unittest: [description]
-    :type unittest: [type]
     """
-    def test_new(self):
+    def setUp(self):
+        pass
+    
+    def test_init(self):
         """
         default constructor of Component class
         """
-        print("\TestScene:test_new() START")
+        print("TestScene:test_init START".center(100, '-'))
         s1 = Scene()
         s2 = Scene()    
         self.assertEqual(s1, s2)
-    
-        print("TestScene:test_new() END")
-        
-    def test_sampleScene(self):
-        """
-        default constructor of Component class
-        """
-        print("\TestScene:test_sampleScene() START")
         
         base = Entity("base", "group", 1)
         arm = Entity("arm", "group",2)
@@ -53,8 +46,8 @@ class TestScene(unittest.TestCase):
     
         print("Scenegraph is: ", scenegraph)
     
-        print("TestScene:test_sampleScene() END")
-
+        print("TestScene:test_init END".center(100, '-'))
+        
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

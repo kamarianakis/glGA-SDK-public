@@ -18,17 +18,20 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Dict
 
-import sys
-from pathlib import Path
+import numpy as np
 
+import pyglGA.ECSS.utilities as util
+from pyglGA.ECSS.Entity import Entity, EntityDfsIterator
+from pyglGA.ECSS.Component import BasicTransform, Camera
+from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
+from pyglGA.ECSS.ECSSManager import ECSSManager
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 
-from pyglGA.ECSS.Entity import Entity
-
-
-class SingletonI(ABC):
-    pass
-
-class Scene(SingletonI):
+class Scene():
+    """
+    Singleton Scene that assembles ECSSManager and Viewer classes together for Scene authoring
+    in pyglGA
+    """
     _instance = None
     
     def __new__(cls):
@@ -38,64 +41,69 @@ class Scene(SingletonI):
             # add further init here
         return cls._instance
     
-    def init():
+    
+    def __init__(self):
+        self._renderWindow = None
+        self._world = ECSSManager()
+    
+    @property
+    def renderWindow(self):
+        return self._renderWindow
+    
+    @property
+    def world(self):
+        return self._world
+    
+    
+    def init(self, sdl2 = True, imgui = False):
         """call the init() of all systems attached to this Scene based on the Visitor pattern
         """
-        pass
+        gContext = None
+        
+        if sdl2 == True:
+            gWindow = SDL2Window()
+            gContext = gWindow
+        
+        if imgui == True:
+            gGUI = ImGUIDecorator(gWindow)
+            gContext = gWindow
     
-    def update():
+        gContext.init()
+        gContext.init_post()
+    
+    
+    def update(self):
         """call the update() of all systems attached to this Scene based on the Visitor pattern
         """
         pass
     
-    def processInput():
+    
+    def processInput(self):
         """process the user input per frame based on Strategy and Decorator patterns
         """
         pass
+    
         
-    def render():
+    def render(self):
         """call the render() of all systems attached to this Scene based on the Visitor pattern
         """
         pass
     
-    def run():
+    
+    def run(self):
         """main loop Scene method based on the "gameloop" game programming pattern
         """
         pass
 
+
 if __name__ == "__main__":
-    # The client code.
+    # The client singleton code.
 
     s1 = Scene()
     s2 = Scene()
 
     if id(s1) == id(s2):
-        print("Singleton works, both variables contain the same instance.")
+        print("Singleton works, both Scenes contain the same instance.")
     else:
-        print("Singleton failed, variables contain different instances.")
+        print("Singleton failed, Scenes contain different instances.")
         
-    # create the basic Chapter 8 Hierarchy example from Angel ICG book
-    
-    base = Entity("base", "group", 1)
-    arm = Entity("arm", "group",2)
-    forearm = Entity("forearm", "group",3)
-    
-    baseShape = Entity("baseShape", "shape",4)
-    armShape = Entity("armShape", "shape", 5)
-    forearmShape = Entity("forearmShape", "shape", 6)
-    
-    base.add(arm)
-    base.add(baseShape)
-    arm.add(forearm)
-    arm.add(armShape)
-    forearm.add(forearmShape)
-    
-    #scenegraph = base.update()
-    #print("Scenegraph is: ", scenegraph)
-    # ----------- attach a render system to root Entity ---------------
-    # 
-    #
-    print(f"----------- attached a render system to root Entity: {base._name} ---------------")
-    
-    # ----------- run a render system from root Entity towards leaf nodes (DFS) and compute l2world matrix ---------------
-   
