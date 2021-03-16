@@ -30,7 +30,8 @@ from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 class Scene():
     """
     Singleton Scene that assembles ECSSManager and Viewer classes together for Scene authoring
-    in pyglGA
+    in pyglGA. It also brings together the new extensions to pyglGA: Shader, VertexArray and 
+    RenderMeshDecorators
     """
     _instance = None
     
