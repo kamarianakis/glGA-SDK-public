@@ -7,10 +7,13 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 """
 
 import unittest
+
+import pyglGA.ECSS.utilities as util
 from pyglGA.ECSS.Entity import Entity
-from pyglGA.ECSS.Component import BasicTransform, Camera
+from pyglGA.ECSS.Component import BasicTransform, Camera, RenderMesh
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
 from pyglGA.ext.Scene import Scene
+from pyglGA.ECSS.ECSSManager import ECSSManager
 
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class
@@ -19,10 +22,44 @@ class TestScene(unittest.TestCase):
     def setUp(self):
         """
         Common setup for all unit tests
+        
+        Scenegraph for unit tests:
+        
+        root
+            |---------------------------|           
+            entityCam1,                 node4,      
+            |-------|                    |--------------|           
+            trans1, entityCam2           trans4,        mesh1     
+                    |                               
+                    ortho, trans2                   
+                                                                
+                                                                
+            
         """
         self.s1 = Scene()
-        self.s2 = Scene()    
-        self.assertEqual(self.s1, self.s2)
+        self.scene = Scene()    
+        self.assertEqual(self.s1, self.scene)
+        
+        # Scenegraph with Entities, Components
+        self.rootEntity = self.scene.world.createEntity(Entity(name="RooT"))
+        self.entityCam1 = self.scene.world.createEntity(Entity(name="entityCam1"))
+        self.scene.world.addEntityChild(self.rootEntity, self.entityCam1)
+        self.trans1 = self.scene.world.addComponent(self.entityCam1, BasicTransform(name="trans1", trs=util.translate(1.0,2.0,3.0)))
+        
+        self.entityCam2 = self.scene.world.createEntity(Entity(name="entityCam2"))
+        self.scene.world.addEntityChild(self.entityCam1, self.entityCam2)
+        self.trans2 = self.scene.world.addComponent(self.entityCam2, BasicTransform(name="trans2", trs=util.translate(2.0,3.0,4.0)))
+        self.orthoCam = self.scene.world.addComponent(self.entityCam2, Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "orthoCam","Camera","500"))
+        
+        self.node4 = self.scene.world.createEntity(Entity(name="node4"))
+        self.scene.world.addEntityChild(self.rootEntity, self.node4)
+        self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
+        self.mesh1 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh1"))
+        
+        # Systems
+        self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
+        self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
+       
     
     def test_init(self):
         """
@@ -30,23 +67,19 @@ class TestScene(unittest.TestCase):
         """
         print("TestScene:test_init START".center(100, '-'))
         
-        base = Entity("base", "group", 1)
-        arm = Entity("arm", "group",2)
-        forearm = Entity("forearm", "group",3)
-    
-        baseShape = Entity("baseShape", "shape",4)
-        armShape = Entity("armShape", "shape", 5)
-        forearmShape = Entity("forearmShape", "shape", 6)
-    
-        base.add(arm)
-        base.add(baseShape)
-        arm.add(forearm)
-        arm.add(armShape)
-        forearm.add(forearmShape)
-    
-        scenegraph = base.update()
-    
-        print("Scenegraph is: ", scenegraph)
+        #check is scenegraph was initialised correctly by the world::ECSSManager
+        self.assertEqual(id(self.scene), id(self.s1))
+        self.assertEqual(self.rootEntity, self.scene.world.root)
+        self.assertIsInstance(self.transUpdate, TransformSystem)
+        self.assertIsInstance(self.camUpdate, CameraSystem)
+        self.assertIn(self.entityCam1, self.rootEntity._children)
+        self.assertIn(self.node4, self.rootEntity._children)
+        self.assertIn(self.trans4, self.node4._children)
+        self.assertIn(self.mesh1, self.node4._children)
+        self.assertIn(self.orthoCam, self.entityCam2._children)
+        
+        self.scene.world.root.print()
+        self.scene.world.print()
     
         print("TestScene:test_init END".center(100, '-'))
     
