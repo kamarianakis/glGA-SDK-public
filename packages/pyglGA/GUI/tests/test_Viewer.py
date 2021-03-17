@@ -46,7 +46,7 @@ class TestSDL2Window(unittest.TestCase):
         
         print("TestSDL2Window:test_initSDL2Decorator START".center(100, '-'))
         
-        
+    @unittest.skip("test_initSDL2Decorator or test_initSDL2Decorator, skipping the test")    
     def test_initImGUIDecorator(self):
         """
         Running the basic RenderWindow (SDL2Window) with an ImGUIDecorator on top

@@ -17,16 +17,18 @@ class TestScene(unittest.TestCase):
 
     """
     def setUp(self):
-        pass
+        """
+        Common setup for all unit tests
+        """
+        self.s1 = Scene()
+        self.s2 = Scene()    
+        self.assertEqual(self.s1, self.s2)
     
     def test_init(self):
         """
         default constructor of Component class
         """
         print("TestScene:test_init START".center(100, '-'))
-        s1 = Scene()
-        s2 = Scene()    
-        self.assertEqual(s1, s2)
         
         base = Entity("base", "group", 1)
         arm = Entity("arm", "group",2)
@@ -47,7 +49,23 @@ class TestScene(unittest.TestCase):
         print("Scenegraph is: ", scenegraph)
     
         print("TestScene:test_init END".center(100, '-'))
+    
+    
+    def test_render(self):
+        """
         
+        """
+        print("TestScene:test_render START".center(100, '-'))
+        running = True
+        # MAIN RENDERING LOOP
+        self.s1.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        
+        while running:
+            running = self.s1.render(running)
+        self.s1.shutdown()
+        
+        print("TestScene:test_render END".center(100, '-'))
+
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

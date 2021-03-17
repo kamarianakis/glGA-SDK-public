@@ -45,6 +45,7 @@ class Scene():
     
     def __init__(self):
         self._renderWindow = None
+        self._gContext = None
         self._world = ECSSManager()
     
     @property
@@ -52,25 +53,28 @@ class Scene():
         return self._renderWindow
     
     @property
+    def gContext(self):
+        return self._gContext
+    
+    @property
     def world(self):
         return self._world
     
     
-    def init(self, sdl2 = True, imgui = False):
+    def init(self, sdl2 = True, imgui = False, windowWidth = None, windowHeight = None, windowTitle = None):
         """call the init() of all systems attached to this Scene based on the Visitor pattern
         """
-        gContext = None
-        
+        #init Viewer GUI subsystem with just SDL2 window or also an ImGUI decorators
         if sdl2 == True:
-            gWindow = SDL2Window()
-            gContext = gWindow
+            self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle)
+            self._gContext = self._renderWindow
         
         if imgui == True:
-            gGUI = ImGUIDecorator(gWindow)
-            gContext = gWindow
+            gGUI = ImGUIDecorator(self._renderWindow)
+            self._gContext = gGUI
     
-        gContext.init()
-        gContext.init_post()
+        self._gContext.init()
+        self._gContext.init_post()
     
     
     def update(self):
@@ -85,16 +89,25 @@ class Scene():
         pass
     
         
-    def render(self):
+    def render(self, running:bool = True) ->bool :
         """call the render() of all systems attached to this Scene based on the Visitor pattern
         """
-        pass
-    
+        self._gContext.display()
+        still_runnning = self._gContext.event_input_process(running)
+        self._gContext.display_post()
+
+        return still_runnning
     
     def run(self):
         """main loop Scene method based on the "gameloop" game programming pattern
         """
         pass
+    
+    
+    def shutdown(self):
+        """main shutdown Scene method based on the "gameloop" game programming pattern
+        """
+        self._gContext.shutdown()
 
 
 if __name__ == "__main__":
