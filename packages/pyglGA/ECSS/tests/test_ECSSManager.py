@@ -157,8 +157,9 @@ class TestECSSManager(unittest.TestCase):
         
         #run a camera traversal
         print("\n-- BEFORE calculating Mr2c camera matrix--")
-        self.orthoCam.accept(self.camUpdate)
-        print(self.orthoCam)
+        #self.orthoCam.accept(self.camUpdate)
+        #print(self.orthoCam)
+        self.WorldManager.traverse_visit_pre_camera(self.camUpdate, self.orthoCam)
         print("\n-- AFTER calculating Mr2c camera matrix--")
         self.WorldManager.traverse_visit(self.camUpdate, self.rootEntity)
         

@@ -193,7 +193,19 @@ class ECSSManager():
                         # just add entity_child in the children's components list
                         value.append(entity_child)
 
-    def traverse_visit(self, system: System.System, entity: Entity, dfs=True):
+    
+    def traverse_visit_pre_camera(self, camUpdate: pyglGA.ECSS.System, camera: pyglGA.ECSS.Component.Camera):
+        """
+        Specifically run a CameraSystem on a Camera Component attached in a scenecegraph, 
+        in order to calculate the MR2C root2camera matrix that is an essential part of the 
+        local2camera matrix.
+        This visitor has to be accepted after the L2W traversal has completed and has to be part of the
+        cameraUpdate  system that will traverse whole scenegraph afterwards
+        """
+        camera.accept(camUpdate)
+    
+    
+    def traverse_visit(self, system: pyglGA.ECSS.System, entity: Entity, dfs=True):
         """
         Traverse whole scenegraph by iterating every Entity/Component and calling 
         a specific System on each different element.   

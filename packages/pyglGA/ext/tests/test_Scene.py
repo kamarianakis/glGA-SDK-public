@@ -59,7 +59,7 @@ class TestScene(unittest.TestCase):
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
-       
+        self.renderUpdate = self.scene.world.createSystem(RenderSystem("renderUpdate", "RenderUpdate", "300", self.orthoCam))
     
     def test_init(self):
         """
@@ -80,22 +80,36 @@ class TestScene(unittest.TestCase):
         
         self.scene.world.root.print()
         self.scene.world.print()
+        
+        # run test traversals one in the scene
+        # root node is accessed via ECSSManagerObject.root property
+        # normally these are run wihtin the rendering loop
+        #
+        # 1. L2W traversal
+        self.scene.world.traverse_visit(self.transUpdate, self.scene.world.root) 
+        # 2. pre-camera Mr2c traversal
+        self.scene.world.traverse_visit_pre_camera(self.camUpdate, self.orthoCam)
+        # 3. run proper Ml2c traversal
+        self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
+        # 4. run proper render traversal
+        self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
     
         print("TestScene:test_init END".center(100, '-'))
     
     
     def test_render(self):
         """
-        
+        First time to test a RenderSystem in a Scene!
         """
         print("TestScene:test_render START".center(100, '-'))
         running = True
         # MAIN RENDERING LOOP
-        self.s1.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
         
         while running:
-            running = self.s1.render(running)
-        self.s1.shutdown()
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+        self.scene.shutdown()
         
         print("TestScene:test_render END".center(100, '-'))
 
