@@ -20,13 +20,29 @@ from pyglGA.ext.Shader import Shader
 class TestShader(unittest.TestCase):
     
     def setUp(self):
-        pass
+        print("TestShader:setUp START".center(100, '-'))
+        
+        self.myShader = Shader()
+        
+        
+        print("TestShader:setUp END".center(100, '-'))
+        
     
     def test_init(self):
-        pass
+        print("TestShader:test_init START".center(100, '-'))
+        
+        self.assertEqual(self.myShader.name, "Shader")
+        self.assertEqual(self.myShader.type,"Shader")
+        
+        print("TestShader:test_init END".center(100, '-'))
+    
     
     def test_update(self):
-        pass
+        print("TestShader:test_update START".center(100, '-'))
+        
+        
+        
+        print("TestShader:test_update END".center(100, '-'))
         
 
 if __name__ == "__main__":

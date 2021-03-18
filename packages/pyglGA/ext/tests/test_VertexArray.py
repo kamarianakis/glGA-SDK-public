@@ -21,13 +21,27 @@ from pyglGA.ext.VertexArray import VertexArray
 class TestVertexArray(unittest.TestCase):
     
     def setUp(self):
-        pass
+        print("TestVertexArray:setUp START".center(100, '-'))
+        
+        self.myVertexArray = VertexArray()
+        
+        print("TestVertexArray:setUp END".center(100, '-'))
     
     def test_init(self):
-        pass
+        print("TestVertexArray:test_init START".center(100, '-'))
+        
+        self.assertEqual(self.myVertexArray.name, "VertexArray")
+        self.assertEqual(self.myVertexArray.type,"VertexArray")
+        
+        print("TestVertexArray:test_init END".center(100, '-'))
+    
     
     def test_update(self):
-        pass
+        print("TestVertexArray:test_update START".center(100, '-'))
+        
+        
+        
+        print("TestVertexArray:test_update END".center(100, '-'))
         
 
 if __name__ == "__main__":
