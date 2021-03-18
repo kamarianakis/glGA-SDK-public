@@ -139,6 +139,22 @@ class System(ABC):
         """
         pass
     
+    def apply2VertexArray(self, vertexArray: pyglGA.ext.VertexArray):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
+    
+    def apply2Shader(self, shader: pyglGA.ext.Shader):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+        
+        """
+        pass
+    
 class TransformSystem(System):
     """
     System that operates on BasicTransform Components and calculates Local2World matrices
