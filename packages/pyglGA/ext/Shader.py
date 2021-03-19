@@ -20,6 +20,11 @@ from __future__         import annotations
 from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
+import os  
+import sys
+
+import OpenGL.GL as gl
+from OpenGL.GL import shaders
 
 import pyglGA.ECSS.System
 from pyglGA.ECSS.Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator, BasicTransformDecorator
@@ -34,12 +39,33 @@ class Shader(Component):
     :param Component: [description]
     :type Component: [type]
     """
-    def __init__(self, name=None, type=None, id=None):
+    def __init__(self, name=None, type=None, id=None, vertex_source="", fragment_source="", geometry_source=""):
         super().__init__(name, type, id)
-        
         self._trs = util.identity()
         self._parent = self
         self._children = []
+        self._glid = None
+        self.init(vertex_source, fragment_source, geometry_source)
+    
+    def __del__(self):
+        pass
+    
+    def _compile_shader(src, shader_type):
+        src = open(src, 'r').read() if os.path.exists(src) else src
+        src = src.decode('ascii') if isinstance(src, bytes) else src.decode
+        shader = gl.glCreateShader(shader_type)
+        gl.glShaderSource(shader, src)
+        gl.glCompileShader(shader)
+        status = gl.glGetShaderiv(shader, gl.GL_COMPILE_STATUS)
+        src = ('%3d: %s' % (i+1, l) for i,l in enumerate(src.splitlines()) ) 
+        if not status:
+            log = gl.glGetShaderInfoLog(shader).decode('ascii')
+            gl.glDeleteShader(shader)
+            src = '\n'.join(src)
+            print('Compile failed for %s\n%s\n%s' % (shader_type, log, src))
+            return None
+        return shader
+        
     
     def draw(self):
         print(self.getClassName(), ": draw() called")
@@ -57,9 +83,9 @@ class Shader(Component):
         """
         system.apply2Shader(self)
     
-    def init(self):
+    def init(self, vertex_source="", fragment_source="", geometry_source=""):
         """
-        abstract method to be subclassed for extra initialisation
+        shader extra initialisation
         """
         pass
     
