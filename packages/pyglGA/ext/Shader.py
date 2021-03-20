@@ -44,13 +44,13 @@ class Shader(Component):
         self._trs = util.identity()
         self._parent = self
         self._children = []
-        self._glid = None
+        self.__glid = None
         self.init(vertex_source, fragment_source)
     
     def __del__(self):
         gl.glUseProgram(0)
-        if self.glid:
-            gl.glDeleteProgram(self.glid)
+        if self._glid:
+            gl.glDeleteProgram(self._glid)
     
     def _compile_shader(src, shader_type):
         src = open(src, 'r').read() if os.path.exists(src) else src
@@ -85,7 +85,7 @@ class Shader(Component):
         """
         system.apply2Shader(self)
     
-    def init(self, vertex_source="", fragment_source=""):
+    def init(self, vertex_source, fragment_source):
         """
         shader extra initialisation from raw strings or source file names
         """
@@ -93,17 +93,17 @@ class Shader(Component):
         frag = self._compile_shader(fragment_source, gl.GL_FRAGMENT_SHADER)
         
         if vert and frag:
-            self.glid = gl.glCreateProgram()
-            gl.glAttachShader(self.glid, vert)
-            gl.glAttachShader(self.glid, frag)
-            gl.glLinkProgram(self.glid)
+            self._glid = gl.glCreateProgram()
+            gl.glAttachShader(self._glid, vert)
+            gl.glAttachShader(self._glid, frag)
+            gl.glLinkProgram(self._glid)
             gl.glDeleteShader(vert)
             gl.glDeleteShader(frag)
-            status = gl.glGetProgramiv(self.glid, gl.GL_LINK_STATUS)
+            status = gl.glGetProgramiv(self._glid, gl.GL_LINK_STATUS)
             if not status:
-                print(gl.glGetProgramInfoLog(self.glid).decode('ascii'))
-                gl.glDeleteProgram(self.glid)
-                self.glid = None
+                print(gl.glGetProgramInfoLog(self._glid).decode('ascii'))
+                gl.glDeleteProgram(self._glid)
+                self._glid = None
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
