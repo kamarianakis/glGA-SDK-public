@@ -39,16 +39,18 @@ class Shader(Component):
     :param Component: [description]
     :type Component: [type]
     """
-    def __init__(self, name=None, type=None, id=None, vertex_source="", fragment_source="", geometry_source=""):
+    def __init__(self, name=None, type=None, id=None, vertex_source="", fragment_source=""):
         super().__init__(name, type, id)
         self._trs = util.identity()
         self._parent = self
         self._children = []
         self._glid = None
-        self.init(vertex_source, fragment_source, geometry_source)
+        self.init(vertex_source, fragment_source)
     
     def __del__(self):
-        pass
+        gl.glUseProgram(0)
+        if self.glid:
+            gl.glDeleteProgram(self.glid)
     
     def _compile_shader(src, shader_type):
         src = open(src, 'r').read() if os.path.exists(src) else src
@@ -83,11 +85,25 @@ class Shader(Component):
         """
         system.apply2Shader(self)
     
-    def init(self, vertex_source="", fragment_source="", geometry_source=""):
+    def init(self, vertex_source="", fragment_source=""):
         """
-        shader extra initialisation
+        shader extra initialisation from raw strings or source file names
         """
-        pass
+        vert = self._compile_shader(vertex_source, gl.GL_VERTEX_SHADER)
+        frag = self._compile_shader(fragment_source, gl.GL_FRAGMENT_SHADER)
+        
+        if vert and frag:
+            self.glid = gl.glCreateProgram()
+            gl.glAttachShader(self.glid, vert)
+            gl.glAttachShader(self.glid, frag)
+            gl.glLinkProgram(self.glid)
+            gl.glDeleteShader(vert)
+            gl.glDeleteShader(frag)
+            status = gl.glGetProgramiv(self.glid, gl.GL_LINK_STATUS)
+            if not status:
+                print(gl.glGetProgramInfoLog(self.glid).decode('ascii'))
+                gl.glDeleteProgram(self.glid)
+                self.glid = None
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
