@@ -386,8 +386,7 @@ class RenderMesh(Component):
     """
     A concrete RenderMesh class
 
-    :param Component: [description]
-    :type Component: [type]
+    Accepts a dedicated RenderSystem to initiate rendering of the RenderMesh, using its vertex attributes (property)
     """
     def __init__(self, name=None, type=None, id=None):
         super().__init__(name, type, id)
@@ -395,13 +394,16 @@ class RenderMesh(Component):
         self._trs = util.identity()
         self._parent = self
         self._children = []
+        self._vertex_attributes = [] #list of vertex attribute lists (vertices, colors, normals, bone weights etc.)
     
-    def draw(self):
-        print(self.getClassName(), ": draw() called")
+    @property
+    def vertex_attributes(self):
+        return self._vertex_attributes
+    
         
     def update(self):
         print(self.getClassName(), ": update() called")
-        self.draw()
+   
    
     def accept(self, system: pyglGA.ECSS.System):
         """
@@ -412,11 +414,13 @@ class RenderMesh(Component):
         """
         system.apply2RenderMesh(self)
     
+    
     def init(self):
         """
         abstract method to be subclassed for extra initialisation
         """
         pass
+    
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator

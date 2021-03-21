@@ -6,6 +6,7 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 
 """
 
+
 import unittest
 
 import pyglGA.ECSS.utilities as util
@@ -14,6 +15,9 @@ from pyglGA.ECSS.Component import BasicTransform, Camera, RenderMesh
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
 from pyglGA.ext.Scene import Scene
 from pyglGA.ECSS.ECSSManager import ECSSManager
+
+from ext.Shader import Shader, ShaderStandardDecorator, RenderShaderSystem
+from ext.VertexArray import VertexArray
 
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class
@@ -28,8 +32,8 @@ class TestScene(unittest.TestCase):
         root
             |---------------------------|           
             entityCam1,                 node4,      
-            |-------|                    |--------------|           
-            trans1, entityCam2           trans4,        mesh1     
+            |-------|                    |--------------|----------|--------------|           
+            trans1, entityCam2           trans4,        mesh4,     shaderDec4     vArray4
                     |                               
                     ortho, trans2                   
                                                                 
@@ -54,16 +58,18 @@ class TestScene(unittest.TestCase):
         self.node4 = self.scene.world.createEntity(Entity(name="node4"))
         self.scene.world.addEntityChild(self.rootEntity, self.node4)
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
-        self.mesh1 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh1"))
-        
-        #rendering components
-        #a shader with default pass-through
+        self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray)
         
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
-        self.renderUpdate = self.scene.world.createSystem(RenderSystem("renderUpdate", "RenderUpdate", "300", self.orthoCam))
-    
+        
+        # decorated components and systems
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderStandardDecorator(Shader(vertex_source=Shader.COLOR_VERT, fragment_source=Shader.COLOR_FRAG)))
+        self.renderUpdate = self.scene.world.createSystem(RenderShaderSystem(RenderSystem("renderUpdate", "RenderUpdate", "300", self.orthoCam)))
+
+
     def test_init(self):
         """
         default constructor of Component class
@@ -75,10 +81,11 @@ class TestScene(unittest.TestCase):
         self.assertEqual(self.rootEntity, self.scene.world.root)
         self.assertIsInstance(self.transUpdate, TransformSystem)
         self.assertIsInstance(self.camUpdate, CameraSystem)
+        self.assertIsInstance(self.renderUpdate, RenderSystem)
         self.assertIn(self.entityCam1, self.rootEntity._children)
         self.assertIn(self.node4, self.rootEntity._children)
         self.assertIn(self.trans4, self.node4._children)
-        self.assertIn(self.mesh1, self.node4._children)
+        self.assertIn(self.mesh4, self.node4._children)
         self.assertIn(self.orthoCam, self.entityCam2._children)
         
         self.scene.world.root.print()
@@ -95,7 +102,7 @@ class TestScene(unittest.TestCase):
         # 3. run proper Ml2c traversal
         self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
         # 4. run proper render traversal
-        self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+        # self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
     
         print("TestScene:test_init END".center(100, '-'))
         
@@ -105,6 +112,7 @@ class TestScene(unittest.TestCase):
         """
         print("TestScene:test_Shader_RenderShaderSystem_Decorators START".center(100, '-'))
         
+        #
         
         
         print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))

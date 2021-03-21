@@ -60,7 +60,7 @@ class Shader(Component):
         self._parent = self
         self._children = []
         self.__glid = None
-        self.init(vertex_source, fragment_source)
+        #self.init(vertex_source, fragment_source) #init Shader under a valid GL context
     
     def __del__(self):
         gl.glUseProgram(0)
@@ -169,7 +169,9 @@ class RenderShaderSystem(SystemDecorator):
         - renderMeshEntity = getRenderMeshEntityParent()
         - renderMeshShader = renderMeshEntity.getShader()
             - shaderDecorator node contains a custom update method to pass uniform params to Shader
+            - shaderDecorator.init()
         - renderMeshVertexArray = renderMeshEntity.getVertexArray()
+        - renderMeshVertexArray.init(vertex attributes)
         
         """
         self.system.apply2RenderMesh(renderMesh)

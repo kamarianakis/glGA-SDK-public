@@ -48,7 +48,7 @@ class VertexArray(Component):
         self._buffers = [] #store all GL buffers
         self._draw_command = None
         self._arguments = (0,0)
-        self.init(attributes, index, usage)
+        #self.init(attributes, index, usage) #init after a valid GL context is active
         
     def __del__(self):
         gl.glDeleteVertexArrays(1, [self._glid])
