@@ -155,6 +155,29 @@ class System(ABC):
         """
         pass
     
+class SystemDecorator(System):
+    """Basic System Decorator, based on the Decorator design pattern
+
+    :param sys: [System to be decorated]
+    :type sys: [System]
+    """
+    
+    def __init__(self, sys, name=None, type=None, id=None, priority=0):
+        super().__init__(name, type, id, priority)
+        self._system = sys
+    
+    @property
+    def system(self):
+        return self._system
+    
+    def init(self):
+        self._system.init()
+    
+    def update(self, **kwargs):
+        self._system.update(**kwargs)
+    
+
+    
 class TransformSystem(System):
     """
     System that operates on BasicTransform Components and calculates Local2World matrices
@@ -344,8 +367,7 @@ class RenderSystem(System):
     def update(self):
         """
         method to be subclassed for  behavioral or logic computation 
-        when visits Components of an EntityNode. 
-        
+        when visits RenderMesh Components of the parent EntityNode. 
         """
         pass
     

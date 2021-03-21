@@ -17,6 +17,7 @@ from pyglGA.ECSS.ECSSManager import ECSSManager
 
 from pyglGA.ext.Shader import Shader
 
+@unittest.skip("Requires active GL context, skipping the test")
 class TestShader(unittest.TestCase):
     
     def setUp(self):

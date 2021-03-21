@@ -18,6 +18,7 @@ from pyglGA.ECSS.ECSSManager import ECSSManager
 from pyglGA.ext.VertexArray import VertexArray
 
 
+@unittest.skip("Requires active GL context, skipping the test")
 class TestVertexArray(unittest.TestCase):
     
     def setUp(self):

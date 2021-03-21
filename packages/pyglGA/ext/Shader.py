@@ -26,8 +26,8 @@ import sys
 import OpenGL.GL as gl
 from OpenGL.GL import shaders
 
-import pyglGA.ECSS.System
-from pyglGA.ECSS.Component import Component, BasicTransform, Camera, RenderMesh, CompNullIterator, BasicTransformDecorator
+from pyglGA.ECSS.System import System, RenderSystem, SystemDecorator
+from pyglGA.ECSS.Component import Component, BasicTransform, Camera, ComponentDecorator, RenderMesh, CompNullIterator, BasicTransformDecorator
 import uuid  
 import pyglGA.ECSS.utilities as util
 
@@ -39,6 +39,21 @@ class Shader(Component):
     :param Component: [description]
     :type Component: [type]
     """
+    
+    COLOR_VERT = """#version 410 core
+    layout(location = 0) in vec3 position;
+
+    void main() {
+        gl_Position = vec4(position, 1);
+    }"""
+    
+    COLOR_FRAG = """#version 410 core
+    out vec4 outColor;
+
+    void main() {
+        outColor = vec4(1, 0, 0, 1);
+    }"""
+    
     def __init__(self, name=None, type=None, id=None, vertex_source="", fragment_source=""):
         super().__init__(name, type, id)
         self._trs = util.identity()
@@ -51,7 +66,8 @@ class Shader(Component):
         gl.glUseProgram(0)
         if self._glid:
             gl.glDeleteProgram(self._glid)
-    
+            
+    @staticmethod
     def _compile_shader(src, shader_type):
         src = open(src, 'r').read() if os.path.exists(src) else src
         src = src.decode('ascii') if isinstance(src, bytes) else src.decode
@@ -69,14 +85,11 @@ class Shader(Component):
         return shader
         
     
-    def draw(self):
-        print(self.getClassName(), ": draw() called")
-        
     def update(self):
         print(self.getClassName(), ": update() called")
-        self.draw()
+        
    
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: System):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -109,3 +122,55 @@ class Shader(Component):
         """ A component does not have children to iterate, thus a NULL iterator
         """
         return CompNullIterator(self) 
+    
+    
+class ShaderStandardDecorator(ComponentDecorator):
+    """A decorator of the Shader Compoment to decorate it with custom standard pass-through 
+    shader attributes
+
+    :param ComponentDecorator: [description]
+    :type ComponentDecorator: [type]
+    """
+    def init(self):
+        self.component.init()
+    
+    def update(self):
+        self.component.update()
+        #add here custom shader draw calls, e.g. glGetUniformLocation(), glUniformMatrix4fv() etc.add()
+
+
+class RenderShaderSystem(SystemDecorator):
+    """A decorated RenderSystem specifically for GL vertex and fragment Shaders and associated 
+    VertexArray components attached to a specific Entity
+
+    """
+    def update(self):
+        """
+        - Custom Shader drawing sequence:
+            - useShaderProgram(renderMeshShader.id)
+            - bindVertexArray(renderMeshVertexArray.id)
+            - renderMeshVertexArray.execute(gl.GL_TRIANGLES)
+            - userShaderProgram(0) #clean GL state
+        """
+        self.system.update()
+        #add here custom Shader render calls
+        
+    def apply2RenderMesh(self, renderMesh:RenderMesh):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components. 
+
+        method to be subclassed for  behavioral or logic computation 
+        when visits RenderMesh Components of the parent EntityNode. 
+        Separate SystemDecorator is needed for each case, e.g. for rendering with GL 
+        vertex and fragment Shaders: RenderShaderSystem
+        
+        Actuall RenderShaderSystem logic happens in this update call, according to following pseudocode:
+        - renderMeshEntity = getRenderMeshEntityParent()
+        - renderMeshShader = renderMeshEntity.getShader()
+            - shaderDecorator node contains a custom update method to pass uniform params to Shader
+        - renderMeshVertexArray = renderMeshEntity.getVertexArray()
+        
+        """
+        self.system.apply2RenderMesh(renderMesh)
+        self.update()

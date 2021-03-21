@@ -56,6 +56,9 @@ class TestScene(unittest.TestCase):
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
         self.mesh1 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh1"))
         
+        #rendering components
+        #a shader with default pass-through
+        
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
@@ -95,11 +98,21 @@ class TestScene(unittest.TestCase):
         self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
     
         print("TestScene:test_init END".center(100, '-'))
+        
+        
+    def test_Shader_RenderShaderSystem_Decorators(self):
+        """ test the decorated Shader and RenderSystem
+        """
+        print("TestScene:test_Shader_RenderShaderSystem_Decorators START".center(100, '-'))
+        
+        
+        
+        print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))
     
     
     def test_render(self):
         """
-        First time to test a RenderSystem in a Scene!
+        First time to test a RenderSystem in a Scene with Shader and VertexArray components
         """
         print("TestScene:test_render START".center(100, '-'))
         running = True
