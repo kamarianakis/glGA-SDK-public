@@ -30,7 +30,7 @@ from pyglGA.ECSS.System import System, RenderSystem, SystemDecorator
 from pyglGA.ECSS.Component import Component, BasicTransform, Camera, ComponentDecorator, RenderMesh, CompNullIterator, BasicTransformDecorator
 import uuid  
 import pyglGA.ECSS.utilities as util
-
+from pyglGA.ext.VertexArray import VertexArray
 
 class Shader(Component):
     """
@@ -56,9 +56,9 @@ class Shader(Component):
     
     def __init__(self, name=None, type=None, id=None, vertex_source=None, fragment_source=None):
         super().__init__(name, type, id)
-        self._trs = util.identity()
+        
         self._parent = self
-        self._children = []
+        
         self.__glid = None
         
         if not vertex_source:
@@ -150,7 +150,7 @@ class Shader(Component):
         return CompNullIterator(self) 
     
     
-class ShaderStandardDecorator(ComponentDecorator):
+class ShaderGLDecorator(ComponentDecorator):
     """A decorator of the Shader Compoment to decorate it with custom standard pass-through 
     shader attributes
 
@@ -165,11 +165,60 @@ class ShaderStandardDecorator(ComponentDecorator):
         #add here custom shader draw calls, e.g. glGetUniformLocation(), glUniformMatrix4fv() etc.add()
 
 
-class RenderShaderSystem(SystemDecorator):
+
+class InitGLShaderSystem(System):
+    """Initialise outside of the rendering loop RenderMesh, Shader, VertexArray, ShaderGLDecorator classes
+
+    """
+    def init(self):
+        pass
+    
+    def update(self):
+        """
+        """
+        #add here custom Shader render calls
+        
+    def apply2RenderMesh(self, renderMesh:RenderMesh):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        self.update()
+        
+    def apply2VertexArray(self, vertexArray:VertexArray):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass
+    
+    def apply2Shader(self, shader:Shader):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass
+    
+    def apply2ShaderGLDecorator(self, shaderGLDecorator:ShaderGLDecorator):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass
+
+
+class RenderGLShaderSystem(System):
     """A decorated RenderSystem specifically for GL vertex and fragment Shaders and associated 
     VertexArray components attached to a specific Entity
 
     """
+    def init(self):
+        pass
+    
     def update(self):
         """
         - Custom Shader drawing sequence:
@@ -178,7 +227,6 @@ class RenderShaderSystem(SystemDecorator):
             - renderMeshVertexArray.execute(gl.GL_TRIANGLES)
             - userShaderProgram(0) #clean GL state
         """
-        self.system.update()
         #add here custom Shader render calls
         
     def apply2RenderMesh(self, renderMesh:RenderMesh):
@@ -200,5 +248,28 @@ class RenderShaderSystem(SystemDecorator):
         - renderMeshVertexArray.init(vertex attributes)
         
         """
-        self.system.apply2RenderMesh(renderMesh)
         self.update()
+        
+    def apply2VertexArray(self, vertexArray:VertexArray):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass
+    
+    def apply2Shader(self, shader:Shader):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass
+    
+    def apply2ShaderGLDecorator(self, shaderGLDecorator:ShaderGLDecorator):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components.
+        
+        """
+        pass

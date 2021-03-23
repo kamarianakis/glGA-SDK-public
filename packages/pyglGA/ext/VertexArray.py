@@ -41,9 +41,9 @@ class VertexArray(Component):
     def __init__(self, name=None, type=None, id=None, attributes=None, index=None, usage=gl.GL_STATIC_DRAW):
         super().__init__(name, type, id)
         
-        self._trs = util.identity()
+        
         self._parent = self
-        self._children = []
+        
         self._glid = None
         self._buffers = [] #store all GL buffers
         self._draw_command = None

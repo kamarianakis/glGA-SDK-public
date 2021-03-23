@@ -12,7 +12,7 @@ import time
 import numpy as np
 
 import pyglGA.ECSS.utilities as util
-from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
+from pyglGA.ECSS.System import System, TransformSystem, CameraSystem
 from pyglGA.ECSS.Entity import Entity
 from pyglGA.ECSS.Component import BasicTransform, Camera
 
@@ -364,44 +364,6 @@ class TestCameraSystem(unittest.TestCase):
         
         print("test_CameraSystem_use() END")
 
-class TestRenderSystem(unittest.TestCase):
-    def test_init(self):
-        """
-        default constructor of System class
-        """
-        print("\TestRenderSystem:test_init() START")
         
-        #mySystem = System(100, "baseSystem", "abstract")
-        mySystem = RenderSystem()
-        mySystem.name = "RenderSystem"
-        mySystem.type = "System"
-        mySystem.id = 101
-        
-        self.assertEqual(mySystem.name, "RenderSystem")
-        self.assertEqual(mySystem.type,"System")
-        self.assertEqual(mySystem.id, 101)
-        
-        print("TestRenderSystem:test_init() END")
-    
-    def test_update(self):
-        """
-        test_update of System Depth First Search traversal
-        based on https://likegeeks.com/depth-first-search-in-python/
-        """
-        print("\TestSystem:test_update() START")
-        
-        #mySystem = System(100, "baseSystem", "abstract")
-        mySystem = RenderSystem()
-        mySystem.name = "mySystem"
-        mySystem.type = "Rendering"
-        mySystem.id = 102
-        
-        self.assertEqual(mySystem.name, "mySystem")
-        self.assertEqual(mySystem.type,"Rendering")
-        self.assertEqual(mySystem.id, 102)
-        
-        print("TestSystem:test_update() END")
-        
-
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

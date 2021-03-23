@@ -97,6 +97,14 @@ class System(ABC):
         """
         pass
     
+    def init(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+        when visits Components of an EntityNode. 
+        
+        """
+        pass
+    
     def apply(self, Entity):
         """
         method to be subclassed for  behavioral or logic computation 
@@ -139,20 +147,13 @@ class System(ABC):
         """
         pass
     
-    def apply2VertexArray(self, vertexArray: pyglGA.ext.VertexArray):
-        """
-        method to be subclassed for  behavioral or logic computation 
-        when visits Components. 
-        
-        """
+    def apply2VertexArray(self, vertexArray):
         pass
     
-    def apply2Shader(self, shader: pyglGA.ext.Shader):
-        """
-        method to be subclassed for  behavioral or logic computation 
-        when visits Components. 
-        
-        """
+    def apply2Shader(self, shader):
+        pass
+    
+    def apply2ShaderGLDdecorator(self, shaderGLDecorator):
         pass
     
 class SystemDecorator(System):
@@ -356,30 +357,8 @@ class CameraSystem(System):
 
 class RenderSystem(System):
     """
-    A basic forward rendering system based on GPU shaders
-    :param System: [description]
-    :type System: [type]
+    A basic, empty forward rendering sample system.
+    Basically this needs to be redefined in each rendering context: OpenGL, RayTracing etc. 
     """
-    def __init__(self, name=None, type=None, id=None, cameraComponent=None):
-        super().__init__(name, type, id)
-        self._camera = cameraComponent #if Scene has a cameraComponent, specify also l2Camera
-    
-    def update(self):
-        """
-        method to be subclassed for  behavioral or logic computation 
-        when visits RenderMesh Components of the parent EntityNode. 
-        """
-        pass
-    
-    
-    def apply2RenderMesh(self, renderMesh: pyglGA.ECSS.Component.RenderMesh):
-        """
-        method to be subclassed for  behavioral or logic computation 
-        when visits Components. 
-        
-        """
-        print(self.getClassName(), ": apply(RenderMesh) called")
-        renderMesh.update()
-    
-    
-            
+    pass
+               

@@ -16,7 +16,7 @@ from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSyst
 from pyglGA.ext.Scene import Scene
 from pyglGA.ECSS.ECSSManager import ECSSManager
 
-from ext.Shader import Shader, ShaderStandardDecorator, RenderShaderSystem
+from ext.Shader import InitGLShaderSystem, Shader, ShaderGLDecorator, RenderGLShaderSystem
 from ext.VertexArray import VertexArray
 
 class TestScene(unittest.TestCase):
@@ -65,11 +65,11 @@ class TestScene(unittest.TestCase):
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
         self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
+        self.renderUpdate = self.scene.world.createSystem(RenderGLShaderSystem())
+        self.initUpdate = self.scene.world.createSystem(InitGLShaderSystem())
         
         # decorated components and systems
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderStandardDecorator(Shader()))
-        self.renderUpdate = self.scene.world.createSystem(RenderShaderSystem(RenderSystem("renderUpdate", "RenderUpdate", "300", self.orthoCam)))
-
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader()))
 
     def test_init(self):
         """
@@ -82,7 +82,7 @@ class TestScene(unittest.TestCase):
         self.assertEqual(self.rootEntity, self.scene.world.root)
         self.assertIsInstance(self.transUpdate, TransformSystem)
         self.assertIsInstance(self.camUpdate, CameraSystem)
-        self.assertIsInstance(self.renderUpdate, RenderShaderSystem)
+        self.assertIsInstance(self.renderUpdate, RenderGLShaderSystem)
         self.assertIn(self.entityCam1, self.rootEntity._children)
         self.assertIn(self.node4, self.rootEntity._children)
         self.assertIn(self.trans4, self.node4._children)
@@ -115,7 +115,7 @@ class TestScene(unittest.TestCase):
         
         # create valid render context
         # need to do a scene pre-pass to init all Shader and VertexArrays after GL context is created
-        # init in RenderMesh should copy all vertex_attributes to VertexArray.attributes
+        # init in RenderMesh should copy all RenderMesh.vertex_attributes to VertexArray.attributes
         #
         # RenderShaderSystem could do an init pre-pass with additional apply2Shader and apply2VertexArray 
         # overwritten methods?
@@ -133,6 +133,9 @@ class TestScene(unittest.TestCase):
         running = True
         # MAIN RENDERING LOOP
         self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
         while running:
             running = self.scene.render(running)
