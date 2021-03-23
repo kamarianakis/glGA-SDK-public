@@ -48,8 +48,24 @@ class VertexArray(Component):
         self._buffers = [] #store all GL buffers
         self._draw_command = None
         self._arguments = (0,0)
+        self._attributes = attributes
+        self._index = index
+        self._usage = usage
         #self.init(attributes, index, usage) #init after a valid GL context is active
-        
+    
+    @property
+    def attributes(self):
+        # vertex positions, colors, normals, texcoords lists
+        return self._attributes
+    
+    @property
+    def index(self):
+        return self._index
+    
+    @property
+    def usage(self):
+        return self._usage
+    
     def __del__(self):
         gl.glDeleteVertexArrays(1, [self._glid])
         gl.glDeleteBuffers(len(self._buffers), self._buffers)
@@ -74,7 +90,7 @@ class VertexArray(Component):
         """
         system.apply2VertexArray(self)
     
-    def init(self, attributes, index, usage):
+    def init(self, index, usage):
         """
         extra method for extra initialisation pf VertexArray
         Vertex array from attributes and optional index array. 
@@ -86,7 +102,7 @@ class VertexArray(Component):
         nb_primitives, size = 0, 0
         
         # load buffer per vertex attribute (in a list with index = shader layout)
-        for loc, data in enumerate(attributes):
+        for loc, data in enumerate(self._attributes):
             if data is not None:
                 # bind a new VBO, upload it to GPU, declare size and type
                 self._buffers.append(gl.glGenBuffers(1))

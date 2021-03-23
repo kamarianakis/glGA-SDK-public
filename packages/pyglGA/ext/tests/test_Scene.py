@@ -59,7 +59,8 @@ class TestScene(unittest.TestCase):
         self.scene.world.addEntityChild(self.rootEntity, self.node4)
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
         self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
-        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray)
+        self.mesh4.vertex_attributes = []
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
@@ -81,7 +82,7 @@ class TestScene(unittest.TestCase):
         self.assertEqual(self.rootEntity, self.scene.world.root)
         self.assertIsInstance(self.transUpdate, TransformSystem)
         self.assertIsInstance(self.camUpdate, CameraSystem)
-        self.assertIsInstance(self.renderUpdate, RenderSystem)
+        self.assertIsInstance(self.renderUpdate, RenderShaderSystem)
         self.assertIn(self.entityCam1, self.rootEntity._children)
         self.assertIn(self.node4, self.rootEntity._children)
         self.assertIn(self.trans4, self.node4._children)
@@ -114,6 +115,7 @@ class TestScene(unittest.TestCase):
         
         # create valid render context
         # need to do a scene pre-pass to init all Shader and VertexArrays after GL context is created
+        # init in RenderMesh should copy all vertex_attributes to VertexArray.attributes
         #
         # RenderShaderSystem could do an init pre-pass with additional apply2Shader and apply2VertexArray 
         # overwritten methods?

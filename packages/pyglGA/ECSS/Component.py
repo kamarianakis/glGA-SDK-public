@@ -394,7 +394,9 @@ class RenderMesh(Component):
         self._trs = util.identity()
         self._parent = self
         self._children = []
-        self._vertex_attributes = [] #list of vertex attribute lists (vertices, colors, normals, bone weights etc.)
+        # the generic place to store all vertex attributes (vertices, colors, normals, bone weights etc.)
+        # specifically for OpenGL buffers, these will be passed to a VertexArray by a RenderGLShaderSystem
+        self._vertex_attributes = [] #list of vertex attribute lists 
     
     @property
     def vertex_attributes(self):

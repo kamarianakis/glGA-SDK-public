@@ -54,13 +54,31 @@ class Shader(Component):
         outColor = vec4(1, 0, 0, 1);
     }"""
     
-    def __init__(self, name=None, type=None, id=None, vertex_source="", fragment_source=""):
+    def __init__(self, name=None, type=None, id=None, vertex_source=None, fragment_source=None):
         super().__init__(name, type, id)
         self._trs = util.identity()
         self._parent = self
         self._children = []
         self.__glid = None
+        
+        if not vertex_source:
+            self._vertex_source = Shader.COLOR_VERT
+        else:
+            self._vertex_source = vertex_source
+            
+        if not fragment_source:
+            self._fragment_source = Shader.COLOR_FRAG
+        else:
+            self._fragment_source = fragment_source
         #self.init(vertex_source, fragment_source) #init Shader under a valid GL context
+    
+    @property
+    def vertex_source(self):
+        return self._vertex_source
+    
+    @property
+    def fragment_source(self):
+        return self._fragment_source
     
     def __del__(self):
         gl.glUseProgram(0)
@@ -98,12 +116,12 @@ class Shader(Component):
         """
         system.apply2Shader(self)
     
-    def init(self, vertex_source, fragment_source):
+    def init(self):
         """
         shader extra initialisation from raw strings or source file names
         """
-        vert = self._compile_shader(vertex_source, gl.GL_VERTEX_SHADER)
-        frag = self._compile_shader(fragment_source, gl.GL_FRAGMENT_SHADER)
+        vert = self._compile_shader(self._vertex_source, gl.GL_VERTEX_SHADER)
+        frag = self._compile_shader(self._fragment_source, gl.GL_FRAGMENT_SHADER)
         
         if vert and frag:
             self._glid = gl.glCreateProgram()
