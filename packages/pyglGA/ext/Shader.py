@@ -76,9 +76,17 @@ class Shader(Component):
     def vertex_source(self):
         return self._vertex_source
     
+    @vertex_source.setter
+    def vertex_source(self, value):
+        self._vertex_source = value
+    
     @property
     def fragment_source(self):
         return self._fragment_source
+    
+    @fragment_source.setter
+    def fragment_source(self, value):
+        self._fragment_source = value
     
     def __del__(self):
         gl.glUseProgram(0)

@@ -58,13 +58,25 @@ class VertexArray(Component):
         # vertex positions, colors, normals, texcoords lists
         return self._attributes
     
+    @attributes.setter
+    def attributes(self, value):
+        self._attributes = value
+    
     @property
     def index(self):
         return self._index
     
+    @index.setter
+    def index(self, value):
+        self._index = value
+    
     @property
     def usage(self):
         return self._usage
+    
+    @usage.setter
+    def usage(self, value):
+        self._usage = value
     
     def __del__(self):
         gl.glDeleteVertexArrays(1, [self._glid])

@@ -388,19 +388,29 @@ class RenderMesh(Component):
 
     Accepts a dedicated RenderSystem to initiate rendering of the RenderMesh, using its vertex attributes (property)
     """
-    def __init__(self, name=None, type=None, id=None):
+    def __init__(self, name=None, type=None, id=None, vertex_attributes=None):
+        """ Initialize the generic RenderMesh component with the vertex attribute arrays
+        this is the generic place to store all vertex attributes (vertices, colors, normals, bone weights etc.)
+        specifically for OpenGL buffers, these will be passed to a VertexArray by a RenderGLShaderSystem
+        then other RenderSystems could use that vertex attribute information for their rendering, 
+        e.g. a RenderRayTracingSystem for backwards rayTracing, a RenderPathTracingSystem for pathTracing etc. 
+
+        """
         super().__init__(name, type, id)
         
-        self._trs = util.identity()
         self._parent = self
-        self._children = []
-        # the generic place to store all vertex attributes (vertices, colors, normals, bone weights etc.)
-        # specifically for OpenGL buffers, these will be passed to a VertexArray by a RenderGLShaderSystem
-        self._vertex_attributes = [] #list of vertex attribute lists 
+        if not vertex_attributes:
+            self._vertex_attributes = [] #list of vertex attribute lists 
+        else:
+            self._vertex_attributes = vertex_attributes
     
     @property
     def vertex_attributes(self):
         return self._vertex_attributes
+    
+    @vertex_attributes.setter
+    def vertex_attributes(self, value):
+        self._vertex_attributes = value
     
         
     def update(self):

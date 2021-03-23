@@ -67,7 +67,7 @@ class TestScene(unittest.TestCase):
         self.camUpdate = self.scene.world.createSystem(CameraSystem("camUpdate", "CameraUpdate", "200"))
         
         # decorated components and systems
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderStandardDecorator(Shader(vertex_source=Shader.COLOR_VERT, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderStandardDecorator(Shader()))
         self.renderUpdate = self.scene.world.createSystem(RenderShaderSystem(RenderSystem("renderUpdate", "RenderUpdate", "300", self.orthoCam)))
 
 
@@ -94,7 +94,7 @@ class TestScene(unittest.TestCase):
         
         # run test traversals one in the scene
         # root node is accessed via ECSSManagerObject.root property
-        # normally these are run wihtin the rendering loop
+        # normally these are run within the rendering loop
         #
         # 1. L2W traversal
         self.scene.world.traverse_visit(self.transUpdate, self.scene.world.root) 
