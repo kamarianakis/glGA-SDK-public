@@ -117,9 +117,7 @@ class TestScene(unittest.TestCase):
         # need to do a scene pre-pass to init all Shader and VertexArrays after GL context is created
         # init in RenderMesh should copy all RenderMesh.vertex_attributes to VertexArray.attributes
         #
-        # RenderShaderSystem could do an init pre-pass with additional apply2Shader and apply2VertexArray 
-        # overwritten methods?
-        # Otherwise call a nice initSystem to call the init of all components and get over with it!
+        # call a nice initSystem to call the init of all components and get over with it!
         
         
         print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))
