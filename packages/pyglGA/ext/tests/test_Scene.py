@@ -9,6 +9,8 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 
 import unittest
 
+import numpy as np
+
 import pyglGA.ECSS.utilities as util
 from pyglGA.ECSS.Entity import Entity
 from pyglGA.ECSS.Component import BasicTransform, Camera, RenderMesh
@@ -59,7 +61,14 @@ class TestScene(unittest.TestCase):
         self.scene.world.addEntityChild(self.rootEntity, self.node4)
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
         self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
-        self.mesh4.vertex_attributes = []
+        # a simple triangle
+        self.vertexData = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [0.5, 1.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0]
+        ],dtype=np.float,order='F') 
+        # attached that simple triangle in a RenderMesh
+        self.mesh4.vertex_attributes = self.vertexData
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         
         # Systems

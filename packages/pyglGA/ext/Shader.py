@@ -192,6 +192,9 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
+        # Access parent Entity's RenderMesh
+        # Copy RenderMesh::vertex_attributes to vertexArray
+        # Init vertexArray
         pass
     
     def apply2Shader(self, shader:Shader):
@@ -200,6 +203,7 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
+        #if there is no ShaderGLDecorator, init Shader
         pass
     
     def apply2ShaderGLDecorator(self, shaderGLDecorator:ShaderGLDecorator):
@@ -208,6 +212,7 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
+        #init ShaderGLDecorator if there is such a node
         pass
 
 

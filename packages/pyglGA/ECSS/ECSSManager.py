@@ -163,6 +163,7 @@ class ECSSManager():
                             else:
                                 value = list(component)
                             return component
+            return component
 
     def addEntityChild(self, entity_parent: Entity, entity_child: Entity):
         """

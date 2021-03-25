@@ -433,6 +433,17 @@ class RenderMesh(Component):
         """
         pass
     
+    def print(self):
+        """
+        prints out name, type, id, parent of this Component
+        """
+        print(f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, vertex_attributes: \n{self._vertex_attributes}")
+        print(f" ______________________________________________________________")
+    
+    
+    def __str__(self):
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, vertex_attributes: \n{self._vertex_attributes}"
+
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator
