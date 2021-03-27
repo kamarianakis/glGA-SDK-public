@@ -102,7 +102,7 @@ class VertexArray(Component):
         """
         system.apply2VertexArray(self)
     
-    def init(self, index, usage):
+    def init(self):
         """
         extra method for extra initialisation pf VertexArray
         Vertex array from attributes and optional index array. 
@@ -122,15 +122,15 @@ class VertexArray(Component):
                 nb_primitives, size = data.shape
                 gl.glEnableVertexAttribArray(loc)
                 gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._buffers[-1])
-                gl.glBufferData(gl.GL_ARRAY_BUFFER, data, usage)
+                gl.glBufferData(gl.GL_ARRAY_BUFFER, data, self._usage)
                 gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, None)
         
         #optionally create and upload an index buffer for this VBO         
         self._draw_command = gl.glDrawArrays
         self._arguments = (0, nb_primitives)
-        if index is not None:
+        if self._index is not None:
             self._buffers += [gl.glGenBuffers(1)]
-            index_buffer = np.array(index, np.int32, copy=False)
+            index_buffer = np.array(self._index, np.int32, copy=False)
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._buffers[-1])
             self._draw_command = gl.glDrawElements
             self._arguments = (index_buffer.size, gl.GL_UNSIGNED_INT, None)

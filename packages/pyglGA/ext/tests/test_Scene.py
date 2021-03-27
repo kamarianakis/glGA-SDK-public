@@ -113,6 +113,10 @@ class TestScene(unittest.TestCase):
         self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
         # 4. run proper render traversal
         # self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        #self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
     
         print("TestScene:test_init END".center(100, '-'))
         
@@ -142,6 +146,7 @@ class TestScene(unittest.TestCase):
         self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        # needs an active GL context
         self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
         while running:

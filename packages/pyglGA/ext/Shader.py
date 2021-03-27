@@ -177,6 +177,7 @@ class InitGLShaderSystem(System):
         """
         """
         #add here custom Shader render calls
+    
         
     def apply2RenderMesh(self, renderMesh:RenderMesh):
         """
@@ -184,6 +185,7 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
+        print(f'\n{renderMesh} accessed within {self.getClassName()}::apply2RenderMesh() \n')
         self.update()
         
     def apply2VertexArray(self, vertexArray:VertexArray):
@@ -192,10 +194,19 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
+        print(f'\n{vertexArray} accessed within {self.getClassName()}::apply2RenderMesh() \n')
         # Access parent Entity's RenderMesh
-        # Copy RenderMesh::vertex_attributes to vertexArray
+        parentEntity = vertexArray.parent
+        parentRenderMesh = parentEntity.getChildByType(RenderMesh.getClassName())
+        if parentRenderMesh:
+            # Copy RenderMesh::vertex_attributes to vertexArray
+            vertexArray.attributes = parentRenderMesh.vertex_attributes.flatten()
+            vertexArray.init()
+        else:
+            print("\n no RenderMesh to copy vertex attributes from! \n")
         # Init vertexArray
-        pass
+        
+        
     
     def apply2Shader(self, shader:Shader):
         """
@@ -203,8 +214,11 @@ class InitGLShaderSystem(System):
         when visits Components.
         
         """
-        #if there is no ShaderGLDecorator, init Shader
-        pass
+        # if there is no ShaderGLDecorator, init Shader
+        # for the moment assume that the user will not be directly adding both a shader and shaderDecorator at scenegraph level
+        # we can prevent this at ECSSManager level, but not at scenegraph direct access level
+        shader.init()
+        print(f'\n{shader} accessed within {self.getClassName()}::apply2Shader() \n')
     
     def apply2ShaderGLDecorator(self, shaderGLDecorator:ShaderGLDecorator):
         """
@@ -213,7 +227,8 @@ class InitGLShaderSystem(System):
         
         """
         #init ShaderGLDecorator if there is such a node
-        pass
+        shaderGLDecorator.init()
+        print(f'\n{shaderGLDecorator} accessed within {self.getClassName()}::apply2ShaderGLDecorator() \n')
 
 
 class RenderGLShaderSystem(System):
