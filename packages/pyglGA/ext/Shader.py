@@ -96,6 +96,9 @@ class Shader(Component):
         gl.glUseProgram(0)
         if self._glid:
             gl.glDeleteProgram(self._glid)
+    
+    def disableShader(self):
+        gl.glUseProgram(0)
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -171,6 +174,11 @@ class ShaderGLDecorator(ComponentDecorator):
         # e.g.  loc = GL.glGetUniformLocation(shid, 'projection')
         #       GL.glUniformMatrix4fv(loc, 1, True, projection)
 
+    def disableShader(self):
+        self.component.disableShader()
+        
+    def get_glid(self):
+        return self.component.glid
 
 
 class InitGLShaderSystem(System):
@@ -262,11 +270,11 @@ class RenderGLShaderSystem(System):
         if not compShader:
             compShader = parentEntity.getChildByType(ShaderGLDecorator.getClassName())
         
-        if (compRenderMesh and compShader):
-            self.render(compRenderMesh, compShader)
+        if (vertexArray and compRenderMesh and compShader):
+            self.render(vertexArray, compRenderMesh, compShader)
     
     
-    def render(self, compRenderMesh:RenderMesh = None, compShader=None):
+    def render(self, vertexArray:VertexArray = None, compRenderMesh:RenderMesh = None, compShader=None):
         """
         - Shader-based main draw():
             - retrive ShaderDecorator glid
@@ -275,5 +283,15 @@ class RenderGLShaderSystem(System):
             - renderMeshVertexArray.execute(gl.GL_TRIANGLES)
             - userShaderProgram(0) #clean GL state
         """
+        #retrieve Shader GL id
+        if isinstance(compShader, Shader):
+            gl.glUseProgram(compShader.glid)
+        else:
+            gl.glUseProgram(compShader.get_glid())
         #add here custom Shader render calls
+        
+        #call main draw from VertexArray
+        vertexArray.update()
+        
+        compShader.disableShader()
         print(f'\nMain shader GL render within {self.getClassName()}::update() \n')

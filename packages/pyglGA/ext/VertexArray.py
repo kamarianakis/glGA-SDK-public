@@ -38,7 +38,7 @@ class VertexArray(Component):
     :param Component: [description]
     :type Component: [type]
     """
-    def __init__(self, name=None, type=None, id=None, attributes=None, index=None, primitive = None, usage=gl.GL_STATIC_DRAW):
+    def __init__(self, name=None, type=None, id=None, attributes=None, index=None, primitive = gl.GL_TRIANGLES, usage=gl.GL_STATIC_DRAW):
         super().__init__(name, type, id)
         
         
@@ -102,9 +102,9 @@ class VertexArray(Component):
         gl.glBindVertexArray(self._glid)
         self._draw_command(self._primitive, *self._arguments)
         
-    def update(self, primitive = None):
+    def update(self):
         print(self.getClassName(), ": update() called")
-        self.draw(primitive)
+        self.draw()
    
     def accept(self, system: pyglGA.ECSS.System):
         """
