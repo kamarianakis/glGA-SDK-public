@@ -96,7 +96,7 @@ class Shader(Component):
     @staticmethod
     def _compile_shader(src, shader_type):
         src = open(src, 'r').read() if os.path.exists(src) else src
-        src = src.decode('ascii') if isinstance(src, bytes) else src.decode
+        #src = src.decode('ascii') if isinstance(src, bytes) else src.decode
         shader = gl.glCreateShader(shader_type)
         gl.glShaderSource(shader, src)
         gl.glCompileShader(shader)
@@ -200,7 +200,7 @@ class InitGLShaderSystem(System):
         parentRenderMesh = parentEntity.getChildByType(RenderMesh.getClassName())
         if parentRenderMesh:
             # Copy RenderMesh::vertex_attributes to vertexArray
-            vertexArray.attributes = parentRenderMesh.vertex_attributes.flatten()
+            vertexArray.attributes = parentRenderMesh.vertex_attributes
             vertexArray.init()
         else:
             print("\n no RenderMesh to copy vertex attributes from! \n")

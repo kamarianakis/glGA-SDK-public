@@ -68,7 +68,7 @@ class TestScene(unittest.TestCase):
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float,order='F') 
         # attached that simple triangle in a RenderMesh
-        self.mesh4.vertex_attributes = self.vertexData
+        self.mesh4.vertex_attributes.append(self.vertexData)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         
         # Systems
