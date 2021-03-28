@@ -238,7 +238,7 @@ class ECSSManager():
                 else:
                     # only if we reached end of Entity's children traversedComp is None
                     if (traversedComp is not None):
-                        print(traversedComp)
+                        #print(traversedComp)
                         # accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
                         # calls specific concrete Visitor's apply(), which calls specific concrete Component's update
                         traversedComp.accept(system)

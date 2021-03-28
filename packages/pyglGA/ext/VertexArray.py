@@ -38,7 +38,7 @@ class VertexArray(Component):
     :param Component: [description]
     :type Component: [type]
     """
-    def __init__(self, name=None, type=None, id=None, attributes=None, index=None, usage=gl.GL_STATIC_DRAW):
+    def __init__(self, name=None, type=None, id=None, attributes=None, index=None, primitive = None, usage=gl.GL_STATIC_DRAW):
         super().__init__(name, type, id)
         
         
@@ -51,7 +51,12 @@ class VertexArray(Component):
         self._attributes = attributes
         self._index = index
         self._usage = usage
+        self._primitive = primitive #e.g. GL.GL_TRIANGLES
         #self.init(attributes, index, usage) #init after a valid GL context is active
+    
+    @property
+    def glid(self):
+        return self._glid
     
     @property
     def attributes(self):
@@ -77,17 +82,25 @@ class VertexArray(Component):
     @usage.setter
     def usage(self, value):
         self._usage = value
+        
+    @property
+    def primitive(self):
+        return self._primitive
+    
+    @usage.setter
+    def primitive(self, value):
+        self._primitive = value
     
     def __del__(self):
         gl.glDeleteVertexArrays(1, [self._glid])
         gl.glDeleteBuffers(len(self._buffers), self._buffers)
     
-    def draw(self, primitive = None):
+    def draw(self):
         # draw a vertex Array as direct array or index array
         print(self.getClassName(), ": draw() called")
         
         gl.glBindVertexArray(self._glid)
-        self._draw_command(primitive, *self._arguments)
+        self._draw_command(self._primitive, *self._arguments)
         
     def update(self, primitive = None):
         print(self.getClassName(), ": update() called")

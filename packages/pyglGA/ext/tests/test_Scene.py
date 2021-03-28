@@ -98,7 +98,7 @@ class TestScene(unittest.TestCase):
         self.assertIn(self.mesh4, self.node4._children)
         self.assertIn(self.orthoCam, self.entityCam2._children)
         
-        self.scene.world.root.print()
+        #self.scene.world.root.print()
         self.scene.world.print()
         
         # run test traversals one in the scene
@@ -111,8 +111,8 @@ class TestScene(unittest.TestCase):
         self.scene.world.traverse_visit_pre_camera(self.camUpdate, self.orthoCam)
         # 3. run proper Ml2c traversal
         self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
-        # 4. run proper render traversal
-        # self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+        # 4. run proper render traversal for once!
+        self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         #self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
@@ -151,7 +151,7 @@ class TestScene(unittest.TestCase):
         
         while running:
             running = self.scene.render(running)
-            #self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
         self.scene.shutdown()
         
         print("TestScene:test_render END".center(100, '-'))
