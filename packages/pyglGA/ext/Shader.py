@@ -40,19 +40,26 @@ class Shader(Component):
     :type Component: [type]
     """
     
-    COLOR_VERT = """#version 410 core
-    layout(location = 0) in vec3 position;
-
-    void main() {
-        gl_Position = vec4(position, 1);
-    }"""
+    COLOR_VERT = """#version 410
+        layout (location=0) in vec4 position;
+        //layout (location=1) in vec4 colour;
+        //out vec4 theColour;
+        void main()
+        {
+            gl_Position = position;
+            //theColour = colour;
+        }
+    """
     
-    COLOR_FRAG = """#version 410 core
-    out vec4 outColor;
-
-    void main() {
-        outColor = vec4(1, 0, 0, 1);
-    }"""
+    COLOR_FRAG = """#version 410
+        //in vec4 theColour;
+        out vec4 outputColour;
+        void main()
+        {
+            outputColour = vec4(1, 0, 0, 1);
+            //outputColour = theColour;
+        }
+    """
     
     def __init__(self, name=None, type=None, id=None, vertex_source=None, fragment_source=None):
         super().__init__(name, type, id)
@@ -292,6 +299,6 @@ class RenderGLShaderSystem(System):
         
         #call main draw from VertexArray
         vertexArray.update()
+        #compShader.disableShader()
         
-        compShader.disableShader()
-        print(f'\nMain shader GL render within {self.getClassName()}::update() \n')
+        print(f'\nMain shader GL render within {self.getClassName()}::render() \n')
