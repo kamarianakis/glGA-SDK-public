@@ -102,6 +102,7 @@ class Shader(Component):
         gl.glCompileShader(shader)
         status = gl.glGetShaderiv(shader, gl.GL_COMPILE_STATUS)
         src = ('%3d: %s' % (i+1, l) for i,l in enumerate(src.splitlines()) ) 
+        print('Compile shader success for %s\n%s\n%s' % (shader_type, status, src))
         if not status:
             log = gl.glGetShaderInfoLog(shader).decode('ascii')
             gl.glDeleteShader(shader)

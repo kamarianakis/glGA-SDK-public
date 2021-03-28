@@ -151,7 +151,7 @@ class TestScene(unittest.TestCase):
         
         while running:
             running = self.scene.render(running)
-            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            #self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
         self.scene.shutdown()
         
         print("TestScene:test_render END".center(100, '-'))
