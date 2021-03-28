@@ -101,7 +101,7 @@ class VertexArray(Component):
         
         gl.glBindVertexArray(self._glid)
         self._draw_command(self._primitive, *self._arguments)
-        #gl.glBindVertexArray(0)
+        gl.glBindVertexArray(0)
         
     def update(self):
         print(self.getClassName(), ": update() called")

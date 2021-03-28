@@ -299,6 +299,6 @@ class RenderGLShaderSystem(System):
         
         #call main draw from VertexArray
         vertexArray.update()
-        #compShader.disableShader()
+        compShader.disableShader()
         
         print(f'\nMain shader GL render within {self.getClassName()}::render() \n')
