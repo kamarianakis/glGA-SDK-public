@@ -62,11 +62,22 @@ class TestScene(unittest.TestCase):
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
         self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
         # a simple triangle
+        
         self.vertexData = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, 1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0]
-        ],dtype=np.float,order='F') 
+        ],dtype=np.float32) 
+        """
+        self.vertexData = np.array(
+        [
+            #vertex positions
+            0.0, 0.0, 0.0, 1.0,
+            0.5, 1.0, 0.0, 1.0,
+            1.0, 0.0, 0.0, 1.0
+        ],dtype=np.float32)
+        """
+        
         # attached that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())

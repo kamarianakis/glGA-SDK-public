@@ -20,6 +20,7 @@ from __future__         import annotations
 from abc                import ABC, abstractmethod
 from typing             import List
 from collections.abc    import Iterable, Iterator
+import ctypes
 
 import OpenGL.GL as gl
 from OpenGL.GL import shaders
@@ -101,6 +102,7 @@ class VertexArray(Component):
         
         gl.glBindVertexArray(self._glid)
         self._draw_command(self._primitive, *self._arguments)
+        #gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
         gl.glBindVertexArray(0)
         
     def update(self):
@@ -138,6 +140,7 @@ class VertexArray(Component):
                 gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._buffers[-1])
                 gl.glBufferData(gl.GL_ARRAY_BUFFER, data, self._usage)
                 gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, None)
+                #gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, ctypes.c_void_p(48))
         
         #optionally create and upload an index buffer for this VBO         
         self._draw_command = gl.glDrawArrays
