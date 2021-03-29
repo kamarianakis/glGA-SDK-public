@@ -205,8 +205,8 @@ class VertexArray():
         print("VertexArray: draw() called")
         
         gl.glBindVertexArray(self._glid)
-        self._draw_command(self._primitive, *self._arguments)
-        #gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+        #self._draw_command(self._primitive, *self._arguments)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
         gl.glBindVertexArray(0)
         
     def update(self):
@@ -246,7 +246,10 @@ class VertexArray():
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._buffers[-1])
             self._draw_command = gl.glDrawElements
             self._arguments = (index_buffer.size, gl.GL_UNSIGNED_INT, None)
-    
+
+        # cleanup and unbind so no accidental subsequent state update
+        gl.glBindVertexArray(0)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
 
 class SDL2Window():
     """ The concrete subclass of RenderWindow for the SDL2 GUI API 
@@ -426,13 +429,15 @@ if __name__ == "__main__":
     # MAIN RENDERING LOOP
     while running:
         
-        # draw vArray4
-        gl.glUseProgram(shaderDec4.glid)
-        vArray4.update()
+        
         
         gWindow.display()
         running = gWindow.event_input_process(running)
         gWindow.display_post()
+        
+        # draw vArray4
+        gl.glUseProgram(shaderDec4.glid)
+        vArray4.update()
         
         shaderDec4.disableShader()
         
