@@ -161,9 +161,9 @@ class TestScene(unittest.TestCase):
         self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
         while running:
-            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
-            
             running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.scene.render_post()
             
         self.scene.shutdown()
         

@@ -94,9 +94,11 @@ class Scene():
         """
         self._gContext.display()
         still_runnning = self._gContext.event_input_process(running)
-        self._gContext.display_post()
-
+        
         return still_runnning
+    
+    def render_post(self):
+        self._gContext.display_post()
     
     def run(self):
         """main loop Scene method based on the "gameloop" game programming pattern

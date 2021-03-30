@@ -202,7 +202,7 @@ class VertexArray():
     
     def draw(self):
         # draw a vertex Array as direct array or index array
-        print("VertexArray: draw() called")
+        #print("VertexArray: draw() called")
         
         gl.glBindVertexArray(self._glid)
         #self._draw_command(self._primitive, *self._arguments)
@@ -210,7 +210,7 @@ class VertexArray():
         gl.glBindVertexArray(0)
         
     def update(self):
-        print("VertexArray: update() called")
+        #print("VertexArray: update() called")
         self.draw()
     
     def init(self):
@@ -433,12 +433,14 @@ if __name__ == "__main__":
         
         gWindow.display()
         running = gWindow.event_input_process(running)
-        gWindow.display_post()
+        
         
         # draw vArray4
         gl.glUseProgram(shaderDec4.glid)
         vArray4.update()
         
         shaderDec4.disableShader()
+        
+        gWindow.display_post()
         
     gWindow.shutdown()
