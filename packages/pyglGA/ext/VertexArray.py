@@ -131,7 +131,7 @@ class VertexArray(Component):
         
         # load buffer per vertex attribute (in a list with index = shader layout)
         for loc, data in enumerate(self._attributes):
-            if data is not None:
+            if data is not None and len(data) : #check if it is empty
                 # bind a new VBO, upload it to GPU, declare size and type
                 self._buffers.append(gl.glGenBuffers(1))
                 data = np.array(data, np.float32, copy=False)
@@ -140,18 +140,19 @@ class VertexArray(Component):
                 gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._buffers[-1])
                 gl.glBufferData(gl.GL_ARRAY_BUFFER, data, self._usage)
                 gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, None)
-                #gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, ctypes.c_void_p(48))
+           
         
         #optionally create and upload an index buffer for this VBO         
         self._draw_command = gl.glDrawArrays
         self._arguments = (0, nb_primitives)
-        if self._index is not None:
+        if self._index is not None and len(self._index): #check if list is empty
             self._buffers += [gl.glGenBuffers(1)]
             index_buffer = np.array(self._index, np.int32, copy=False)
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._buffers[-1])
+            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, index_buffer, self._usage)
             self._draw_command = gl.glDrawElements
             self._arguments = (index_buffer.size, gl.GL_UNSIGNED_INT, None)
-    
+        
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator

@@ -42,22 +42,22 @@ class Shader(Component):
     
     COLOR_VERT = """#version 410
         layout (location=0) in vec4 position;
-        //layout (location=1) in vec4 colour;
-        //out vec4 theColour;
+        layout (location=1) in vec4 colour;
+        out vec4 theColour;
         void main()
         {
             gl_Position = position;
-            //theColour = colour;
+            theColour = colour;
         }
     """
     
     COLOR_FRAG = """#version 410
-        //in vec4 theColour;
+        in vec4 theColour;
         out vec4 outputColour;
         void main()
         {
-            outputColour = vec4(1, 0, 0, 1);
-            //outputColour = theColour;
+            //outputColour = vec4(1, 0, 0, 1);
+            outputColour = theColour;
         }
     """
     
@@ -221,8 +221,9 @@ class InitGLShaderSystem(System):
         parentEntity = vertexArray.parent
         parentRenderMesh = parentEntity.getChildByType(RenderMesh.getClassName())
         if parentRenderMesh:
-            # Copy RenderMesh::vertex_attributes to vertexArray
+            # Copy RenderMesh::vertex_attributes and vertex_indices to vertexArray
             vertexArray.attributes = parentRenderMesh.vertex_attributes
+            vertexArray.index = parentRenderMesh.vertex_index
             vertexArray.init()
         else:
             print("\n no RenderMesh to copy vertex attributes from! \n")

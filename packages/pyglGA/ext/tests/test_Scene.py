@@ -68,18 +68,19 @@ class TestScene(unittest.TestCase):
             [0.5, 1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
-        """
-        self.vertexData = np.array(
-        [
-            #vertex positions
-            0.0, 0.0, 0.0, 1.0,
-            0.5, 1.0, 0.0, 1.0,
-            1.0, 0.0, 0.0, 1.0
-        ],dtype=np.float32)
-        """
+        
+        self.colorVertexData = np.array([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0]
+        ], dtype=np.float32)
+    
+        self.index = np.array((0,1,2), np.uint32)
         
         # attached that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData)
+        self.mesh4.vertex_attributes.append(self.colorVertexData)
+        self.mesh4.vertex_index.append(self.index)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         
         # Systems

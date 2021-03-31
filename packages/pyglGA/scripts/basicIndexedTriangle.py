@@ -31,22 +31,22 @@ class Shader():
     
     COLOR_VERT = """#version 410
         layout (location=0) in vec4 position;
-        //layout (location=1) in vec4 colour;
-        //out vec4 theColour;
+        layout (location=1) in vec4 colour;
+        out vec4 theColour;
         void main()
         {
             gl_Position = position;
-            //theColour = colour;
+            theColour = colour;
         }
     """
     
     COLOR_FRAG = """#version 410
-        //in vec4 theColour;
+        in vec4 theColour;
         out vec4 outputColour;
         void main()
         {
-            outputColour = vec4(1, 0, 0, 1);
-            //outputColour = theColour;
+            //outputColour = vec4(1, 0, 0, 1);
+            outputColour = theColour;
         }
     """
     
@@ -205,8 +205,8 @@ class VertexArray():
         #print("VertexArray: draw() called")
         
         gl.glBindVertexArray(self._glid)
-        #self._draw_command(self._primitive, *self._arguments)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+        self._draw_command(self._primitive, *self._arguments)
+        #gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
         gl.glBindVertexArray(0)
         
     def update(self):
@@ -235,7 +235,7 @@ class VertexArray():
                 gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._buffers[-1])
                 gl.glBufferData(gl.GL_ARRAY_BUFFER, data, self._usage)
                 gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, None)
-                #gl.glVertexAttribPointer(loc, size, gl.GL_FLOAT, False, 0, ctypes.c_void_p(48))
+                
         
         #optionally create and upload an index buffer for this VBO         
         self._draw_command = gl.glDrawArrays
@@ -244,6 +244,7 @@ class VertexArray():
             self._buffers += [gl.glGenBuffers(1)]
             index_buffer = np.array(self._index, np.int32, copy=False)
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._buffers[-1])
+            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, index_buffer, self._usage)
             self._draw_command = gl.glDrawElements
             self._arguments = (index_buffer.size, gl.GL_UNSIGNED_INT, None)
 
@@ -411,6 +412,14 @@ if __name__ == "__main__":
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
+    colorVertexData = np.array([
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0]
+    ], dtype=np.float32)
+    
+    index = np.array((0,1,2), np.uint32)
+    
     gWindow = SDL2Window()
     gWindow.init()
     
@@ -419,28 +428,24 @@ if __name__ == "__main__":
     
     attr = list()
     attr.append(vertexData)
+    attr.append(colorVertexData)
     
     # init() shaderDec4, vArray4
     vArray4.attributes = attr
+    vArray4.index = index
     vArray4.init()
     shaderDec4.init()
     
     running = True
     # MAIN RENDERING LOOP
     while running:
-        
-        
-        
+
         gWindow.display()
         running = gWindow.event_input_process(running)
-        
-        
         # draw vArray4
         gl.glUseProgram(shaderDec4.glid)
         vArray4.update()
-        
         shaderDec4.disableShader()
-        
         gWindow.display_post()
         
     gWindow.shutdown()
