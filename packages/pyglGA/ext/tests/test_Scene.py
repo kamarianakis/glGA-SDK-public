@@ -155,7 +155,7 @@ class TestScene(unittest.TestCase):
         print("TestScene:test_render START".center(100, '-'))
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=False, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context

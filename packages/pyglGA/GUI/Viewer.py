@@ -344,6 +344,10 @@ class ImGUIDecorator(RenderDecorator):
         
         
     def display_post(self):
+        # render imgui (after 3D scene and just before the SDL double buffer swap window)
+        imgui.render()
+        self._imguiRenderer.render(imgui.get_draw_data())
+        # call the SDL window window swapping in the end of the scene as final render action
         self.wrapeeWindow.display_post()
         
         
@@ -365,8 +369,8 @@ class ImGUIDecorator(RenderDecorator):
         #end imgui frame context
         imgui.end()
         #render imgui
-        imgui.render()
-        self._imguiRenderer.render(imgui.get_draw_data())
+        #imgui.render()
+        #self._imguiRenderer.render(imgui.get_draw_data())
         
         #print(f'{self.getClassName()}: extra()')
 
