@@ -412,6 +412,12 @@ if __name__ == "__main__":
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
+    vertexData2 = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [0.5, -1.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0]
+        ],dtype=np.float32) 
+    
     colorVertexData = np.array([
             [1.0, 0.0, 0.0, 0.0],
             [0.0, 1.0, 0.0, 1.0],
@@ -424,16 +430,24 @@ if __name__ == "__main__":
     gWindow.init()
     
     vArray4 = VertexArray()
+    vArray5 = VertexArray()
     shaderDec4 = Shader()
     
     attr = list()
     attr.append(vertexData)
     attr.append(colorVertexData)
     
+    attr2 = list()
+    attr2.append(vertexData2)
+    attr2.append(colorVertexData)
+    
     # init() shaderDec4, vArray4
     vArray4.attributes = attr
     vArray4.index = index
     vArray4.init()
+    vArray5.attributes = attr2
+    vArray5.index = index
+    vArray5.init()
     shaderDec4.init()
     
     running = True
@@ -445,6 +459,7 @@ if __name__ == "__main__":
         # draw vArray4
         gl.glUseProgram(shaderDec4.glid)
         vArray4.update()
+        vArray5.update()
         shaderDec4.disableShader()
         gWindow.display_post()
         

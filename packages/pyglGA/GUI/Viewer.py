@@ -368,9 +368,6 @@ class ImGUIDecorator(RenderDecorator):
         imgui.text(self._wrapeeWindow._gVersionLabel)
         #end imgui frame context
         imgui.end()
-        #render imgui
-        #imgui.render()
-        #self._imguiRenderer.render(imgui.get_draw_data())
         
         #print(f'{self.getClassName()}: extra()')
 
