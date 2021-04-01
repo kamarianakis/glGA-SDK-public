@@ -13,6 +13,7 @@ from typing             import List
 from collections.abc    import Iterable, Iterator
 import os  
 import sys
+from pathlib import Path
 
 import OpenGL.GL as gl
 from OpenGL.GL import shaders
@@ -463,7 +464,20 @@ if __name__ == "__main__":
     vArray4 = VertexArray()
     vArray5 = VertexArray()
     shaderDec4 = Shader()
-    shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
+    #shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
+    
+    # ---------------------------------------
+    #  reading shaders as external files
+    # ---------------------------------------
+    entries = Path('.')
+    for entry in entries.iterdir():
+        print(entry.name)
+        
+    with open('./scripts/color.vert', 'r') as f:
+        vShader = f.read()
+    with open('./scripts/color.frag', 'r') as f:
+        fShader = f.read()
+    shaderDec5 = Shader(vertex_source=vShader, fragment_source=fShader)
     
     attr = list()
     attr.append(vertexData)
