@@ -95,6 +95,9 @@ class Shader():
     
     def disableShader(self):
         gl.glUseProgram(0)
+        
+    def enableShader(self):
+        gl.glUseProgram(self._glid)
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -406,6 +409,9 @@ class SDL2Window():
 if __name__ == "__main__":
     # The client main code.
     
+    # ------------------------------
+    # vertex attribute arrays and shaders
+    # ------------------------------
     vertexData = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, 1.0, 0.0, 1.0],
@@ -426,12 +432,38 @@ if __name__ == "__main__":
     
     index = np.array((0,1,2), np.uint32)
     
+    COLOR_VERT2 = """#version 410
+        layout (location=0) in vec4 position;
+        layout (location=1) in vec4 colour;
+        out vec4 theColour;
+        void main()
+        {
+            gl_Position = position;
+            theColour = colour;
+        }
+    """
+    
+    COLOR_FRAG2 = """#version 410
+        in vec4 theColour;
+        out vec4 outputColour;
+        void main()
+        {
+            outputColour = vec4(1, 0, 0, 1);
+            //outputColour = theColour;
+        }
+    """
+    
+    # ------------------------------
+    # main scene
+    # ------------------------------
+    
     gWindow = SDL2Window()
     gWindow.init()
     
     vArray4 = VertexArray()
     vArray5 = VertexArray()
     shaderDec4 = Shader()
+    shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
     
     attr = list()
     attr.append(vertexData)
@@ -449,18 +481,25 @@ if __name__ == "__main__":
     vArray5.index = index
     vArray5.init()
     shaderDec4.init()
+    shaderDec5.init()
     
     running = True
     # MAIN RENDERING LOOP
     while running:
-
         gWindow.display()
         running = gWindow.event_input_process(running)
-        # draw vArray4
-        gl.glUseProgram(shaderDec4.glid)
+        # draw vArray4 with Shader4 and vArray5 with Shader5
+        shaderDec4.enableShader()
         vArray4.update()
-        vArray5.update()
         shaderDec4.disableShader()
+        shaderDec5.enableShader()
+        vArray5.update()
+        shaderDec5.disableShader()
+        # call ImGUI render and final SDL swap window  
         gWindow.display_post()
-        
+    
+    del shaderDec4
+    del shaderDec5
+    del vArray4
+    del vArray5    
     gWindow.shutdown()
