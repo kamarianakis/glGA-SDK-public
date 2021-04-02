@@ -422,7 +422,8 @@ if __name__ == "__main__":
     vertexData = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, 1.0, 0.0, 1.0],
-            [1.0, 0.0, 0.0, 1.0]
+            [1.0, 0.0, 0.0, 1.0],
+            [0.5, -1.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
     vertexData2 = np.array([
@@ -437,7 +438,8 @@ if __name__ == "__main__":
             [0.0, 0.0, 1.0, 1.0]
     ], dtype=np.float32)
     
-    index = np.array((0,1,2), np.uint32)
+    index = np.array((0,1,2, 0,3,2), np.uint32)
+    index2 = np.array((0,1,2), np.uint32)
     
     translateMat = util.translate(-1.0,0.0,0.0)
     print(translateMat)
@@ -511,7 +513,7 @@ if __name__ == "__main__":
     vArray4.index = index
     vArray4.init()
     vArray5.attributes = attr2
-    vArray5.index = index
+    vArray5.index = index2
     vArray5.init()
     shaderDec4.init()
     shaderDec5.init()
