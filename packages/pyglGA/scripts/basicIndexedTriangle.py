@@ -99,11 +99,12 @@ class Shader():
     def disableShader(self):
         gl.glUseProgram(0)
         
-    def enableShader(self, **kwargs):
+    def enableShader(self, mat4dict=None):
         gl.glUseProgram(self._glid)
-        for key, value in kwargs.items():
-            loc = gl.glGetUniformLocation(self._glid, key)
-            gl.glUniformMatrix4fv(loc, 1, True, value) 
+        if mat4dict is not None:
+            for key, value in mat4dict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniformMatrix4fv(loc, 1, True, value) 
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -515,6 +516,9 @@ if __name__ == "__main__":
     shaderDec4.init()
     shaderDec5.init()
     
+    matDict={}
+    matDict['translate'] = translateMat
+    #matDict = {'translate':translateMat}
     
     running = True
     # MAIN RENDERING LOOP
@@ -525,7 +529,7 @@ if __name__ == "__main__":
         shaderDec4.enableShader()
         vArray4.update()
         shaderDec4.disableShader()
-        shaderDec5.enableShader(translate=translateMat)
+        shaderDec5.enableShader(matDict)
         vArray5.update()
         shaderDec5.disableShader()
         # call ImGUI render and final SDL swap window  
