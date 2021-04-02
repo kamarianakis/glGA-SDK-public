@@ -25,6 +25,8 @@ import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
 import numpy as np
 
+import pyglGA.ECSS.utilities as util
+
 class Shader():
     """
     A concrete Shader class
@@ -97,8 +99,11 @@ class Shader():
     def disableShader(self):
         gl.glUseProgram(0)
         
-    def enableShader(self):
+    def enableShader(self, **kwargs):
         gl.glUseProgram(self._glid)
+        for key, value in kwargs.items():
+            loc = gl.glGetUniformLocation(self._glid, key)
+            gl.glUniformMatrix4fv(loc, 1, True, value) 
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -433,13 +438,26 @@ if __name__ == "__main__":
     
     index = np.array((0,1,2), np.uint32)
     
+    translateMat = util.translate(-1.0,0.0,0.0)
+    print(translateMat)
+    '''
+    we need to pass a mat4fDictionary: {shader uniform variable name, value}
+    to the shader draw method so that it can call:
+        loc = GL.glGetUniformLocation(shid, 'uniformName')
+        GL.glUniformMatrix4fv(loc, 1, True, uniformValue)
+    '''
+    
     COLOR_VERT2 = """#version 410
         layout (location=0) in vec4 position;
         layout (location=1) in vec4 colour;
-        out vec4 theColour;
+        
+        out     vec4 theColour;
+        
+        uniform mat4 translate;
+        
         void main()
         {
-            gl_Position = position;
+            gl_Position = translate * position;
             theColour = colour;
         }
     """
@@ -464,7 +482,7 @@ if __name__ == "__main__":
     vArray4 = VertexArray()
     vArray5 = VertexArray()
     shaderDec4 = Shader()
-    #shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
+    shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
     
     # ---------------------------------------
     #  reading shaders as external files
@@ -477,7 +495,7 @@ if __name__ == "__main__":
         vShader = f.read()
     with open('./scripts/color.frag', 'r') as f:
         fShader = f.read()
-    shaderDec5 = Shader(vertex_source=vShader, fragment_source=fShader)
+    #shaderDec5 = Shader(vertex_source=vShader, fragment_source=fShader)
     
     attr = list()
     attr.append(vertexData)
@@ -497,6 +515,7 @@ if __name__ == "__main__":
     shaderDec4.init()
     shaderDec5.init()
     
+    
     running = True
     # MAIN RENDERING LOOP
     while running:
@@ -506,7 +525,7 @@ if __name__ == "__main__":
         shaderDec4.enableShader()
         vArray4.update()
         shaderDec4.disableShader()
-        shaderDec5.enableShader()
+        shaderDec5.enableShader(translate=translateMat)
         vArray5.update()
         shaderDec5.disableShader()
         # call ImGUI render and final SDL swap window  

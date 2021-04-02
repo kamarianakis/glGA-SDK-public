@@ -198,7 +198,7 @@ def translate(x=0.0, y=0.0, z=0.0):
     #Tmat[1,3] = y
     #Tmat[2,3] = z
     if isinstance(x, Number):
-        Tmat[:3,3] = vec(x,y,z)  
+        Tmat[:3,3] = vec(x,y,z)  #slicing is [start:end:step], :3,3 = all 3 rows on 3 column
     else:
          Tmat[:3,3] = vec(x)
     
