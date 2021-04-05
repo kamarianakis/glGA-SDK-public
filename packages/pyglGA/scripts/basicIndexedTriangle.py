@@ -408,6 +408,8 @@ class SDL2Window():
         #GPTODO make background clear color as parameter at class level
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+        gl.glDisable(gl.GL_CULL_FACE)
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
         #print(f'{self.getClassName()}: display()')
     
     
@@ -466,14 +468,20 @@ if __name__ == "__main__":
     colorVertexData = np.array([
             [1.0, 0.0, 0.0, 0.0],
             [0.0, 1.0, 0.0, 1.0],
-            [0.0, 0.0, 1.0, 1.0]
+            [0.0, 0.0, 1.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0]
     ], dtype=np.float32)
     
     index = np.array((0,1,2, 0,3,2), np.uint32)
     index2 = np.array((0,1,2), np.uint32)
     
     translateMat = util.translate(-1.0,0.0,0.0)
+    #perspMat = util.perspective(120.0, 1, 0.01, 100)
+    #perspMat = util.frustum(-10.0, 10.0,-10.0,10.0, 0.1, 100)
+    perspMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
     print(translateMat)
+    print(perspMat)
+    
     '''
     we need to pass a mat4fDictionary: {shader uniform variable name, value}
     to the shader draw method so that it can call:
@@ -501,8 +509,34 @@ if __name__ == "__main__":
         out vec4 outputColour;
         void main()
         {
-            outputColour = vec4(1, 0, 0, 1);
-            //outputColour = theColour;
+            //outputColour = vec4(1, 0, 0, 1);
+            outputColour = theColour;
+        }
+    """
+    
+    COLOR_VERT3 = """#version 410
+        layout (location=0) in vec4 position;
+        layout (location=1) in vec4 colour;
+        
+        out     vec4 theColour;
+        
+        uniform mat4 modelViewProj;
+        
+        void main()
+        {
+            gl_Position = modelViewProj * position;
+            //gl_Position = position;
+            theColour = colour;
+        }
+    """
+    
+    COLOR_FRAG3 = """#version 410
+        in vec4 theColour;
+        out vec4 outputColour;
+        void main()
+        {
+            //outputColour = vec4(1, 0, 0, 1);
+            outputColour = theColour;
         }
     """
     
@@ -513,17 +547,19 @@ if __name__ == "__main__":
     gWindow = SDL2Window()
     gWindow.init()
     
-    vArray4 = VertexArray()
-    vArray5 = VertexArray()
-    shaderDec4 = Shader()
-    shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
+    #vArray4 = VertexArray()
+    #vArray5 = VertexArray()
+    vArray6 = VertexArray()
+    #shaderDec4 = Shader()
+    #shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
+    shaderDec6 = Shader(vertex_source=COLOR_VERT3, fragment_source=COLOR_FRAG3)
     
     # ---------------------------------------
     #  reading shaders as external files
     # ---------------------------------------
-    entries = Path('.')
-    for entry in entries.iterdir():
-        print(entry.name)
+    #entries = Path('.')
+    #for entry in entries.iterdir():
+    #    print(entry.name)
         
     with open('./scripts/color.vert', 'r') as f:
         vShader = f.read()
@@ -539,7 +575,8 @@ if __name__ == "__main__":
     attr2.append(vertexData2)
     attr2.append(colorVertexData)
     
-    # init() shaderDec4, vArray4
+    # init() shaderDec4, vArray4, shaderDec6, vArray6
+    '''
     vArray4.attributes = attr
     vArray4.index = index
     vArray4.init()
@@ -548,10 +585,17 @@ if __name__ == "__main__":
     vArray5.init()
     shaderDec4.init()
     shaderDec5.init()
+    '''
+    vArray6.attributes = attr2
+    vArray6.index = index2
+    vArray6.init()
+    shaderDec6.init()
     
     matDict={}
     matDict['translate'] = translateMat
     #matDict = {'translate':translateMat}
+    matDict6={}
+    matDict6['modelViewProj'] = perspMat
     
     running = True
     # MAIN RENDERING LOOP
@@ -559,6 +603,7 @@ if __name__ == "__main__":
         gWindow.display()
         running = gWindow.event_input_process(running)
         # draw vArray4 with Shader4 and vArray5 with Shader5
+        '''
         shaderDec4.enableShader()
         vArray4.update()
         shaderDec4.disableShader()
@@ -566,11 +611,18 @@ if __name__ == "__main__":
         shaderDec5.enableShader()
         vArray5.update()
         shaderDec5.disableShader()
+        '''
+        shaderDec6.mat4fDict = matDict6
+        shaderDec6.enableShader()
+        vArray6.update()
+        shaderDec6.disableShader()
         # call ImGUI render and final SDL swap window  
         gWindow.display_post()
     
-    del shaderDec4
-    del shaderDec5
-    del vArray4
-    del vArray5    
+    #del shaderDec4
+    #del shaderDec5
+    #del vArray4
+    #del vArray5  
+    del shaderDec6
+    del vArray6    
     gWindow.shutdown()
