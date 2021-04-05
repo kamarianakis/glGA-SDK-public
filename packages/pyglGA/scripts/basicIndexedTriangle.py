@@ -60,6 +60,13 @@ class Shader():
         
         self._glid = None
         
+        #dictionaries for uniform shader variables
+        self._mat4fDict = None 
+        self._mat3fDict = None
+        self._float1fDict = None
+        self._float3fDict = None
+        self._float4fDict = None
+        
         if not vertex_source:
             self._vertex_source = Shader.COLOR_VERT
         else:
@@ -90,6 +97,14 @@ class Shader():
     @fragment_source.setter
     def fragment_source(self, value):
         self._fragment_source = value
+        
+    @property
+    def mat4fDict(self):
+        return self._mat4fDict
+    
+    @mat4fDict.setter
+    def mat4fDict(self, value):
+        self._mat4fDict = value
     
     def __del__(self):
         gl.glUseProgram(0)
@@ -99,12 +114,28 @@ class Shader():
     def disableShader(self):
         gl.glUseProgram(0)
         
-    def enableShader(self, mat4dict=None):
+    def enableShader(self):
         gl.glUseProgram(self._glid)
-        if mat4dict is not None:
-            for key, value in mat4dict.items():
+        if self._mat4fDict is not None:
+            for key, value in self._mat4fDict.items():
                 loc = gl.glGetUniformLocation(self._glid, key)
                 gl.glUniformMatrix4fv(loc, 1, True, value) 
+        if self._mat3fDict is not None:
+            for key, value in self._mat3fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniformMatrix3fv(loc, 1, True, value)
+        if self._float1fDict is not None:
+            for key, value in self._float1fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform1fv(loc, 1, True, value)
+        if self._float3fDict is not None:
+            for key, value in self._float3fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform3fv(loc, 1, True, value)
+        if self._float4fDict is not None:
+            for key, value in self._float4fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform4fv(loc, 1, True, value)
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -531,7 +562,8 @@ if __name__ == "__main__":
         shaderDec4.enableShader()
         vArray4.update()
         shaderDec4.disableShader()
-        shaderDec5.enableShader(matDict)
+        shaderDec5.mat4fDict = matDict
+        shaderDec5.enableShader()
         vArray5.update()
         shaderDec5.disableShader()
         # call ImGUI render and final SDL swap window  
