@@ -465,6 +465,13 @@ if __name__ == "__main__":
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
+    vertexData6 = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [5, 10.0, 0.0, 1.0],
+            [10.0, 0.0, 0.0, 1.0],
+            [5, -10.0, 0.0, 1.0]
+        ],dtype=np.float32) 
+    
     colorVertexData = np.array([
             [1.0, 0.0, 0.0, 0.0],
             [0.0, 1.0, 0.0, 1.0],
@@ -475,11 +482,17 @@ if __name__ == "__main__":
     index = np.array((0,1,2, 0,3,2), np.uint32)
     index2 = np.array((0,1,2), np.uint32)
     
-    translateMat = util.translate(-1.0,0.0,0.0)
-    #perspMat = util.perspective(120.0, 1, 0.01, 100)
-    #perspMat = util.frustum(-10.0, 10.0,-10.0,10.0, 0.1, 100)
-    perspMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-    print(translateMat)
+    translateMat = util.translate(0.0,0.0,0.5)
+    #perspMat = util.perspective(45.0, 1.333, -1, 10)
+    eye = util.vec(0.0, 0.0, -10.0)
+    target = util.vec(0,0,0)
+    up = util.vec(0.0, 1.0, 0.0)
+    modelview = util.lookat(eye, target, up)
+    #perspMat = util.frustum(-100.0, 100.0,-100.0,100.0, -100.0, 100)
+    perspMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 1.0)
+    #perspMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
+    perspMat = perspMat @ modelview
+    #print(translateMat)
     print(perspMat)
     
     '''
@@ -575,6 +588,10 @@ if __name__ == "__main__":
     attr2.append(vertexData2)
     attr2.append(colorVertexData)
     
+    attr6 = list()
+    attr6.append(vertexData6)
+    attr6.append(colorVertexData)
+    
     # init() shaderDec4, vArray4, shaderDec6, vArray6
     '''
     vArray4.attributes = attr
@@ -586,8 +603,8 @@ if __name__ == "__main__":
     shaderDec4.init()
     shaderDec5.init()
     '''
-    vArray6.attributes = attr2
-    vArray6.index = index2
+    vArray6.attributes = attr6
+    vArray6.index = index
     vArray6.init()
     shaderDec6.init()
     
