@@ -330,6 +330,8 @@ class TestUtilities(unittest.TestCase):
         up = vec(0.0, 1.0, 0.0)
         matLookat = lookat(eye, target, up)
         
+        matLookat2 = lookat((0.0, 0.0, -1.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0))
+        
         mLat = np.array([
             [-0.707107,0.0,0.707107,-0.0],
             [-0.408248,0.816497,-0.408248,-0.0],
@@ -337,11 +339,21 @@ class TestUtilities(unittest.TestCase):
             [0.0,0.0,0.0,1.0],
         ],dtype=np.float,order='F') #glm.lookAtLH
         
+        mLat2 = np.array([
+            [1.0,0.0,0.0,-0.0],
+            [0.0,1.0,0.0,-0.0],
+            [0.0,0.0,1.0,1.0],
+            [0.0,0.0,0.0,1.0],
+        ],dtype=np.float,order='F') #glm.lookAtLH
+        
         #self.assertAlmostEquals(matRot.all(), mR.all(),6)
         np.testing.assert_array_almost_equal(matLookat,mLat,decimal=5)
+        np.testing.assert_array_almost_equal(matLookat2,mLat2,decimal=5)
        
         print(matLookat)
         print(mLat)
+        print(matLookat2)
+        print(mLat2)
     
         print("TestUtilities:test_lookat() END")
         

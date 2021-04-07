@@ -503,13 +503,13 @@ if __name__ == "__main__":
     indexAxes = np.array((0,1, 0,2, 0,3), np.uint32) #3 simple colored Axes as R,G,B lines
     
     model = util.translate(0.0,0.0,-1.5)
-    eye = util.vec(0.0, 0.0, -1.0,1.0)
-    target = util.vec(0,0,0,1.0)
-    up = util.vec(0.0, 1.0, 0.0,1.0)
+    eye = util.vec(0.0, 0.0, -1.0)
+    target = util.vec(0,0,0)
+    up = util.vec(0.0, 1.0, 0.0)
     view = util.lookat(eye, target, up)
     #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-    #projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
-    projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+    projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
+    #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
     #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
     mvpMat = projMat @ view @ model
     print("projMat:\n",projMat)

@@ -6,11 +6,8 @@ glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
     
 The Compoment class is the dedicated to a specific type of data container in the glGA ECS.
 
-The following is example restructured text doc example
-:param file_loc: The file location of the spreadsheet
-:type file_loc: str
-:returns: a list of strings representing the header columns
-:rtype: list
+Most methods have been tested against glm equivalent methods: 
+https://github.com/Zuzu-Typ/PyGLM/tree/master/wiki/function-reference
 
 """
 
@@ -137,8 +134,8 @@ def perspective(fovy, aspect, near, far):
     :param far: [description]
     :type far: [type]
     """
-    #_scale = 1.0/math.tan(math.radians(fovy)/2.0)
-    _scale = 1.0/math.tan(math.radians(fovy/2.0))
+    _scale = 1.0/math.tan(math.radians(fovy)/2.0)
+    #_scale = 1.0/math.tan(math.radians(fovy/2.0))
     sx, sy = _scale / aspect, _scale
     zz = (far + near) / (near - far)
     zw = 2 * far * near/(near - far)
