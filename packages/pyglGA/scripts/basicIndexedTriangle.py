@@ -498,18 +498,48 @@ if __name__ == "__main__":
             [0.0, 0.0, 1.0, 1.0]
     ], dtype=np.float32)
     
+    #Simple Cube
+    vertexCube = np.array([
+            [-0.5, -0.5, 0.5, 1.0],
+            [-0.5, 0.5, 0.5, 1.0],
+            [0.5, 0.5, 0.5, 1.0],
+            [0.5, -0.5, 0.5, 1.0], 
+            [-0.5, -0.5, -0.5, 1.0], 
+            [-0.5, 0.5, -0.5, 1.0], 
+            [0.5, 0.5, -0.5, 1.0], 
+            [0.5, -0.5, -0.5, 1.0]
+        ],dtype=np.float32) 
+    
+    colorCube = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
+            [1.0, 1.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0],
+            [1.0, 0.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0]
+    ], dtype=np.float32)
+    
     index = np.array((0,1,2, 0,3,2), np.uint32) #rhombus out of two triangles
     index2 = np.array((0,1,2), np.uint32) #simple triangle
     indexAxes = np.array((0,1, 0,2, 0,3), np.uint32) #3 simple colored Axes as R,G,B lines
     
-    model = util.translate(0.0,0.0,-1.5)
-    eye = util.vec(0.0, 0.0, -1.0)
+    indexCube = np.array((1,0,3, 1,3,2, 
+                          2,3,7, 2,7,6,
+                          3,0,4, 3,4,7,
+                          6,5,1, 6,1,2,
+                          4,5,6, 4,6,7,
+                          5,4,0, 5,0,1), np.uint32) #rhombus out of two triangles
+    
+    model = util.translate(0.0,0.0,-0.5)
+    eye = util.vec(0.0, 1.0, -1.0)
     target = util.vec(0,0,0)
     up = util.vec(0.0, 1.0, 0.0)
     view = util.lookat(eye, target, up)
     #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-    projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
-    #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+    #projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
+    projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
     #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
     mvpMat = projMat @ view @ model
     print("projMat:\n",projMat)
@@ -580,7 +610,8 @@ if __name__ == "__main__":
     #vArray4 = VertexArray()
     #vArray5 = VertexArray()
     #vArray6 = VertexArray()
-    vArrayAxes = VertexArray()
+    #vArrayAxes = VertexArray()
+    vArrayCube = VertexArray()
     #shaderDec4 = Shader()
     #shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
     shaderDec6 = Shader(vertex_source=COLOR_VERT3, fragment_source=COLOR_FRAG3)
@@ -610,9 +641,9 @@ if __name__ == "__main__":
     attr6.append(vertexData6)
     attr6.append(colorVertexData)
     
-    attrAxes = list()
-    attrAxes.append(vertexAxes)
-    attrAxes.append(colorAxes)
+    attrCube = list()
+    attrCube.append(vertexCube)
+    attrCube.append(colorCube)
     
     # init() shaderDec4, vArray4, shaderDec6, vArray6
     '''
@@ -628,10 +659,15 @@ if __name__ == "__main__":
     #vArray6.attributes = attr6
     #vArray6.index = index
     #vArray6.init()
-    vArrayAxes.attributes = attrAxes
-    vArrayAxes.index = indexAxes
-    vArrayAxes.init()
-    vArrayAxes.primitive = gl.GL_LINES
+    
+    #vArrayAxes.attributes = attrAxes
+    #vArrayAxes.index = indexAxes
+    #vArrayAxes.init()
+    #vArrayAxes.primitive = gl.GL_LINES
+    
+    vArrayCube.attributes = attrCube
+    vArrayCube.index = indexCube
+    vArrayCube.init()
     shaderDec6.init()
     
     matDict={}
@@ -658,7 +694,8 @@ if __name__ == "__main__":
         shaderDec6.mat4fDict = matDict6
         shaderDec6.enableShader()
         #vArray6.update()
-        vArrayAxes.update()
+        #vArrayAxes.update()
+        vArrayCube.update()
         shaderDec6.disableShader()
         # call ImGUI render and final SDL swap window  
         gWindow.display_post()
@@ -668,6 +705,7 @@ if __name__ == "__main__":
     #del vArray4
     #del vArray5  
     del shaderDec6
-    del vArrayAxes
+    del vArrayCube
+    #del vArrayAxes
     #del vArray6    
     gWindow.shutdown()
