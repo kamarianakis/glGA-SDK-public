@@ -473,7 +473,7 @@ if __name__ == "__main__":
         ],dtype=np.float32) 
     
     colorVertexData = np.array([
-            [1.0, 0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 1.0],
             [0.0, 1.0, 0.0, 1.0],
             [0.0, 0.0, 1.0, 1.0],
             [0.0, 1.0, 0.0, 1.0]
@@ -482,25 +482,23 @@ if __name__ == "__main__":
     index = np.array((0,1,2, 0,3,2), np.uint32)
     index2 = np.array((0,1,2), np.uint32)
     
-    translateMat = util.translate(0.0,0.0,0.5)
-    #perspMat = util.perspective(45.0, 1.333, -1, 10)
-    eye = util.vec(0.0, 0.0, -10.0)
-    target = util.vec(0,0,0)
-    up = util.vec(0.0, 1.0, 0.0)
-    modelview = util.lookat(eye, target, up)
-    #perspMat = util.frustum(-100.0, 100.0,-100.0,100.0, -100.0, 100)
-    perspMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 1.0)
-    #perspMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
-    perspMat = perspMat @ modelview
-    #print(translateMat)
-    print(perspMat)
+    model = util.translate(0.0,0.0,-1.5)
+    eye = util.vec(0.0, 0.0, -1.0,1.0)
+    target = util.vec(0,0,0,1.0)
+    up = util.vec(0.0, 1.0, 0.0,1.0)
+    view = util.lookat(eye, target, up)
+    #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 100)
+    #projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
+    projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+    #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
+    mvpMat = projMat @ view @ model
+    print("projMat:\n",projMat)
+    print("viewMat:\n",view)
+    print("mvpMat:\n",mvpMat)
     
-    '''
-    we need to pass a mat4fDictionary: {shader uniform variable name, value}
-    to the shader draw method so that it can call:
-        loc = GL.glGetUniformLocation(shid, 'uniformName')
-        GL.glUniformMatrix4fv(loc, 1, True, uniformValue)
-    '''
+    # ------------------------------
+    # main GLSL shaders
+    # ------------------------------
     
     COLOR_VERT2 = """#version 410
         layout (location=0) in vec4 position;
@@ -552,7 +550,6 @@ if __name__ == "__main__":
             outputColour = theColour;
         }
     """
-    
     # ------------------------------
     # main scene
     # ------------------------------
@@ -609,10 +606,10 @@ if __name__ == "__main__":
     shaderDec6.init()
     
     matDict={}
-    matDict['translate'] = translateMat
-    #matDict = {'translate':translateMat}
+    matDict['translate'] = model
+    #matDict = {'translate':model}
     matDict6={}
-    matDict6['modelViewProj'] = perspMat
+    matDict6['modelViewProj'] = mvpMat
     
     running = True
     # MAIN RENDERING LOOP
