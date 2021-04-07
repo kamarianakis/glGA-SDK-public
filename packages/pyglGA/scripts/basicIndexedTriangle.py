@@ -452,6 +452,8 @@ if __name__ == "__main__":
     # ------------------------------
     # vertex attribute arrays and shaders
     # ------------------------------
+    
+    # rhombus1
     vertexData = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, 1.0, 0.0, 1.0],
@@ -459,12 +461,14 @@ if __name__ == "__main__":
             [0.5, -1.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
+    # simple triangle
     vertexData2 = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, -1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
     
+    #rhombus 2
     vertexData6 = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [5, 10.0, 0.0, 1.0],
@@ -479,15 +483,31 @@ if __name__ == "__main__":
             [0.0, 1.0, 0.0, 1.0]
     ], dtype=np.float32)
     
-    index = np.array((0,1,2, 0,3,2), np.uint32)
-    index2 = np.array((0,1,2), np.uint32)
+    #Colored Axes
+    vertexAxes = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [10.0, 0.0, 0.0, 1.0],
+            [0.0, 10.0, 0.0, 1.0],
+            [0.0, 0.0, 10.0, 1.0]
+        ],dtype=np.float32) 
+    
+    colorAxes = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0]
+    ], dtype=np.float32)
+    
+    index = np.array((0,1,2, 0,3,2), np.uint32) #rhombus out of two triangles
+    index2 = np.array((0,1,2), np.uint32) #simple triangle
+    indexAxes = np.array((0,1, 0,2, 0,3), np.uint32) #3 simple colored Axes as R,G,B lines
     
     model = util.translate(0.0,0.0,-1.5)
     eye = util.vec(0.0, 0.0, -1.0,1.0)
     target = util.vec(0,0,0,1.0)
     up = util.vec(0.0, 1.0, 0.0,1.0)
     view = util.lookat(eye, target, up)
-    #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 100)
+    #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
     #projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
     projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
     #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
@@ -559,7 +579,8 @@ if __name__ == "__main__":
     
     #vArray4 = VertexArray()
     #vArray5 = VertexArray()
-    vArray6 = VertexArray()
+    #vArray6 = VertexArray()
+    vArrayAxes = VertexArray()
     #shaderDec4 = Shader()
     #shaderDec5 = Shader(vertex_source=COLOR_VERT2, fragment_source=COLOR_FRAG2)
     shaderDec6 = Shader(vertex_source=COLOR_VERT3, fragment_source=COLOR_FRAG3)
@@ -589,6 +610,10 @@ if __name__ == "__main__":
     attr6.append(vertexData6)
     attr6.append(colorVertexData)
     
+    attrAxes = list()
+    attrAxes.append(vertexAxes)
+    attrAxes.append(colorAxes)
+    
     # init() shaderDec4, vArray4, shaderDec6, vArray6
     '''
     vArray4.attributes = attr
@@ -600,9 +625,13 @@ if __name__ == "__main__":
     shaderDec4.init()
     shaderDec5.init()
     '''
-    vArray6.attributes = attr6
-    vArray6.index = index
-    vArray6.init()
+    #vArray6.attributes = attr6
+    #vArray6.index = index
+    #vArray6.init()
+    vArrayAxes.attributes = attrAxes
+    vArrayAxes.index = indexAxes
+    vArrayAxes.init()
+    vArrayAxes.primitive = gl.GL_LINES
     shaderDec6.init()
     
     matDict={}
@@ -628,7 +657,8 @@ if __name__ == "__main__":
         '''
         shaderDec6.mat4fDict = matDict6
         shaderDec6.enableShader()
-        vArray6.update()
+        #vArray6.update()
+        vArrayAxes.update()
         shaderDec6.disableShader()
         # call ImGUI render and final SDL swap window  
         gWindow.display_post()
@@ -638,5 +668,6 @@ if __name__ == "__main__":
     #del vArray4
     #del vArray5  
     del shaderDec6
-    del vArray6    
+    del vArrayAxes
+    #del vArray6    
     gWindow.shutdown()
