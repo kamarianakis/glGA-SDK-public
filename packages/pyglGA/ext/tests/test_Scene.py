@@ -61,21 +61,89 @@ class TestScene(unittest.TestCase):
         self.scene.world.addEntityChild(self.rootEntity, self.node4)
         self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
         self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
-        # a simple triangle
         
+        # a simple triangle
         self.vertexData = np.array([
             [0.0, 0.0, 0.0, 1.0],
             [0.5, 1.0, 0.0, 1.0],
             [1.0, 0.0, 0.0, 1.0]
         ],dtype=np.float32) 
-        
         self.colorVertexData = np.array([
             [1.0, 0.0, 0.0, 0.0],
             [0.0, 1.0, 0.0, 1.0],
             [0.0, 0.0, 1.0, 1.0]
         ], dtype=np.float32)
-    
-        self.index = np.array((0,1,2), np.uint32)
+        
+        #Colored Axes
+        self.vertexAxes = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [10.0, 0.0, 0.0, 1.0],
+            [0.0, 10.0, 0.0, 1.0],
+            [0.0, 0.0, 10.0, 1.0]
+        ],dtype=np.float32) 
+        self.colorAxes = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0]
+        ], dtype=np.float32)
+        
+        #Simple Cube
+        self.vertexCube = np.array([
+            [-0.5, -0.5, 0.5, 1.0],
+            [-0.5, 0.5, 0.5, 1.0],
+            [0.5, 0.5, 0.5, 1.0],
+            [0.5, -0.5, 0.5, 1.0], 
+            [-0.5, -0.5, -0.5, 1.0], 
+            [-0.5, 0.5, -0.5, 1.0], 
+            [0.5, 0.5, -0.5, 1.0], 
+            [0.5, -0.5, -0.5, 1.0]
+        ],dtype=np.float32) 
+        self.colorCube = np.array([
+            [0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
+            [1.0, 1.0, 0.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0],
+            [1.0, 0.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0]
+        ], dtype=np.float32)
+        
+        #index arrays for above vertex Arrays
+        self.index = np.array((0,1,2), np.uint32) #simple triangle
+        self.indexAxes = np.array((0,1, 0,2, 0,3), np.uint32) #3 simple colored Axes as R,G,B lines
+        self.indexCube = np.array((1,0,3, 1,3,2, 
+                          2,3,7, 2,7,6,
+                          3,0,4, 3,4,7,
+                          6,5,1, 6,1,2,
+                          4,5,6, 4,6,7,
+                          5,4,0, 5,0,1), np.uint32) #rhombus out of two triangles
+        # GLSL shaders
+        self.COLOR_VERT3 = """#version 410
+        layout (location=0) in vec4 position;
+        layout (location=1) in vec4 colour;
+        
+        out     vec4 theColour;
+        
+        uniform mat4 modelViewProj;
+        
+        void main()
+        {
+            gl_Position = modelViewProj * position;
+            //gl_Position = position;
+            theColour = colour;
+        }
+        """
+        self.COLOR_FRAG3 = """#version 410
+        in vec4 theColour;
+        out vec4 outputColour;
+        void main()
+        {
+            //outputColour = vec4(1, 0, 0, 1);
+            outputColour = theColour;
+        }
+        """
         
         # attached that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData)
@@ -148,6 +216,7 @@ class TestScene(unittest.TestCase):
         print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))
     
     
+    @unittest.skip("Requires active GL context, skipping the test")
     def test_render(self):
         """
         First time to test a RenderSystem in a Scene with Shader and VertexArray components
@@ -170,6 +239,28 @@ class TestScene(unittest.TestCase):
         
         print("TestScene:test_render END".center(100, '-'))
 
+
+    def test_renderCube(self):
+        """
+        First time to test a RenderSystem in a Scene with Shader and VertexArray components
+        """
+        print("TestScene:test_renderCube START".center(100, '-'))
+        running = True
+        # MAIN RENDERING LOOP
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        # needs an active GL context
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
+        while running:
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.scene.render_post()
+            
+        self.scene.shutdown()
+        
+        print("TestScene:test_renderCube END".center(100, '-'))
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

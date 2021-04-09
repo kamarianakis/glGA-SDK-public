@@ -532,15 +532,15 @@ if __name__ == "__main__":
                           4,5,6, 4,6,7,
                           5,4,0, 5,0,1), np.uint32) #rhombus out of two triangles
     
-    model = util.translate(0.0,0.0,-0.5)
+    model = util.translate(0.0,0.0,0.5)
     eye = util.vec(0.0, 1.0, -1.0)
     target = util.vec(0,0,0)
     up = util.vec(0.0, 1.0, 0.0)
     view = util.lookat(eye, target, up)
     #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-    #projMat = util.perspective(90.0, 1.333, -1.0, 10.0)
-    projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-    #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0)
+    #projMat = util.perspective(180.0, 1.333, 1, 10.0)
+    #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+    projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
     mvpMat = projMat @ view @ model
     print("projMat:\n",projMat)
     print("viewMat:\n",view)
