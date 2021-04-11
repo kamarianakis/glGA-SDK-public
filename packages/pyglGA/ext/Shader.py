@@ -394,11 +394,8 @@ class RenderGLShaderSystem(System):
             - renderMeshVertexArray.execute(gl.GL_TRIANGLES)
             - userShaderProgram(0) #clean GL state
         """
-        #retrieve Shader GL id
-        #if isinstance(compShader, Shader):
-        #    gl.glUseProgram(compShader.glid)
-        #else:
-        #    gl.glUseProgram(compShader.get_glid())
+        # retrieve L2C matrix here to pass it as uniform to shader
+        
         #add here custom Shader render calls
         compShader.enableShader()
         

@@ -269,6 +269,71 @@ class TestScene(unittest.TestCase):
         self.scene.shutdown()
         
         print("TestScene:test_renderCube END".center(100, '-'))
+    
+    
+    def test_renderCubeScenegraph(self):
+        """
+        First time to test a RenderSystem in a Scene with Shader and VertexArray components
+        """
+        print("TestScene:test_renderCubeScenegraph START".center(100, '-'))
+        
+        # 
+        # MVP matrix calculation - 
+        # now set directly at shader level!
+        # should be autoamtically picked up at ECSS VertexArray level from Scenegraph System
+        # same process as VertexArray is automatically populated from RenderMesh
+        #
+        model = util.translate(0.0,0.0,0.5)
+        eye = util.vec(0.0, 1.0, -1.0)
+        target = util.vec(0,0,0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
+        #projMat = util.perspective(180.0, 1.333, 1, 10.0)
+        #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+        mvpMat = projMat @ view @ model
+        
+        # decorated components and systems with sample, default pass-through shader with uniform MVP
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        
+        # attach a simple cube in a RenderMesh so that VertexArray can pick it up
+        self.mesh4.vertex_attributes.append(self.vertexCube)
+        self.mesh4.vertex_attributes.append(self.colorCube)
+        self.mesh4.vertex_index.append(self.indexCube)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        
+        self.scene.world.print()
+        
+        running = True
+        # MAIN RENDERING LOOP
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        
+        # ---------------------------------------------------------
+        # run Systems in the scenegraph
+        # root node is accessed via ECSSManagerObject.root property
+        # normally these are run within the rendering loop (except 4th GLInit  System)
+        # --------------------------------------------------------
+        # 1. L2W traversal
+        self.scene.world.traverse_visit(self.transUpdate, self.scene.world.root) 
+        # 2. pre-camera Mr2c traversal
+        self.scene.world.traverse_visit_pre_camera(self.camUpdate, self.orthoCam)
+        # 3. run proper Ml2c traversal
+        self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
+        # 4. run pre render GLInit traversal for once!
+        #   pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        #   needs an active GL context
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
+        while running:
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.scene.render_post()
+            
+        self.scene.shutdown()
+        
+        print("TestScene:test_renderCubeScenegraph END".center(100, '-'))
 
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)
