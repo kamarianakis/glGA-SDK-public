@@ -181,6 +181,8 @@ class SDL2Window(RenderWindow):
         #GPTODO make background clear color as parameter at class level
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+        gl.glDisable(gl.GL_CULL_FACE)
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
         #print(f'{self.getClassName()}: display()')
     
     

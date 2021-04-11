@@ -34,12 +34,13 @@ from pyglGA.ext.VertexArray import VertexArray
 
 class Shader(Component):
     """
-    A concrete Shader class
+    A concrete OpenGL-GLSL Shader container Component class
 
-    :param Component: [description]
-    :type Component: [type]
     """
     
+    # ---------------------------------------------------
+    #  basic pass-through Vertex-Fragment Shader examples
+    # ---------------------------------------------------
     COLOR_VERT = """#version 410
         layout (location=0) in vec4 position;
         layout (location=1) in vec4 colour;
@@ -50,7 +51,6 @@ class Shader(Component):
             theColour = colour;
         }
     """
-    
     COLOR_FRAG = """#version 410
         in vec4 theColour;
         out vec4 outputColour;
@@ -60,6 +60,18 @@ class Shader(Component):
             outputColour = theColour;
         }
     """
+    COLOR_VERT_MVP = """#version 410
+        layout (location=0) in vec4 position;
+        layout (location=1) in vec4 colour;
+        out     vec4 theColour;
+        uniform mat4 modelViewProj;
+        
+        void main()
+        {
+            gl_Position = modelViewProj * position;
+            theColour = colour;
+        }
+    """
     
     def __init__(self, name=None, type=None, id=None, vertex_source=None, fragment_source=None):
         super().__init__(name, type, id)
@@ -67,6 +79,11 @@ class Shader(Component):
         self._parent = self
         
         self._glid = None
+        self._mat4fDict = {}
+        self._mat3fDict = {}
+        self._float1fDict = {}
+        self._float3fDict = {}
+        self._float4fDict = {}
         
         if not vertex_source:
             self._vertex_source = Shader.COLOR_VERT
@@ -98,6 +115,41 @@ class Shader(Component):
     @fragment_source.setter
     def fragment_source(self, value):
         self._fragment_source = value
+        
+    @property
+    def mat4fDict(self):
+        return self._mat4fDict
+    @mat4fDict.setter
+    def mat4fDict(self, value):
+        self._mat4fDict = value
+        
+    @property
+    def mat3fDict(self):
+        return self._mat3fDict
+    @mat3fDict.setter
+    def mat3fDict(self, value):
+        self._mat3fDict = value
+    
+    @property
+    def float1fDict(self):
+        return self._float1fDict
+    @float1fDict.setter
+    def float1fDict(self, value):
+        self._float1fDict = value
+    
+    @property
+    def float3fDict(self):
+        return self._float3fDict
+    @float3fDict.setter
+    def float3fDict(self, value):
+        self._float3fDict = value
+        
+    @property
+    def float4fDict(self):
+        return self._float4fDict
+    @float4fDict.setter
+    def float4fDict(self, value):
+        self._float4fDict = value
     
     def __del__(self):
         gl.glUseProgram(0)
@@ -106,6 +158,29 @@ class Shader(Component):
     
     def disableShader(self):
         gl.glUseProgram(0)
+    
+    def enableShader(self):
+        gl.glUseProgram(self._glid)
+        if self._mat4fDict is not None:
+            for key, value in self._mat4fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniformMatrix4fv(loc, 1, True, value) 
+        if self._mat3fDict is not None:
+            for key, value in self._mat3fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniformMatrix3fv(loc, 1, True, value)
+        if self._float1fDict is not None:
+            for key, value in self._float1fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform1fv(loc, 1, True, value)
+        if self._float3fDict is not None:
+            for key, value in self._float3fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform3fv(loc, 1, True, value)
+        if self._float4fDict is not None:
+            for key, value in self._float4fDict.items():
+                loc = gl.glGetUniformLocation(self._glid, key)
+                gl.glUniform4fv(loc, 1, True, value)
             
     @staticmethod
     def _compile_shader(src, shader_type):
@@ -180,9 +255,25 @@ class ShaderGLDecorator(ComponentDecorator):
         # add here custom shader draw calls, e.g. glGetUniformLocation(), glUniformMatrix4fv() etc.add()
         # e.g.  loc = GL.glGetUniformLocation(shid, 'projection')
         #       GL.glUniformMatrix4fv(loc, 1, True, projection)
-
+        
+    def setUniformVariable(self,key, value, mat4=False, mat3=False, float1=False, float3=False, float4=False):
+        if mat4:
+            self.component.mat4fDict[key]=value
+        if mat3:
+            self.component.mat3fDict[key]=value
+        if float1:
+            self.component.float1fDict[key]=value
+        if float3:
+            self.component.float3fDict[key]=value
+        if float4:
+            self.component.float4fDict[key]=value
+            
+    def enableShader(self):
+        self.component.enableShader()
+    
     def disableShader(self):
         self.component.disableShader()
+    
         
     def get_glid(self):
         return self.component.glid
@@ -292,11 +383,12 @@ class RenderGLShaderSystem(System):
             - userShaderProgram(0) #clean GL state
         """
         #retrieve Shader GL id
-        if isinstance(compShader, Shader):
-            gl.glUseProgram(compShader.glid)
-        else:
-            gl.glUseProgram(compShader.get_glid())
+        #if isinstance(compShader, Shader):
+        #    gl.glUseProgram(compShader.glid)
+        #else:
+        #    gl.glUseProgram(compShader.get_glid())
         #add here custom Shader render calls
+        compShader.enableShader()
         
         #call main draw from VertexArray
         vertexArray.update()

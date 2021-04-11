@@ -98,15 +98,15 @@ class VertexArray(Component):
     
     def draw(self):
         # draw a vertex Array as direct array or index array
-        print(self.getClassName(), ": draw() called")
+        #print(self.getClassName(), ": draw() called")
         
         gl.glBindVertexArray(self._glid)
         self._draw_command(self._primitive, *self._arguments)
-        #gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+        
         gl.glBindVertexArray(0)
         
     def update(self):
-        print(self.getClassName(), ": update() called")
+        #print(self.getClassName(), ": update() called")
         self.draw()
    
     def accept(self, system: pyglGA.ECSS.System):
@@ -153,6 +153,9 @@ class VertexArray(Component):
             self._draw_command = gl.glDrawElements
             self._arguments = (index_buffer.size, gl.GL_UNSIGNED_INT, None)
         
+        # cleanup and unbind so no accidental subsequent state update
+        gl.glBindVertexArray(0)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
     
     def __iter__(self) ->CompNullIterator:
         """ A component does not have children to iterate, thus a NULL iterator

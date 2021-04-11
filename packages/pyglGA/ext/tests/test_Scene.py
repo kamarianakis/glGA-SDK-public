@@ -119,37 +119,8 @@ class TestScene(unittest.TestCase):
                           6,5,1, 6,1,2,
                           4,5,6, 4,6,7,
                           5,4,0, 5,0,1), np.uint32) #rhombus out of two triangles
-        # GLSL shaders
-        self.COLOR_VERT3 = """#version 410
-        layout (location=0) in vec4 position;
-        layout (location=1) in vec4 colour;
+     
         
-        out     vec4 theColour;
-        
-        uniform mat4 modelViewProj;
-        
-        void main()
-        {
-            gl_Position = modelViewProj * position;
-            //gl_Position = position;
-            theColour = colour;
-        }
-        """
-        self.COLOR_FRAG3 = """#version 410
-        in vec4 theColour;
-        out vec4 outputColour;
-        void main()
-        {
-            //outputColour = vec4(1, 0, 0, 1);
-            outputColour = theColour;
-        }
-        """
-        
-        # attached that simple triangle in a RenderMesh
-        self.mesh4.vertex_attributes.append(self.vertexData)
-        self.mesh4.vertex_attributes.append(self.colorVertexData)
-        self.mesh4.vertex_index.append(self.index)
-        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         
         # Systems
         self.transUpdate = self.scene.world.createSystem(TransformSystem("transUpdate", "TransformSystem", "001"))
@@ -157,8 +128,6 @@ class TestScene(unittest.TestCase):
         self.renderUpdate = self.scene.world.createSystem(RenderGLShaderSystem())
         self.initUpdate = self.scene.world.createSystem(InitGLShaderSystem())
         
-        # decorated components and systems
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader()))
 
     def test_init(self):
         """
@@ -217,14 +186,23 @@ class TestScene(unittest.TestCase):
     
     
     @unittest.skip("Requires active GL context, skipping the test")
-    def test_render(self):
+    def test_renderTriangle(self):
         """
         First time to test a RenderSystem in a Scene with Shader and VertexArray components
         """
         print("TestScene:test_render START".center(100, '-'))
+        
+        # decorated components and systems with sample, default pass-through shader
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader()))
+        # attach that simple triangle in a RenderMesh
+        self.mesh4.vertex_attributes.append(self.vertexData)
+        self.mesh4.vertex_attributes.append(self.colorVertexData)
+        self.mesh4.vertex_index.append(self.index)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Triangle Scene")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -239,12 +217,40 @@ class TestScene(unittest.TestCase):
         
         print("TestScene:test_render END".center(100, '-'))
 
-
+    #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderCube(self):
         """
         First time to test a RenderSystem in a Scene with Shader and VertexArray components
         """
         print("TestScene:test_renderCube START".center(100, '-'))
+        
+        # 
+        # MVP matrix calculation - 
+        # now set directly at shader level!
+        # should be autoamtically picked up at ECSS VertexArray level from Scenegraph System
+        # same process as VertexArray is automatically populated from RenderMesh
+        #
+        model = util.translate(0.0,0.0,0.5)
+        eye = util.vec(0.0, 1.0, -1.0)
+        target = util.vec(0,0,0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
+        #projMat = util.perspective(180.0, 1.333, 1, 10.0)
+        #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+        mvpMat = projMat @ view @ model
+        
+        # decorated components and systems with sample, default pass-through shader with uniform MVP
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        
+        # attach a simple cube in a RenderMesh so that VertexArray can pick it up
+        self.mesh4.vertex_attributes.append(self.vertexCube)
+        self.mesh4.vertex_attributes.append(self.colorCube)
+        self.mesh4.vertex_index.append(self.indexCube)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        
         running = True
         # MAIN RENDERING LOOP
         self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Scene")
