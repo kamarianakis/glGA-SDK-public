@@ -153,7 +153,7 @@ class System(ABC):
     def apply2Shader(self, shader):
         pass
     
-    def apply2ShaderGLDdecorator(self, shaderGLDecorator):
+    def apply2ShaderGLDecorator(self, shaderGLDecorator):
         pass
     
 class SystemDecorator(System):

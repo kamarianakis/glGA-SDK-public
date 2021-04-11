@@ -226,21 +226,20 @@ class ECSSManager():
 
         if isinstance(system, pyglGA.ECSS.System.System) and iterator is not None:
             tic1 = time.perf_counter()
-            print(
-                f"\nthis is the {system.name} traversal START".center(100, '-'))
-            done_traversing_for_l2w_update = False
-            while(not done_traversing_for_l2w_update):
+            print(f"\nthis is the {system.name} traversal START".center(100, '-'))
+            done_traversing = False
+            while(not done_traversing):
                 try:
                     traversedComp = next(iterator)
                 except StopIteration:
                     print("\n--- end of Scene reached, traversed all Components!---")
-                    done_traversing_for_l2w_update = True
+                    done_traversing = True
                 else:
                     # only if we reached end of Entity's children traversedComp is None
                     if (traversedComp is not None):
                         #print(traversedComp)
-                        # accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
-                        # calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                        # accept a visitor System for each Component that can accept it
+                        # calls specific concrete Visitor's apply2Component(), which calls specific concrete Component's methods
                         traversedComp.accept(system)
 
             toc1 = time.perf_counter()

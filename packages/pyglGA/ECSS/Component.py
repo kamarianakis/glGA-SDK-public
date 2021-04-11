@@ -132,6 +132,7 @@ class Component(ABC, Iterable):
         :param system: [a System object]
         :type system: [System]
         """
+        pass
         #system.update()
         
     def print(self):
@@ -174,9 +175,11 @@ class ComponentDecorator(Component):
     def update(self, **kwargs):
         self._component.update(**kwargs)
     
-
-    def accept(self, system: pyglGA.ECSS.System):
-         self._component.accept(system)
+    #def accept(self, system: pyglGA.ECSS.System):
+       # we want the decorator first to accept the visitor and only if needed the wrappe to accept it too
+       # each component decorator has to override this method
+        
+    
     
 
 class ComponentIterator(ABC):
@@ -301,7 +304,7 @@ class BasicTransform(Component):
         return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \nl2world: {self.l2world}, l2cam: {self.l2cam}, trs: {self.trs}"
     
     def __iter__(self) ->CompNullIterator:
-        """ A component does not have children to iterate, thus a NULL iterator
+        """ A concrete component does not have children to iterate, thus a NULL iterator
         """
         return CompNullIterator(self) 
 
@@ -476,3 +479,7 @@ class BasicTransformDecorator(ComponentDecorator):
         """
         self.component.init()
         #call any extra methods before or after
+    
+    def accept(self, system: pyglGA.ECSS.System):
+        pass # we want the decorator first to accept the visitor and only if needed the wrappe to accept it too
+        #self._component.accept(system)

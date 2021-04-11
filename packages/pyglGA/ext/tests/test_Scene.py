@@ -193,7 +193,7 @@ class TestScene(unittest.TestCase):
         print("TestScene:test_render START".center(100, '-'))
         
         # decorated components and systems with sample, default pass-through shader
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader()))
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
         # attach that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData)
         self.mesh4.vertex_attributes.append(self.colorVertexData)
@@ -250,6 +250,8 @@ class TestScene(unittest.TestCase):
         self.mesh4.vertex_attributes.append(self.colorCube)
         self.mesh4.vertex_index.append(self.indexCube)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        
+        self.scene.world.print()
         
         running = True
         # MAIN RENDERING LOOP

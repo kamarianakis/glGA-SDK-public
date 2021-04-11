@@ -274,10 +274,22 @@ class ShaderGLDecorator(ComponentDecorator):
     def disableShader(self):
         self.component.disableShader()
     
-        
     def get_glid(self):
         return self.component.glid
 
+    def accept(self, system: System):
+        """
+        Accepts a class object to operate on the Component, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
+        system.apply2ShaderGLDecorator(self)
+    
+    def __iter__(self) ->CompNullIterator:
+        """ A concrete component Decorator does not have children to iterate, thus a NULL iterator
+        """
+        return CompNullIterator(self) 
 
 class InitGLShaderSystem(System):
     """Initialise outside of the rendering loop RenderMesh, Shader, VertexArray, ShaderGLDecorator classes
@@ -344,7 +356,7 @@ class InitGLShaderSystem(System):
 
 
 class RenderGLShaderSystem(System):
-    """A decorated RenderSystem specifically for GL vertex and fragment Shaders and associated 
+    """A RenderSystem specifically for GL vertex and fragment Shaders and associated 
     VertexArray components attached to a specific Entity
 
     """
