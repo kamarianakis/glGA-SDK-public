@@ -185,7 +185,7 @@ class TestScene(unittest.TestCase):
         print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))
     
     
-    @unittest.skip("Requires active GL context, skipping the test")
+    #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderTriangle(self):
         """
         First time to test a RenderSystem in a Scene with Shader and VertexArray components
