@@ -326,6 +326,11 @@ class TestScene(unittest.TestCase):
         #   needs an active GL context
         self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
+        
+        # UnitTest mvp mat directly set here with the one extracted/calculated from ECSS
+        l2cMat = None
+        #np.testing.assert_array_almost_equal(l2cMat,mvpMat,decimal=5)
+        
         while running:
             running = self.scene.render(running)
             self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
