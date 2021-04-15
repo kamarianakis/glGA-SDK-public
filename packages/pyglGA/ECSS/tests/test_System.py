@@ -364,6 +364,141 @@ class TestCameraSystem(unittest.TestCase):
         
         print("test_CameraSystem_use() END")
 
+    def test_CameraSystem_MVP(self):
+        """
+        test_CameraSystem_MVP() use case test for model-view-projection matrices
+        """
+        print("test_CameraSystem_MVP() START")
+        
+        #test the EntityDfsIterator to traverse the above ECS scenegraph
+        dfsIterator = iter(self.gameObject)
+        #self.gameObject.print()
+        #self.trans7.print()
+        
+        # 
+        # MVP matrix calculation - 
+        #
+        model = util.translate(0.0,0.0,0.5)
+        eye = util.vec(0.0, 1.0, -1.0)
+        target = util.vec(0,0,0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
+        #projMat = util.perspective(180.0, 1.333, 1, 10.0)
+        #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+        #mvpMat = projMat @ view @ model
+        mvpMat = model @ view @projMat
+        
+        self.trans1.trs = model
+        self.trans2.trs = view
+        self.perspCam.projMat = projMat
+        
+        #instantiate a new TransformSystem System to visit all scenegraph componets
+        transUpdate = TransformSystem("transUpdate", "TransformSystem", "001")
+        camUpdate = CameraSystem("camUpdate", "CameraUpdate", "200")
+        
+        tic1 = time.perf_counter()
+        print("------------------ This is the Scene:: l2w update traversal start-----------------")
+        nodePath = []
+        done_traversing_for_l2w_update = False
+        while(not done_traversing_for_l2w_update):
+            try:
+                traversedComp = next(dfsIterator)
+            except StopIteration:
+                print("\n--- end of Scene reached, traversed all Components!---")
+                done_traversing_for_l2w_update = True
+            else:
+                if (traversedComp is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedComp)
+                    #accept a TransformSystem visitor System for each Component that can accept it (BasicTransform)
+                    traversedComp.accept(transUpdate) #calls specific concrete Visitor's apply(), which calls specific concrete Component's update
+                    nodePath.append(traversedComp) #no need for this now
+        #print("".join(str(nodePath)))
+        # ------------------ This is the Scene:: l2w update traversal end-----------------
+        toc1 = time.perf_counter()
+        print(f"\n\n------------------ Scene l2w traversal took {(toc1 - tic1)*1000:0.4f} msecs -----------------")
+
+
+        tic2 = time.perf_counter()
+        print("\n\n------------------ This is the Scene:: camera traversal start-----------------")
+        done_traversing_for_camera = False
+        # new iterator to DFS scenegraph from root
+        dfsIteratorCamera = iter(self.gameObject)
+        #accept the CameraSystem directly first on the Camera to calculate is r2c (root2camera) matrix
+        # as we have run before l2w, the camera's BasicTransform will have the l2w component needed for r2c
+        # M2lc = Mr2c * Ml2w * V
+        print("\n-- BEFORE calculating Mr2c camera matrix--")
+        self.perspCam.accept(camUpdate)
+        print(self.perspCam)
+        print("\n-- AFTER calculating Mr2c camera matrix--")
+        
+        while(not done_traversing_for_camera):
+            try:
+                traversedCom = next(dfsIteratorCamera)
+            except StopIteration:
+                print("\n--- end of Scene reached, traversed all Components!---")
+                done_traversing_for_camera = True
+            else:
+                if (traversedCom is not None): #only if we reached end of Entity's children traversedComp is None
+                    print(traversedCom)
+                    
+                    #having calculated R2C and L2W, accept a CameraVisitor to calculate L2C (L2C=L2W*R2C)
+                    traversedCom.accept(camUpdate)
+        # ----------------- This is the Scene:: camera traversal end --------------------
+        toc2 = time.perf_counter()
+        print(f"\n\n----------------- Scene camera traversal took {(toc2 - tic1)*1000:0.4f} msecs -----------------")
+        
+        #print(f"\n\n----------------- Scene after all traversals: -----------------")
+        #self.gameObject.print()
+        
+        #setup matrices for the unit tests
+        camOrthoMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+        #camOrthoMat = util.translate(10.0,10.0,10.0)
+        trans1Mat = model
+        trans2Mat = view
+        trans3Mat = util.translate(3.0,3.0,3.0)
+        trans6Mat = util.translate(6.0,6.0,6.0)
+        trans7Mat = util.translate(7.0,7.0,7.0)
+        
+        # T2local2world = T2 @ T1
+        trans2l2w = trans2Mat @ trans1Mat
+        # Mroot2cam = (T1)^-1 @ (T2)^-1 @ P = (T2 @ T1)^-1 @ P = (T2local2world)^-1 @ P
+        mr2c = util.inverse(trans2l2w) @ camOrthoMat
+        # M7local2world = trans7 @ trans6 @ trans3
+        m4l2w = self.trans4.l2world
+        #M7local2camera = Mroot2cam @ M2local2world @ Vertex (right to left)
+        #m4l2c = m4l2w @ mr2c
+        m4l2c =  mr2c @ m4l2w
+        
+        #setup transformations
+        #self.trans1.trs = util.translate(1.0,2.0,3.0)
+        #self.trans2.trs = util.translate(2.0,3.0,4.0)
+        #self.trans3.trs = util.translate(3.0,3.0,3.0)
+        #self.trans6.trs = util.translate(6.0,6.0,6.0)
+        #self.trans7.trs = util.translate(7.0,7.0,7.0)
+        
+        self.assertIn(self.gameObject1, self.gameObject._children)
+        self.assertIn(self.gameObject4, self.gameObject._children)
+        self.assertIn(self.trans4, self.gameObject4._children)
+        self.assertIn(self.gameObject3, self.gameObject._children)
+        self.assertIn(self.trans5, self.gameObject5._children)
+        self.assertIn(self.trans7, self.gameObject7._children)
+        self.assertIn(self.perspCam, self.gameObject2._children)
+        self.assertEqual(self.gameObject._id,0)
+        # here are tests on r2cam, l2cam, l2world
+        np.testing.assert_array_almost_equal(self.perspCam.projMat,camOrthoMat, decimal=3)
+        np.testing.assert_array_almost_equal(self.perspCam.root2cam,mr2c,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans4.l2world,m4l2w,decimal=3)
+        np.testing.assert_array_almost_equal(self.trans4.l2cam,m4l2c,decimal=3)
+        #np.testing.assert_array_almost_equal(mvpMat,m4l2c,decimal=3)
+
+        print(f"trans4.l2cam: \n{self.trans4.l2cam}")
+        print(f"m4l2c: \n{m4l2c}")
+        
+        
+        print("test_CameraSystem_MVP() END")
+
         
 if __name__ == "__main__":
     unittest.main(argv=[''], verbosity=3, exit=False)

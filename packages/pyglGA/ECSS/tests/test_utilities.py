@@ -161,8 +161,17 @@ class TestUtilities(unittest.TestCase):
             [0.0,0.0,-1.0,0.0],
         ],dtype=np.float,order='F')
         
+        matPersp2 = perspective(45.0, 1.33, 0.1, 100)
+        np_Persp2 = np.array([
+            [1.815,0.0,0.0,0.0],
+            [0.0,2.414,0.0,0.0],
+            [0.0,0.0,-1.002,-0.2002],
+            [0.0,0.0,-1.0,0.0],
+        ],dtype=np.float,order='F')
+        
         #self.assertAlmostEqual(matPersp.all(), np_Persp.all())
         np.testing.assert_array_almost_equal(matPersp,np_Persp,decimal=5)
+        np.testing.assert_array_almost_equal(matPersp2,np_Persp2,decimal=3)
         
         print(matPersp)
         print(np_Persp)

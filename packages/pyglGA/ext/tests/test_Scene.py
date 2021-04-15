@@ -50,16 +50,16 @@ class TestScene(unittest.TestCase):
         self.rootEntity = self.scene.world.createEntity(Entity(name="RooT"))
         self.entityCam1 = self.scene.world.createEntity(Entity(name="entityCam1"))
         self.scene.world.addEntityChild(self.rootEntity, self.entityCam1)
-        self.trans1 = self.scene.world.addComponent(self.entityCam1, BasicTransform(name="trans1", trs=util.translate(1.0,2.0,3.0)))
+        self.trans1 = self.scene.world.addComponent(self.entityCam1, BasicTransform(name="trans1", trs=util.identity()))
         
         self.entityCam2 = self.scene.world.createEntity(Entity(name="entityCam2"))
         self.scene.world.addEntityChild(self.entityCam1, self.entityCam2)
-        self.trans2 = self.scene.world.addComponent(self.entityCam2, BasicTransform(name="trans2", trs=util.translate(2.0,3.0,4.0)))
+        self.trans2 = self.scene.world.addComponent(self.entityCam2, BasicTransform(name="trans2", trs=util.identity()))
         self.orthoCam = self.scene.world.addComponent(self.entityCam2, Camera(util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0), "orthoCam","Camera","500"))
         
         self.node4 = self.scene.world.createEntity(Entity(name="node4"))
         self.scene.world.addEntityChild(self.rootEntity, self.node4)
-        self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4"))
+        self.trans4 = self.scene.world.addComponent(self.node4, BasicTransform(name="trans4", trs=util.identity()))
         self.mesh4 = self.scene.world.addComponent(self.node4, RenderMesh(name="mesh4"))
         
         # a simple triangle
@@ -149,41 +149,9 @@ class TestScene(unittest.TestCase):
         
         #self.scene.world.root.print()
         self.scene.world.print()
-        
-        # run test traversals one in the scene
-        # root node is accessed via ECSSManagerObject.root property
-        # normally these are run within the rendering loop
-        #
-        # 1. L2W traversal
-        self.scene.world.traverse_visit(self.transUpdate, self.scene.world.root) 
-        # 2. pre-camera Mr2c traversal
-        self.scene.world.traverse_visit_pre_camera(self.camUpdate, self.orthoCam)
-        # 3. run proper Ml2c traversal
-        self.scene.world.traverse_visit(self.camUpdate, self.scene.world.root)
-        # 4. run proper render traversal for once!
-        #self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
-        
-        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
-        #self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
-        
     
         print("TestScene:test_init END".center(100, '-'))
         
-        
-    def test_Shader_RenderShaderSystem_Decorators(self):
-        """ test the decorated Shader and RenderSystem
-        """
-        print("TestScene:test_Shader_RenderShaderSystem_Decorators START".center(100, '-'))
-        
-        # create valid render context
-        # need to do a scene pre-pass to init all Shader and VertexArrays after GL context is created
-        # init in RenderMesh should copy all RenderMesh.vertex_attributes to VertexArray.attributes
-        #
-        # call a nice initSystem to call the init of all components and get over with it!
-        
-        
-        print("TestScene:test_Shader_RenderShaderSystem_Decorators END".center(100, '-'))
-    
     
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderTriangle(self):
@@ -231,15 +199,16 @@ class TestScene(unittest.TestCase):
         # same process as VertexArray is automatically populated from RenderMesh
         #
         model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 1.0, -1.0)
+        eye = util.vec(0.0, 0.0, 5.0)
         target = util.vec(0,0,0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
         #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-        #projMat = util.perspective(180.0, 1.333, 1, 10.0)
-        #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-        projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
-        mvpMat = projMat @ view @ model
+        projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
+        #projMat = util.ortho(-100.0, 100.0, -100.0, 100.0, -0.5, 100.0)
+        #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0)
+        #mvpMat = projMat @ view @ model
+        mvpMat = model @ view @ projMat
         
         # decorated components and systems with sample, default pass-through shader with uniform MVP
         self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
@@ -284,19 +253,28 @@ class TestScene(unittest.TestCase):
         # same process as VertexArray is automatically populated from RenderMesh
         #
         model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 1.0, -1.0)
+        eye = util.vec(0.0, 0.0, -10.0)
         target = util.vec(0,0,0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
         #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-        #projMat = util.perspective(180.0, 1.333, 1, 10.0)
+        projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
         #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-        projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
-        mvpMat = projMat @ view @ model
+        #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+        mvpMat = model @ view @ projMat
+        
+        #
+        # setup ECSS nodes pre-systems
+        #
+        self.orthoCam.projMat = projMat
+        self.trans2.trs = view
+        self.trans1.trs = model
+        #l2cMat = self.node4.l2cam
         
         # decorated components and systems with sample, default pass-through shader with uniform MVP
         self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        # direct uniform variable shader setup
+        #self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
         
         # attach a simple cube in a RenderMesh so that VertexArray can pick it up
         self.mesh4.vertex_attributes.append(self.vertexCube)
@@ -326,10 +304,19 @@ class TestScene(unittest.TestCase):
         #   needs an active GL context
         self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
+        #
+        # setup ECSS nodes after-systems
+        #
+        l2cMat = self.trans4.l2cam
+        print(f'\nl2cMat: \n{l2cMat}')
+        print(f'\nmvpMat: \n{mvpMat}')
+        print(self.trans4)
+        
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
         
         # UnitTest mvp mat directly set here with the one extracted/calculated from ECSS
-        l2cMat = None
         #np.testing.assert_array_almost_equal(l2cMat,mvpMat,decimal=5)
+        #np.testing.assert_array_almost_equal(mvpMat,l2cMat)
         
         while running:
             running = self.scene.render(running)

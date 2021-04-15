@@ -301,7 +301,7 @@ class BasicTransform(Component):
         pass
     
     def __str__(self):
-        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \nl2world: {self.l2world}, l2cam: {self.l2cam}, trs: {self.trs}"
+        return f"\n {self.getClassName()} name: {self._name}, type: {self._type}, id: {self._id}, parent: {self._parent._name}, \nl2world: \n{self.l2world}, \nl2cam: \n{self.l2cam}, \ntrs: \n{self.trs}"
     
     def __iter__(self) ->CompNullIterator:
         """ A concrete component does not have children to iterate, thus a NULL iterator
