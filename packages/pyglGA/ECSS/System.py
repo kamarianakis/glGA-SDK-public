@@ -145,7 +145,7 @@ class System(ABC):
         when visits Components. 
         
         """
-        pass
+        passlo9
     
     def apply2VertexArray(self, vertexArray):
         pass

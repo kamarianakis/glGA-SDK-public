@@ -1,15 +1,9 @@
-""" EntityI classes, part of the glGA SDK ECSS
+""" Entity classes, part of the glGA SDK ECSS
     
 glGA SDK v2021.0.5 ECSS (Entity Component System in a Scenegraph)
 @Coopyright 2020-2021 George Papagiannakis
     
-The EntityI class is the based aggregation of Components in the glGA ECS.
-
-The following is example restructured text doc example
-:param file_loc: The file location of the spreadsheet
-:type file_loc: str
-:returns: a list of strings representing the header columns
-:rtype: list
+The Entity class is the based aggregation of Components in the glGA ECS.
 
 """
 
