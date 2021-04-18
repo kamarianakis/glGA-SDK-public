@@ -113,7 +113,7 @@ class Component(ABC, Iterable):
         """
         abstract method to be subclassed for extra initialisation
         """
-        pass
+        raise NotImplementedError
     
     @abstractmethod
     def update(self, **kwargs):
@@ -122,19 +122,18 @@ class Component(ABC, Iterable):
         in case we need some behavioral or logic computation within te Component. 
         This violates the ECS architecture and should be avoided.
         """
-        pass
+        raise NotImplementedError
     
     @abstractmethod
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: pyglGA.ECSS.System, event = None):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
         :param system: [a System object]
         :type system: [System]
         """
-        pass
-        #system.update()
-        
+        raise NotImplementedError
+                
     def print(self):
         """
         prints out name, type, id, parent of this Component
