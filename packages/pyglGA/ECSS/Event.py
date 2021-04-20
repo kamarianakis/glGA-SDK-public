@@ -20,7 +20,7 @@ from pyglGA.ECSS.Entity import Entity, EntityDfsIterator
 from pyglGA.ECSS.Component import BasicTransform, Camera, Component
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
 from pyglGA.ECSS.ECSSManager import ECSSManager
-from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderWindow
 
 @dataclass
 class Event:
@@ -38,7 +38,7 @@ class EventPublisher(ABC):
     """
     
     @abstractmethod
-    def notify(self, component: Component, event: Event):
+    def notify(self, component: Any, event: Event):
         raise NotImplementedError
     
 
@@ -49,15 +49,22 @@ class EventManager(EventPublisher):
     """
     
     def __init__(self):
-        self._subscribers: List[Component]=[]
+        self._subscribers: List[Any]=[]
     
-    def notify(self, component: Component, event: Event):
+    def notify(self, component: Any, event: Event):
         print(f'\n{EventManager.getClassName()}: notify() reacts from {component} with {event}\n')
+        
+        """
+        if event.name == "OnUpdateTRS":
+            if comp.name == "BasicTransform":
+                ts=_world.getSystem(UpdateTRS)
+                comp.accept(ts, event)
+        """ 
     
-    def subscribe(self, component: Component):
+    def subscribe(self, component: Any):
         self._subscribers.append(component)
         
-    def unsubscribe(self, component: Component):
+    def unsubscribe(self, component: Any):
         self._subscribers.remove(component)
     
     @classmethod
