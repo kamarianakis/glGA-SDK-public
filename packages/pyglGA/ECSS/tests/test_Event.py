@@ -15,13 +15,28 @@ import pyglGA.ECSS.utilities as util
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem
 from pyglGA.ECSS.Entity import Entity
 from pyglGA.ECSS.Component import BasicTransform, Camera
-from pyglGA.ECSS.Event import Event
+from pyglGA.ECSS.Event import Event, EventManager
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
 
 class TestEvent(unittest.TestCase):
+    
+    def setUp(self):
+        """
+        setup common scene for Event testing
+        """ 
+        #simple RenderWindow
+        self.gWindow = SDL2Window(windowTitle="RenderWindow Event Testing")
+        self.gGUI = ImGUIDecorator(self.gWindow)
+        #simple scenegraph
+        self.gameObject = Entity("root") 
+        self.gameComponent = BasicTransform()
+        self.gameObject.add(self.gameComponent)
     
     def test_init(self):
         """simple tests for Event dataclass
         """
+        print("TestEvent:test_init START".center(100, '-'))
+        
         trsMat = util.translate(10.0,20.0,30.0)
         e = Event("OnUpdate", 100, trsMat)
         
@@ -42,12 +57,16 @@ class TestEvent(unittest.TestCase):
         
         print(e.value)
         print("\n Event e: ",e)
+        
+        print("TestEvent:test_init END".center(100, '-'))
     
     def test_notify(self):
-        """[summary]
+        """simple Event notification from GUI
         """
+        print("TestEvent:test_notify START".center(100, '-'))
         
         # instantiate new EventManager
+        _eManager = EventManager()
         
         # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
         
@@ -65,4 +84,14 @@ class TestEvent(unittest.TestCase):
         #    - { Event: System }
         # ComponentDestination.accept(system)
         
+        self.gGUI.init() #calls ImGUIDecorator::init()-->SDL2Window::init()
         
+        running = True
+        # MAIN RENDERING LOOP
+        while running:
+            self.gGUI.display()
+            running = self.gGUI.event_input_process(running)
+            self.gGUI.display_post()
+        self.gGUI.shutdown()
+        
+        print("TestEvent:test_notify END".center(100, '-'))

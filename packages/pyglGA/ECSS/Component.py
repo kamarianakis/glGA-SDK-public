@@ -58,6 +58,8 @@ class Component(ABC, Iterable):
         
         self._parent = self
         self._children = None
+        self._worldManager = None
+        self._eventManager = None
     
     #define properties for id, name, type, parent
     @property #name
@@ -91,6 +93,22 @@ class Component(ABC, Iterable):
     @parent.setter
     def parent(self, value):
         self._parent = value
+        
+    @property #ECSSManager
+    def worldManager(self):
+        """ Get Component's ECSSManager """
+        return self._worldManager
+    @worldManager.setter
+    def worldManager(self, value):
+        self._worldManager = value
+    
+    @property #EventManager
+    def eventManager(self):
+        """ Get Component's EventManager """
+        return self._eventManager
+    @eventManager.setter
+    def eventManager(self, value):
+        self._eventManager = value
     
     def add(self, object: Component) ->None:
         pass
