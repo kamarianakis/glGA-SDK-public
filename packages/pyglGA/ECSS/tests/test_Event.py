@@ -66,9 +66,10 @@ class TestEvent(unittest.TestCase):
         print("TestEvent:test_notify START".center(100, '-'))
         
         # instantiate new EventManager
-        _eManager = EventManager()
+        eManager = EventManager()
         
         # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
+        self.gGUI.event_manager = eManager
         
         # subscribe a RenderWindow to the EventManager
         

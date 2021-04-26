@@ -34,7 +34,19 @@ class RenderWindow(ABC):
     based on the Decorator Pattern, this class is "wrapped" by decorators
     in order to provide extra cpapabilities e.g. SDL2 window, context and ImGUI widgets    
     """     
-        
+    
+    def __init__(self):
+        self._eventManager = None
+    
+    #define properties for eventManager
+    @property #name
+    def eventManager(self):
+        """ Get RenderWindow's eventManager """
+        return self._eventManager
+    @eventManager.setter
+    def eventManager(self, value):
+        self._eventManager = value
+    
     @abstractmethod
     def init(self):
         raise NotImplementedError
@@ -81,6 +93,8 @@ class SDL2Window(RenderWindow):
         :param windowTitle: [description], defaults to None
         :type windowTitle: [type], optional
         """
+        super().__init__()
+        
         self._gWindow = None
         self._gContext = None
         self._gVersionLabel = "None"
@@ -228,6 +242,8 @@ class RenderDecorator(RenderWindow):
     :type RenderWindow: [type]
     """
     def __init__(self, wrapee: RenderWindow):
+        super().__init__()
+        
         self._wrapeeWindow = wrapee
     
     
