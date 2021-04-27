@@ -71,7 +71,11 @@ class TestEvent(unittest.TestCase):
         # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
         self.gGUI.event_manager = eManager
         
+        #setup an Event
+        updateTRSevent = Event(name="OnUpdateTRS", id=100, value=None)
+        
         # subscribe a RenderWindow to the EventManager
+        eManager._subscribers[updateTRSevent.name]= [self.gGUI]
         
         # call self._eventManager.notify(self, "OnUpdateTRS") from within the RenderWindow when a GUI event is generated
         
