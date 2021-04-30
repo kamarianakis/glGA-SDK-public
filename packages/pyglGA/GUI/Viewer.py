@@ -24,6 +24,7 @@ import OpenGL.GL as gl
 from OpenGL.GL import shaders
 import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
+import pyglGA.ECSS.System
   
 import pyglGA.ECSS.utilities as util
 
@@ -69,6 +70,16 @@ class RenderWindow(ABC):
     
     @abstractmethod
     def event_input_process(self, running = True):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def accept(self, system: pyglGA.ECSS.System, event = None):
+        """
+        Accepts a class object to operate on the RenderWindow, based on the Visitor pattern.
+
+        :param system: [a System object]
+        :type system: [System]
+        """
         raise NotImplementedError
     
     @classmethod
@@ -231,6 +242,9 @@ class SDL2Window(RenderWindow):
             if event.type == sdl2.SDL_QUIT:
                 running = False
         return running
+    
+    def accept(self, system: pyglGA.ECSS.System, event = None):
+        pass
 
 
 class RenderDecorator(RenderWindow):
@@ -281,7 +295,7 @@ class RenderDecorator(RenderWindow):
         :param running: [description], defaults to True
         :type running: bool, optional
         """
-        self._wrapeeWindow.event_input_process(running = True)
+        self._wrapeeWindow.event_input_process(running)
     
     
     def display_post(self):
@@ -297,6 +311,9 @@ class RenderDecorator(RenderWindow):
         this should be ctypiically alled AFTER all other GL contexts have been created, e.g. ImGUI context
         """
         self._wrapeeWindow.init_post()
+        
+    def accept(self, system: pyglGA.ECSS.System, event = None):
+        self._wrapeeWindow.accept(system, event)
                     
 class ImGUIDecorator(RenderDecorator):
     """
@@ -388,6 +405,9 @@ class ImGUIDecorator(RenderDecorator):
         imgui.end()
         
         #print(f'{self.getClassName()}: extra()')
+        
+    def accept(self, system: pyglGA.ECSS.System, event = None):
+        self._wrapeeWindow.accept(system, event)
 
 
 if __name__ == "__main__":

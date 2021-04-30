@@ -62,12 +62,14 @@ class EventManager(EventPublisher):
                 ts=_world.getSystem(UpdateTRS)
                 comp.accept(ts, event)
         """ 
-    
+    '''
+    @GPTODO NEED REFACTORING these methods once API is stable
     def subscribe(self, component: Any):
         self._subscribers.append(component)
         
     def unsubscribe(self, component: Any):
         self._subscribers.remove(component)
+    '''
     
     @classmethod
     def getClassName(cls):
