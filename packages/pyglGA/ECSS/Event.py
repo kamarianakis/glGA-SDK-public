@@ -56,12 +56,23 @@ class EventManager(EventPublisher):
     def notify(self, component: Any, event: Event):
         print(f'\n{EventManager.getClassName()}: notify() reacts from {component} with {event}\n')
         
+        # hardcode it for now, in a refactored version search if there is a match in the dictionaries
+        # i.e. no need to hardcode this in the future:
+        # just add event name and appropriate subscribers, publishers, actuators
+        # and run matchmaking here between subscribers-actuators
+        # all needed data are passed from the Event.value
+        # and the appopriate actuator (System) will know what to do
+        if event.name == "OnUpdateBackground":
+            print(f'\n{event.name}: will be actuated from the appropriate system\n')
+        
+        
         """
         if event.name == "OnUpdateTRS":
             if comp.name == "BasicTransform":
                 ts=_world.getSystem(UpdateTRS)
                 comp.accept(ts, event)
         """ 
+        
     '''
     @GPTODO NEED REFACTORING these methods once API is stable
     def subscribe(self, component: Any):
