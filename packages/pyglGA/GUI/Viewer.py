@@ -13,7 +13,7 @@ Basic design principles are based on the Decorator Design pattern:
 
 from __future__         import annotations
 from abc                import ABC, abstractmethod
-from typing             import List
+from typing             import List, Dict, Any
 from collections.abc    import Iterable, Iterator
 
 import sdl2
@@ -329,7 +329,11 @@ class ImGUIDecorator(RenderDecorator):
         else:
             self._imguiContext = imguiContext
         self._imguiRenderer = None
-    
+        # extra UI elements
+        self._wireframeMode = False
+        self._changed = False 
+        self._checkbox = False 
+        self._colorEditor = (0.0, 0.0, 0.0)
     
     def init(self):
         """
@@ -401,10 +405,36 @@ class ImGUIDecorator(RenderDecorator):
         #labels inside the window
         imgui.text("PyImgui + PySDL2 integration successful!")
         imgui.text(self._wrapeeWindow._gVersionLabel)
+        
+        # populate window with extra UI elements
+        imgui.separator()
+        imgui.new_line()
+        #
+        #imgui.text("Change wireframe state")
+        # wireframe state
+        
+        self._changed, self._checkbox = imgui.checkbox("Wireframe", self._wireframeMode)
+        if self._changed:
+            if self._checkbox is True:
+                self._wireframeMode = True
+                print(f"wireframe: {self._wireframeMode}")
+            if self._checkbox is False:
+                self._wireframeMode = False
+                print(f"wireframe: {self._wireframeMode}")
+        #
+        # simple slider for color
+        
+        self._changed, self._colorEditor = imgui.color_edit3("Color edit", *self._colorEditor)
+        imgui.separator()
+        #
+        # simple FPS counter
+        strFrameRate = str(("Application average: ", imgui.get_io().framerate, " FPS"))
+        imgui.text(strFrameRate)
         #end imgui frame context
         imgui.end()
         
         #print(f'{self.getClassName()}: extra()')
+        
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
         self._wrapeeWindow.accept(system, event)

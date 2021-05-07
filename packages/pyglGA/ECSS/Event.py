@@ -49,9 +49,9 @@ class EventManager(EventPublisher):
     """
     
     def __init__(self):
-        self._publishers: Dict[str,Any]={}
-        self._subscribers: Dict[str,Any]={}
-        self._actuators: Dict[str,Any]={}
+        self._publishers: Dict[str,Any] = {}
+        self._subscribers: Dict[str,Any] = {}
+        self._actuators: Dict[str,Any] = {}
     
     def notify(self, component: Any, event: Event):
         print(f'\n{EventManager.getClassName()}: notify() reacts from {component} with {event}\n')

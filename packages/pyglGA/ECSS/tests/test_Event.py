@@ -80,7 +80,7 @@ class TestEvent(unittest.TestCase):
         eManager._subscribers[updateBackgroundEvent.name] = [self.gGUI]
         
         # Add RenderWindow to the EventManager publishers
-        eManager._publishers[updateBackgroundEvent.name] = [self.gUI]
+        eManager._publishers[updateBackgroundEvent.name] = [self.gGUI]
         
         # call self._eventManager.notify(self, "OnUpdateTRS") from within the RenderWindow when a GUI event is generated
         
