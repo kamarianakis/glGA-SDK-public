@@ -410,21 +410,22 @@ class ImGUIDecorator(RenderDecorator):
         imgui.separator()
         imgui.new_line()
         #
-        #imgui.text("Change wireframe state")
         # wireframe state
-        
         self._changed, self._checkbox = imgui.checkbox("Wireframe", self._wireframeMode)
         if self._changed:
             if self._checkbox is True:
                 self._wireframeMode = True
+                self.wrapeeWindow.eventManager.notify(self, None) 
                 print(f"wireframe: {self._wireframeMode}")
             if self._checkbox is False:
                 self._wireframeMode = False
+                self.wrapeeWindow.eventManager.notify(self, None) 
                 print(f"wireframe: {self._wireframeMode}")
         #
         # simple slider for color
-        
         self._changed, self._colorEditor = imgui.color_edit3("Color edit", *self._colorEditor)
+        if self._changed:
+             print(f"_colorEditor: {self._colorEditor}")
         imgui.separator()
         #
         # simple FPS counter

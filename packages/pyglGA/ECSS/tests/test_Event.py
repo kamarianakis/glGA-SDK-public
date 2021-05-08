@@ -31,6 +31,24 @@ class TestEvent(unittest.TestCase):
         self.gameObject = Entity("root") 
         self.gameComponent = BasicTransform()
         self.gameObject.add(self.gameComponent)
+        
+        # instantiate new EventManager
+        self.eManager = EventManager()
+        
+        #setup Events and add them to the EventManager
+        self.updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
+        self.updateBackground = Event(name="OnUpdateBackground", id=200, value=None)
+        self.updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
+        self.eManager._events[self.updateTRS.name] = self.updateTRS
+        self.eManager._events[self.updateBackground.name] = self.updateBackground
+        self.eManager._events[self.updateWireframe.name] = self.updateWireframe
+        
+        # Add RenderWindow to the EventManager subscribers
+        self.eManager._subscribers[self.updateTRS.name] = [self.gGUI]
+        self.eManager._subscribers[self.updateBackground.name] = [self.gGUI]
+        
+        # Add RenderWindow to the EventManager publishers
+        self.eManager._publishers[self.updateBackground.name] = [self.gGUI]
     
     def test_init(self):
         """simple tests for Event dataclass
@@ -65,22 +83,8 @@ class TestEvent(unittest.TestCase):
         """
         print("TestEvent:test_notify START".center(100, '-'))
         
-        # instantiate new EventManager
-        eManager = EventManager()
-        
         # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
-        self.gGUI.event_manager = eManager
-        
-        #setup an Event
-        updateTRSevent = Event(name="OnUpdateTRS", id=100, value=None)
-        updateBackgroundEvent = Event(name="OnUpdateBackground", id=200, value=None)
-        
-        # Add RenderWindow to the EventManager subscribers
-        eManager._subscribers[updateTRSevent.name] = [self.gGUI]
-        eManager._subscribers[updateBackgroundEvent.name] = [self.gGUI]
-        
-        # Add RenderWindow to the EventManager publishers
-        eManager._publishers[updateBackgroundEvent.name] = [self.gGUI]
+        self.gGUI.wrapeeWindow.eventManager = self.eManager
         
         # call self._eventManager.notify(self, "OnUpdateTRS") from within the RenderWindow when a GUI event is generated
         
