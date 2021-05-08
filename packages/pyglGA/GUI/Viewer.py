@@ -24,10 +24,10 @@ import OpenGL.GL as gl
 from OpenGL.GL import shaders
 import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
-import pyglGA.ECSS.System
-  
-import pyglGA.ECSS.utilities as util
 
+import pyglGA.ECSS.System  
+import pyglGA.ECSS.utilities as util
+import pyglGA.ECSS.Event
 
 class RenderWindow(ABC):
     """
@@ -94,7 +94,7 @@ class SDL2Window(RenderWindow):
     :type RenderWindow: [type]
     """
     
-    def __init__(self, windowWidth = None, windowHeight = None, windowTitle = None):
+    def __init__(self, windowWidth = None, windowHeight = None, windowTitle = None, eventManager = None):
         """Constructor SDL2Window for basic SDL2 parameters
 
         :param windowWidth: [description], defaults to None
@@ -124,7 +124,9 @@ class SDL2Window(RenderWindow):
             self._windowTitle = "SDL2Window"
         else:
             self._windowTitle = windowTitle
-             
+        
+        if eventManager is not None:
+            self.eventManager = eventManager
              
     @property
     def gWindow(self):
@@ -322,13 +324,16 @@ class ImGUIDecorator(RenderDecorator):
     :param RenderDecorator: [description]
     :type RenderDecorator: [type]
     """
-    def __init__(self, wrapee: RenderWindow, imguiContext = None):
+    def __init__(self, wrapee: RenderWindow, imguiContext = None, eventManager = None):
         super().__init__(wrapee)
         if imguiContext is None:
             self._imguiContext = imgui.create_context()
         else:
             self._imguiContext = imguiContext
         self._imguiRenderer = None
+        #if someone else has provided an eventManager (SDLWindow) do not set it again, otherwise do so
+        if eventManager is not None:
+            self.wrapeeWindow.eventManager = eventManager
         # extra UI elements
         self._wireframeMode = False
         self._changed = False 
@@ -337,7 +342,7 @@ class ImGUIDecorator(RenderDecorator):
     
     def init(self):
         """
-        [summary]
+        Calls Decoratee init() and also sets up events
         """
         self.wrapeeWindow.init()
         if self._imguiContext is None:
@@ -346,10 +351,17 @@ class ImGUIDecorator(RenderDecorator):
         else:
             print("Yay! ImGUI context created successfully")
         
-        # GPTODO here is the problem: SDL2Decorator takes an SDLWindow as wrappee wheras
+        # GPTODO here is the issue: SDL2Decorator takes an SDLWindow as wrappee wheras
         # ImGUIDEcorator takes and SDL2Decorator and decorates it!
         if isinstance(self.wrapeeWindow, SDL2Window):   
             self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
+            
+        #
+        # Setting up events that this class is publishing
+        #
+        self._updateWireframe = pyglGA.ECSS.Event.Event(name="OnUpdateWireframe", id=201, value=None)
+        self._wrapeeWindow.eventManager._events[self._updateWireframe.name] = self._updateWireframe
+        self._wrapeeWindow.eventManager._publishers[self._updateWireframe.name] = self
         
         print(f'{self.getClassName()}: init()')
         

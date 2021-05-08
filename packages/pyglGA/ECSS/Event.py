@@ -38,7 +38,15 @@ class EventPublisher(ABC):
     """
     
     @abstractmethod
-    def notify(self, component: Any, event: Event):
+    def notify(self, sender: Any, event: Event):
+        """the main mediator pattern type notification
+
+        :param sender: [the object sending the event]
+        :type sender: Component or RenderWindow
+        :param event: [the Event name, id and value]
+        :type event: Event
+        :raises NotImplementedError: [description]
+        """
         raise NotImplementedError
     
 
@@ -54,9 +62,9 @@ class EventManager(EventPublisher):
         self._actuators: Dict[str,Any] = {}
         self._events: Dict[str,Event] = {}
     
-    def notify(self, component: Any, event: Event):
+    def notify(self, sender: Any, event: Event):
         if event is not None:
-            print(f'\n{EventManager.getClassName()}: notify() reacts from {component} with {event}\n')
+            print(f'\n{EventManager.getClassName()}: notify() reacts from {sender} with {event}\n')
         
             # hardcode it for now, in a refactored version search if there is a match in the dictionaries
             # i.e. no need to hardcode this in the future:
@@ -87,3 +95,34 @@ class EventManager(EventPublisher):
     @classmethod
     def getClassName(cls):
         return cls.__name__    
+    
+    def print(self):
+        """ debug output
+        """
+        print("\n_publishers dict\n".center(100, '-'))
+        for key, value in self._publishers.items():
+            print(f"\n{key} with value: {value} and value type: {type(value)} and contents:")
+            if isinstance(value, List):
+                for el in value:
+                    print(el)
+        
+        print("\n_subscribers dict\n".center(100, '-'))
+        for key, value in self._subscribers.items():
+            print(f"\n{key} with value: {value} and value type: {type(value)} and contents:")
+            if isinstance(value, List):
+                for el in value:
+                    print(el)
+        
+        print("\n_actuators dict\n".center(100, '-'))
+        for key, value in self._actuators.items():
+            print(f"\n{key} with value: {value} and value type: {type(value)} and contents:")
+            if isinstance(value, List):
+                for el in value:
+                    print(el)
+        
+        print("\n_events dict\n".center(100, '-'))
+        for key, value in self._events.items():
+            print(f"\n{key} with value: {value} and value type: {type(value)} and contents:")
+            if isinstance(value, List):
+                for el in value:
+                    print(el)

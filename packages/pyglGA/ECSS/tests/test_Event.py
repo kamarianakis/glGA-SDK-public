@@ -24,24 +24,26 @@ class TestEvent(unittest.TestCase):
         """
         setup common scene for Event testing
         """ 
+        
+        # instantiate new EventManager
+        # need to pass that instance to all event publishers e.g. ImGUIDecorator
+        self.eManager = EventManager()
+        
         #simple RenderWindow
         self.gWindow = SDL2Window(windowTitle="RenderWindow Event Testing")
-        self.gGUI = ImGUIDecorator(self.gWindow)
+        self.gGUI = ImGUIDecorator(self.gWindow, eventManager = self.eManager)
         #simple scenegraph
         self.gameObject = Entity("root") 
         self.gameComponent = BasicTransform()
         self.gameObject.add(self.gameComponent)
         
-        # instantiate new EventManager
-        self.eManager = EventManager()
-        
         #setup Events and add them to the EventManager
         self.updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
         self.updateBackground = Event(name="OnUpdateBackground", id=200, value=None)
-        self.updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
+        #self.updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
         self.eManager._events[self.updateTRS.name] = self.updateTRS
         self.eManager._events[self.updateBackground.name] = self.updateBackground
-        self.eManager._events[self.updateWireframe.name] = self.updateWireframe
+        #self.eManager._events[self.updateWireframe.name] = self.updateWireframe
         
         # Add RenderWindow to the EventManager subscribers
         self.eManager._subscribers[self.updateTRS.name] = [self.gGUI]
@@ -78,13 +80,13 @@ class TestEvent(unittest.TestCase):
         
         print("TestEvent:test_init END".center(100, '-'))
     
-    def test_notify(self):
+    def test_notify_ImGUIDecorator(self):
         """simple Event notification from GUI
         """
         print("TestEvent:test_notify START".center(100, '-'))
         
         # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
-        self.gGUI.wrapeeWindow.eventManager = self.eManager
+        #self.gGUI.wrapeeWindow.eventManager = self.eManager
         
         # call self._eventManager.notify(self, "OnUpdateTRS") from within the RenderWindow when a GUI event is generated
         
@@ -99,6 +101,7 @@ class TestEvent(unittest.TestCase):
         # ComponentDestination.accept(system)
         
         self.gGUI.init() #calls ImGUIDecorator::init()-->SDL2Window::init()
+        self.gGUI.wrapeeWindow.eventManager.print()
         
         running = True
         # MAIN RENDERING LOOP
