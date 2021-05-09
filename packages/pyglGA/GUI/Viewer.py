@@ -357,11 +357,12 @@ class ImGUIDecorator(RenderDecorator):
             self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
             
         #
-        # Setting up events that this class is publishing
+        # Setting up events that this class is publishing (if the EventManager is present)
         #
         self._updateWireframe = pyglGA.ECSS.Event.Event(name="OnUpdateWireframe", id=201, value=None)
-        self._wrapeeWindow.eventManager._events[self._updateWireframe.name] = self._updateWireframe
-        self._wrapeeWindow.eventManager._publishers[self._updateWireframe.name] = self
+        if self._wrapeeWindow.eventManager is not None:
+            self._wrapeeWindow.eventManager._events[self._updateWireframe.name] = self._updateWireframe
+            self._wrapeeWindow.eventManager._publishers[self._updateWireframe.name] = self
         
         print(f'{self.getClassName()}: init()')
         
@@ -427,11 +428,15 @@ class ImGUIDecorator(RenderDecorator):
         if self._changed:
             if self._checkbox is True:
                 self._wireframeMode = True
-                self.wrapeeWindow.eventManager.notify(self, None) 
+                self._updateWireframe.value = self._wireframeMode
+                if self._wrapeeWindow.eventManager is not None:
+                    self.wrapeeWindow.eventManager.notify(self, self._updateWireframe) 
                 print(f"wireframe: {self._wireframeMode}")
             if self._checkbox is False:
                 self._wireframeMode = False
-                self.wrapeeWindow.eventManager.notify(self, None) 
+                self._updateWireframe.value = self._wireframeMode
+                if self._wrapeeWindow.eventManager is not None:
+                    self.wrapeeWindow.eventManager.notify(self, self._updateWireframe) 
                 print(f"wireframe: {self._wireframeMode}")
         #
         # simple slider for color

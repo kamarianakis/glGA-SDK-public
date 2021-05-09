@@ -156,6 +156,12 @@ class System(ABC):
     def apply2ShaderGLDecorator(self, shaderGLDecorator):
         pass
     
+    def apply2RenderWindow(self, renderWindow):
+        pass
+    
+    def apply2RenderDecorator(self, renderDecorator):
+        pass 
+    
 class SystemDecorator(System):
     """Basic System Decorator, based on the Decorator design pattern
 

@@ -293,7 +293,7 @@ class BasicTransform(Component):
             self._l2cam = kwargs[arg3]
         
        
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: pyglGA.ECSS.System, event = None):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -371,7 +371,7 @@ class Camera(Component):
             self._root2cam = kwargs[arg1]
        
        
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: pyglGA.ECSS.System, event = None):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -449,7 +449,7 @@ class RenderMesh(Component):
         print(self.getClassName(), ": update() called")
    
    
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: pyglGA.ECSS.System, event = None):
         """
         Accepts a class object to operate on the Component, based on the Visitor pattern.
 
@@ -497,6 +497,6 @@ class BasicTransformDecorator(ComponentDecorator):
         self.component.init()
         #call any extra methods before or after
     
-    def accept(self, system: pyglGA.ECSS.System):
+    def accept(self, system: pyglGA.ECSS.System, event = None):
         pass # we want the decorator first to accept the visitor and only if needed the wrappe to accept it too
         #self._component.accept(system)
