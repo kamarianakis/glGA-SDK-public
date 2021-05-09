@@ -105,7 +105,7 @@ class System(ABC):
         """
         pass
     
-    def apply(self, Entity):
+    def apply(self, Entity, event = None):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Entities. 
@@ -114,7 +114,7 @@ class System(ABC):
         pass
     
     
-    def apply2RenderMesh(self, renderMesh: pyglGA.ECSS.Component.RenderMesh):
+    def apply2RenderMesh(self, renderMesh: pyglGA.ECSS.Component.RenderMesh, event = None):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -123,7 +123,7 @@ class System(ABC):
         pass
     
     
-    def apply2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
+    def apply2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform, event = None):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -131,7 +131,7 @@ class System(ABC):
         """
         pass
     
-    def applyCamera2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform):
+    def applyCamera2BasicTransform(self, basicTransform: pyglGA.ECSS.Component.BasicTransform, event = None):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -139,7 +139,7 @@ class System(ABC):
         """
         pass
     
-    def apply2Camera(self, basicTransform: pyglGA.ECSS.Component.Camera):
+    def apply2Camera(self, basicTransform: pyglGA.ECSS.Component.Camera, event = None):
         """
         method to be subclassed for  behavioral or logic computation 
         when visits Components. 
@@ -147,19 +147,22 @@ class System(ABC):
         """
         pass
     
-    def apply2VertexArray(self, vertexArray):
+    def apply2VertexArray(self, vertexArray, event = None):
         pass
     
-    def apply2Shader(self, shader):
+    def apply2Shader(self, shader, event = None):
         pass
     
-    def apply2ShaderGLDecorator(self, shaderGLDecorator):
+    def apply2ShaderGLDecorator(self, shaderGLDecorator, event = None):
         pass
     
-    def apply2RenderWindow(self, renderWindow):
+    def apply2RenderWindow(self, renderWindow, event = None):
         pass
     
-    def apply2RenderDecorator(self, renderDecorator):
+    def apply2RenderDecorator(self, renderDecorator, event = None):
+        pass 
+    
+    def apply2ImGUIDecorator(self, imGUIDecorator, event = None):
         pass 
     
 class SystemDecorator(System):

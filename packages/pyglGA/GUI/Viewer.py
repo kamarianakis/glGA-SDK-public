@@ -28,6 +28,7 @@ from imgui.integrations.sdl2 import SDL2Renderer
 import pyglGA.ECSS.System  
 import pyglGA.ECSS.utilities as util
 import pyglGA.ECSS.Event
+from pyglGA.ECSS.System import System 
 
 class RenderWindow(ABC):
     """
@@ -207,7 +208,7 @@ class SDL2Window(RenderWindow):
         """
         #GPTODO make background clear color as parameter at class level
         gl.glClearColor(0.0,0.0,0.0,1.0)
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDisable(gl.GL_CULL_FACE)
         gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
         #print(f'{self.getClassName()}: display()')
@@ -451,11 +452,51 @@ class ImGUIDecorator(RenderDecorator):
         #end imgui frame context
         imgui.end()
         
+        #setup some extra GL state flags
+        # @GPTODO: refactor this to do it at SDLWindow too for events:
+        if self._wireframeMode:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+        else:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+        
         #print(f'{self.getClassName()}: extra()')
         
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
         self._wrapeeWindow.accept(system, event)
+
+
+class RenderGLStateSystem(System):
+    """
+    System that operates on a RenderDecorator (ImGUIDecorator) and affect GL State
+
+    """
+    
+    def __init__(self, name=None, type=None, id=None):
+        super().__init__(name, type, id)
+        
+    def update(self):
+        """
+        method to be subclassed for  behavioral or logic computation 
+
+        """
+        pass
+    
+    
+    def apply2ImGUIDecorator(self, imGUIDecorator, event = None):
+        """
+        method for  behavioral or logic computation 
+        when visits Components. 
+        
+        In this case update GL State from ImGUIDecorator
+        
+        """
+        if event.name == "OnUpdateWireframe":
+            imGUIDecorator._wireframeMode = event.value
+        
+        
 
 
 if __name__ == "__main__":
