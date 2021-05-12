@@ -30,7 +30,7 @@ class TestEvent(unittest.TestCase):
         self.eManager = EventManager()
         
         #simple RenderWindow
-        self.gWindow = SDL2Window(windowTitle="RenderWindow Event Testing")
+        self.gWindow = SDL2Window(windowTitle="RenderWindow Event Testing", eventManager = self.eManager)
         self.gGUI = ImGUIDecorator(self.gWindow, eventManager = self.eManager)
         #simple scenegraph
         self.gameObject = Entity("root") 
@@ -48,6 +48,9 @@ class TestEvent(unittest.TestCase):
         # Add RenderWindow to the EventManager subscribers
         self.eManager._subscribers[self.updateTRS.name] = [self.gGUI]
         self.eManager._subscribers[self.updateBackground.name] = [self.gGUI]
+        # this is a special case below:
+        # this event is published in ImGUIDecorator and the subscriber is SDLWindow
+        self.eManager._subscribers['OnUpdateWireframe'] = [self.gWindow]
         
         # Add RenderWindow to the EventManager publishers
         self.eManager._publishers[self.updateBackground.name] = [self.gGUI]

@@ -128,6 +128,9 @@ class SDL2Window(RenderWindow):
         
         if eventManager is not None:
             self.eventManager = eventManager
+            
+        #OpenGL state variables
+        self._wireframeMode = False
              
     @property
     def gWindow(self):
@@ -210,7 +213,17 @@ class SDL2Window(RenderWindow):
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDisable(gl.GL_CULL_FACE)
-        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+        #gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+        
+         #setup some extra GL state flags
+        # @GPTODO: refactor this to do it at SDLWindow too for events:
+        if self._wireframeMode:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+        else:
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+            
         #print(f'{self.getClassName()}: display()')
     
     
@@ -247,7 +260,7 @@ class SDL2Window(RenderWindow):
         return running
     
     def accept(self, system: pyglGA.ECSS.System, event = None):
-        pass
+        self.accept(system, event)
 
 
 class RenderDecorator(RenderWindow):
@@ -452,20 +465,11 @@ class ImGUIDecorator(RenderDecorator):
         #end imgui frame context
         imgui.end()
         
-        #setup some extra GL state flags
-        # @GPTODO: refactor this to do it at SDLWindow too for events:
-        if self._wireframeMode:
-            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
-            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
-        else:
-            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
-        
         #print(f'{self.getClassName()}: extra()')
         
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
-        self._wrapeeWindow.accept(system, event)
+        self.accept(system, event)
 
 
 class RenderGLStateSystem(System):
@@ -493,9 +497,22 @@ class RenderGLStateSystem(System):
         In this case update GL State from ImGUIDecorator
         
         """
-        if event.name == "OnUpdateWireframe":
-            imGUIDecorator._wireframeMode = event.value
+        pass
+            
+    
+    def apply2SDLWindow(self, sdlWindow, event = None):
+        """method for  behavioral or logic computation 
+        when visits Components. 
         
+        In this case update GL State from SDLWindow
+
+        :param sdlWindow: [description]
+        :type sdlWindow: [type]
+        :param event: [description], defaults to None
+        :type event: [type], optional
+        """
+        if event.name == "OnUpdateWireframe":
+            sdlWindow._wireframeMode = event.value
         
 
 
