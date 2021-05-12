@@ -16,7 +16,7 @@ from pyglGA.ECSS.System import System, TransformSystem, CameraSystem
 from pyglGA.ECSS.Entity import Entity
 from pyglGA.ECSS.Component import BasicTransform, Camera
 from pyglGA.ECSS.Event import Event, EventManager
-from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderGLStateSystem
 
 class TestEvent(unittest.TestCase):
     
@@ -36,6 +36,8 @@ class TestEvent(unittest.TestCase):
         self.gameObject = Entity("root") 
         self.gameComponent = BasicTransform()
         self.gameObject.add(self.gameComponent)
+        #simple Event actuator system
+        self.renderGLEventActuator = RenderGLStateSystem()
         
         #setup Events and add them to the EventManager
         self.updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
@@ -46,14 +48,15 @@ class TestEvent(unittest.TestCase):
         #self.eManager._events[self.updateWireframe.name] = self.updateWireframe
         
         # Add RenderWindow to the EventManager subscribers
-        self.eManager._subscribers[self.updateTRS.name] = [self.gGUI]
-        self.eManager._subscribers[self.updateBackground.name] = [self.gGUI]
+        self.eManager._subscribers[self.updateTRS.name] = self.gGUI
+        self.eManager._subscribers[self.updateBackground.name] = self.gGUI
         # this is a special case below:
         # this event is published in ImGUIDecorator and the subscriber is SDLWindow
-        self.eManager._subscribers['OnUpdateWireframe'] = [self.gWindow]
+        self.eManager._subscribers['OnUpdateWireframe'] = self.gWindow
+        self.eManager._actuators['OnUpdateWireframe'] = self.renderGLEventActuator
         
         # Add RenderWindow to the EventManager publishers
-        self.eManager._publishers[self.updateBackground.name] = [self.gGUI]
+        self.eManager._publishers[self.updateBackground.name] = self.gGUI
     
     def test_init(self):
         """simple tests for Event dataclass

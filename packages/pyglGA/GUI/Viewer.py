@@ -219,10 +219,10 @@ class SDL2Window(RenderWindow):
         # @GPTODO: refactor this to do it at SDLWindow too for events:
         if self._wireframeMode:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
-            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+            print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
         else:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-            print(f"ImGUIDecorator:display() set wireframemode: {self._wireframeMode}")
+            print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
             
         #print(f'{self.getClassName()}: display()')
     
@@ -260,7 +260,7 @@ class SDL2Window(RenderWindow):
         return running
     
     def accept(self, system: pyglGA.ECSS.System, event = None):
-        self.accept(system, event)
+        system.apply2SDLWindow(self, event)
 
 
 class RenderDecorator(RenderWindow):
@@ -329,7 +329,7 @@ class RenderDecorator(RenderWindow):
         self._wrapeeWindow.init_post()
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
-        self._wrapeeWindow.accept(system, event)
+        pass
                     
 class ImGUIDecorator(RenderDecorator):
     """
@@ -420,6 +420,9 @@ class ImGUIDecorator(RenderDecorator):
     def extra(self):
         """sample ImGUI widgets to be rendered on a RenderWindow
         """
+        # this is important to draw the ImGUI in full mode and not wireframe!
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+        
         imgui.set_next_window_size(300.0, 150.0)
         
         #start new ImGUI frame context
@@ -469,7 +472,7 @@ class ImGUIDecorator(RenderDecorator):
         
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
-        self.accept(system, event)
+        system.apply2ImGUIDecorator(self, event)
 
 
 class RenderGLStateSystem(System):
@@ -512,6 +515,7 @@ class RenderGLStateSystem(System):
         :type event: [type], optional
         """
         if event.name == "OnUpdateWireframe":
+            print(f"RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
             sdlWindow._wireframeMode = event.value
         
 

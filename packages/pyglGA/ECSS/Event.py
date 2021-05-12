@@ -79,8 +79,10 @@ class EventManager(EventPublisher):
                 
             if event.name in self._subscribers:
                 subscriber  = self._subscribers[event.name] 
+                print(f'\n{EventManager.getClassName()}: notify() subscriber: {subscriber} for {event}\n')
                 if event.name in self._actuators:
                     systemActuator = self._actuators[event.name]
+                    print(f'\n{EventManager.getClassName()}: notify() actuator: {systemActuator} for {event}\n')
                     subscriber.accept(systemActuator, event)
         
         print("EventManager:notify() ended")
