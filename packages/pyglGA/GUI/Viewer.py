@@ -215,14 +215,13 @@ class SDL2Window(RenderWindow):
         gl.glDisable(gl.GL_CULL_FACE)
         #gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
         
-         #setup some extra GL state flags
-        # @GPTODO: refactor this to do it at SDLWindow too for events:
+        #setup some extra GL state flags
         if self._wireframeMode:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
-            print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
+            #print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
         else:
             gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-            print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
+            #print(f"SDL2Window:display() set wireframemode: {self._wireframeMode}")
             
         #print(f'{self.getClassName()}: display()')
     

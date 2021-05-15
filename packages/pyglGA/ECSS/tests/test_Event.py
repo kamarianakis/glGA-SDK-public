@@ -91,21 +91,6 @@ class TestEvent(unittest.TestCase):
         """
         print("TestEvent:test_notify START".center(100, '-'))
         
-        # instantiate new RenderWindow that will generate an event and set the Renderwindow._eventManager object
-        #self.gGUI.wrapeeWindow.eventManager = self.eManager
-        
-        # call self._eventManager.notify(self, "OnUpdateTRS") from within the RenderWindow when a GUI event is generated
-        
-        # how to connect the viewer that generates the Event with the appropriate component listening for that event?
-        
-        # 1. create a custom System that in the apply2BasicTransform() performs basic Event handling
-        # 2. question is how to know which component to apply to since the Renderwindow generated that Event and not the Component?
-        #   - we could also subscribe that component as an observer to the Event Manager based on that Event
-        #   - essential build two data structures:
-        #    - { Event: [ComponentSource, ComponentDestination]}
-        #    - { Event: System }
-        # ComponentDestination.accept(system)
-        
         self.gGUI.init() #calls ImGUIDecorator::init()-->SDL2Window::init()
         self.gGUI.wrapeeWindow.eventManager.print()
         
