@@ -18,8 +18,8 @@ from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSyst
 from pyglGA.ext.Scene import Scene
 from pyglGA.ECSS.ECSSManager import ECSSManager
 
-from ext.Shader import InitGLShaderSystem, Shader, ShaderGLDecorator, RenderGLShaderSystem
-from ext.VertexArray import VertexArray
+from pyglGA.ext.Shader import InitGLShaderSystem, Shader, ShaderGLDecorator, RenderGLShaderSystem
+from pyglGA.ext.VertexArray import VertexArray
 
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class

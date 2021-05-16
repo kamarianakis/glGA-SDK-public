@@ -16,11 +16,10 @@ from dataclasses import dataclass
 import numpy as np
 
 import pyglGA.ECSS.utilities as util
-from pyglGA.ECSS.Entity import Entity, EntityDfsIterator
-from pyglGA.ECSS.Component import BasicTransform, Camera, Component
-from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
-from pyglGA.ECSS.ECSSManager import ECSSManager
-from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderWindow
+#from pyglGA.ECSS.Entity import Entity, EntityDfsIterator
+#from pyglGA.ECSS.Component import BasicTransform, Camera, Component
+#from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
+
 
 @dataclass
 class Event:

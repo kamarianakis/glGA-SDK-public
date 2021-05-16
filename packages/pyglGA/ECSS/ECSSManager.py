@@ -17,7 +17,7 @@ from pyglGA.ECSS.Entity import Entity
 import pyglGA.ECSS.Component
 import pyglGA.ECSS.System
 import pyglGA.ECSS.utilities as util
-
+import pyglGA.ECSS.Event 
 
 class ECSSManager():
     """
@@ -52,6 +52,7 @@ class ECSSManager():
         self._cameras: List[pyglGA.ECSS.Component.Component] = []
         # dict with keys entities and values list of components per entity
         self._entities_components = {}
+        self._eventManager = pyglGA.ECSS.Event.EventManager()
         self._root = None
 
     # define properties for root
@@ -63,6 +64,14 @@ class ECSSManager():
     @root.setter
     def root(self, value):
         self._root = value
+    
+    
+    # define properties for EventManager
+    @property 
+    def eventManager(self) -> pyglGA.ECSS.Event.EventManager:
+        """ Get ECSS's EventManager """
+        return self._eventManager
+    
 
     def createEntity(self, entity: Entity):
         """

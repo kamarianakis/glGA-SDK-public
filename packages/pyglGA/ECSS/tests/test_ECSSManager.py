@@ -13,7 +13,7 @@ import pyglGA.ECSS.utilities as util
 from pyglGA.ECSS.Entity import Entity, EntityDfsIterator
 from pyglGA.ECSS.Component import BasicTransform, Camera
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
-from pyglGA.ECSS.ECSSManager import ECSSManager
+import pyglGA.ECSS.ECSSManager
 
 class TestECSSManager(unittest.TestCase):
     """[summary]
@@ -34,8 +34,8 @@ class TestECSSManager(unittest.TestCase):
         b) Low-level directly at scenegraph hierarchy level
         
         """
-        self.WorldManager = ECSSManager()
-        self.WorldManager2 = ECSSManager()
+        self.WorldManager = pyglGA.ECSS.ECSSManager.ECSSManager()
+        self.WorldManager2 = pyglGA.ECSS.ECSSManager.ECSSManager()
         
         """
         Rebuild the same scenegraph from test_System::TestCameraSystem class,

@@ -46,7 +46,7 @@ class Scene():
     def __init__(self):
         self._renderWindow = None
         self._gContext = None
-        self._world = ECSSManager()
+        self._world = ECSSManager() #which also instantiates an EventManager
     
     @property
     def renderWindow(self):
