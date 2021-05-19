@@ -337,16 +337,13 @@ class ImGUIDecorator(RenderDecorator):
     :param RenderDecorator: [description]
     :type RenderDecorator: [type]
     """
-    def __init__(self, wrapee: RenderWindow, imguiContext = None, eventManager = None):
+    def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee)
         if imguiContext is None:
             self._imguiContext = imgui.create_context()
         else:
             self._imguiContext = imguiContext
         self._imguiRenderer = None
-        #if someone else has provided an eventManager (SDLWindow) do not set it again, otherwise do so
-        if eventManager is not None:
-            self.wrapeeWindow.eventManager = eventManager
         # extra UI elements
         self._wireframeMode = False
         self._changed = False 
@@ -370,7 +367,7 @@ class ImGUIDecorator(RenderDecorator):
             self._imguiRenderer = SDL2Renderer(self.wrapeeWindow._gWindow)
             
         #
-        # Setting up events that this class is publishing (if the EventManager is present)
+        # Setting up events that this class is publishing (if the EventManager is present in the decorated wrappee)
         #
         self._updateWireframe = pyglGA.ECSS.Event.Event(name="OnUpdateWireframe", id=201, value=None)
         if self._wrapeeWindow.eventManager is not None:
@@ -409,6 +406,9 @@ class ImGUIDecorator(RenderDecorator):
         
         
     def display_post(self):
+        # this is important to draw the ImGUI in full mode and not wireframe!
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
+        
         # render imgui (after 3D scene and just before the SDL double buffer swap window)
         imgui.render()
         self._imguiRenderer.render(imgui.get_draw_data())
@@ -419,9 +419,6 @@ class ImGUIDecorator(RenderDecorator):
     def extra(self):
         """sample ImGUI widgets to be rendered on a RenderWindow
         """
-        # this is important to draw the ImGUI in full mode and not wireframe!
-        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
-        
         imgui.set_next_window_size(300.0, 150.0)
         
         #start new ImGUI frame context

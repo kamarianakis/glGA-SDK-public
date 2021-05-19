@@ -398,7 +398,7 @@ def main():
          #render the shader-based cube in each frame, before any ImGUI widget
         displayCube()
         
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        #glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
      
 
         ImGui.set_next_window_size(300.0, 150.0)
@@ -414,12 +414,12 @@ def main():
         ImGui.text(gVersionLabel)
         # close current window context
         ImGui.end()
-        
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
         # pass all ImGUI drawing commands to the rendering pipeline
         # and close ImGUI frame context
         ImGui.render() #always draw last ImGUI
         renderer.render(ImGui.get_draw_data())
-
+        
         SDL_GL_SwapWindow(gWindow)
     # CLOSING
     renderer.shutdown()

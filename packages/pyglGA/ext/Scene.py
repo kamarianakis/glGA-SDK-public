@@ -66,10 +66,12 @@ class Scene():
         """
         #init Viewer GUI subsystem with just SDL2 window or also an ImGUI decorators
         if sdl2 == True:
-            self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle)
+            self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle, self.world.eventManager)
+            #self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle)
             self._gContext = self._renderWindow
         
         if imgui == True:
+            #gGUI = ImGUIDecorator(self._renderWindow, self.world.eventManager)
             gGUI = ImGUIDecorator(self._renderWindow)
             self._gContext = gGUI
     

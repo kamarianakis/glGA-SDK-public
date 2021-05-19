@@ -248,8 +248,8 @@ class TestScene(unittest.TestCase):
         
         # 
         # MVP matrix calculation - 
-        # now set directly at shader level!
-        # should be autoamtically picked up at ECSS VertexArray level from Scenegraph System
+        # now set directly here only for Testing
+        # otherwise automatically picked up at ECSS VertexArray level from the Scenegraph System
         # same process as VertexArray is automatically populated from RenderMesh
         #
         model = util.translate(0.0,0.0,0.5)

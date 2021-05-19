@@ -85,21 +85,36 @@ class EventManager(EventPublisher):
                     subscriber.accept(systemActuator, event)
         
         print("EventManager:notify() ended")
-        """
-        if event.name == "OnUpdateTRS":
-            if comp.name == "BasicTransform":
-                ts=_world.getSystem(UpdateTRS)
-                comp.accept(ts, event)
-        """ 
+       
         
     '''
     @GPTODO NEED REFACTORING these methods once API is stable
+    # value should be a List
+    # any new subscriber to same key::Event of the Dict should be appended on the value:: List
+    #
     def subscribe(self, component: Any):
         self._subscribers.append(component)
         
     def unsubscribe(self, component: Any):
         self._subscribers.remove(component)
     '''
+    def subscribe(self, component: Any):
+        pass
+    
+    def unsubscribe(self, component: Any):
+        pass
+    
+    def publish(self, component: Any):
+        pass
+    
+    def unpublish(self, component: Any):
+        pass
+    
+    def actuate(self, system: Any):
+        pass
+    
+    def unactuate(self, system: Any):
+        pass
     
     @classmethod
     def getClassName(cls):
