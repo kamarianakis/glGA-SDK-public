@@ -143,7 +143,7 @@ class TestEvent(unittest.TestCase):
         eManager = EventManager()
         #simple RenderWindow
         gWindow = SDL2Window(windowTitle="RenderWindow Event Testing", eventManager = eManager)
-        gGUI = ImGUIDecorator(gWindow, eventManager = eManager)
+        gGUI = ImGUIDecorator(gWindow)
         #simple Event actuator System
         renderGLEventActuator = RenderGLStateSystem()
         

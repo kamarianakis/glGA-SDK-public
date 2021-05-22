@@ -384,6 +384,8 @@ class ImGUIDecorator(RenderDecorator):
         self.wrapeeWindow.display()
         #render the ImGUI widgets
         self.extra()
+        #draw scenegraph tree widget
+        self.scenegraphVisualiser()
         #print(f'{self.getClassName()}: display()')
         
         
@@ -465,7 +467,15 @@ class ImGUIDecorator(RenderDecorator):
         imgui.end()
         
         #print(f'{self.getClassName()}: extra()')
-        
+    
+    def scenegraphVisualiser(self):
+        """display the ECSS in an ImGUI tree node structure
+        """
+        imgui.begin("ECSS tree")
+        if imgui.tree_node("Scene root", imgui.TREE_NODE_DEFAULT_OPEN):
+            imgui.text("camera node")
+            imgui.tree_pop()
+        imgui.end()
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
         system.apply2ImGUIDecorator(self, event)
