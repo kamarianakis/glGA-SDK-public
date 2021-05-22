@@ -47,12 +47,11 @@ class TestEvent(unittest.TestCase):
                     ortho, trans2                   
                                                                 
         """
-        self.s1 = Scene()
+        
         self.scene = Scene()    
-        self.assertEqual(self.s1, self.scene)
         
         # Scenegraph with Entities, Components
-        self.rootEntity = self.scene.world.createEntity(Entity(name="RooT"))
+        self.rootEntity = self.scene.world.createEntity(Entity(name="Root"))
         self.entityCam1 = self.scene.world.createEntity(Entity(name="entityCam1"))
         self.scene.world.addEntityChild(self.rootEntity, self.entityCam1)
         self.trans1 = self.scene.world.addComponent(self.entityCam1, BasicTransform(name="trans1", trs=util.identity()))

@@ -87,8 +87,13 @@ class ECSSManager():
             self._entities.append(entity)
             self._entities_components[entity] = [None]
 
+            # @@@GPTODO: refactor so that only first entity is set to root
+            # now it is hardcoded with the name root 
             if entity.name.lower() == "root":
                 self._root = entity
+            
+            if self._root is None:
+                raise Exception('root node should have the name Root}')
 
         # if the method was called with an inline constructor e.g. 'createEntity(Entity())',
         return entity

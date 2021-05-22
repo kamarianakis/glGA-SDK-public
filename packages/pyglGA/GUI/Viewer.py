@@ -39,8 +39,9 @@ class RenderWindow(ABC):
     
     def __init__(self):
         self._eventManager = None
+        self._scene = None
     
-    #define properties for eventManager
+    #define properties for EventManager, Scene objects
     @property #name
     def eventManager(self):
         """ Get RenderWindow's eventManager """
@@ -48,6 +49,14 @@ class RenderWindow(ABC):
     @eventManager.setter
     def eventManager(self, value):
         self._eventManager = value
+        
+    @property #name
+    def scene(self):
+        """ Get RenderWindow's Scene reference """
+        return self._scene
+    @scene.setter
+    def scene(self, value):
+        self._scene = value
     
     @abstractmethod
     def init(self):
@@ -471,8 +480,12 @@ class ImGUIDecorator(RenderDecorator):
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
         """
+        sceneRoot = self.wrapeeWindow.scene.world.root.name
+        if sceneRoot is None:
+            sceneRoot = "ECSS Root Entity"
+        
         imgui.begin("ECSS tree")
-        if imgui.tree_node("Scene root", imgui.TREE_NODE_DEFAULT_OPEN):
+        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_DEFAULT_OPEN):
             imgui.text("camera node")
             imgui.tree_pop()
         imgui.end()
