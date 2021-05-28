@@ -482,13 +482,17 @@ class ImGUIDecorator(RenderDecorator):
         Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
         """
         sceneRoot = self.wrapeeWindow.scene.world.root.name
+        sceneRoot2 = self.wrapeeWindow.scene.world.root.getChild(0).name
         if sceneRoot is None:
             sceneRoot = "ECSS Root Entity"
         
         imgui.begin("ECSS tree")
-        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_DEFAULT_OPEN):
+        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
             imgui.text("camera node")
             imgui.tree_pop()
+            if imgui.tree_node(sceneRoot2):
+                imgui.text("node")
+                imgui.tree_pop()
         imgui.end()
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
