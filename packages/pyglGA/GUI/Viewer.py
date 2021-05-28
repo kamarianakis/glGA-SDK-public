@@ -479,6 +479,7 @@ class ImGUIDecorator(RenderDecorator):
     
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
+        Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
         """
         sceneRoot = self.wrapeeWindow.scene.world.root.name
         if sceneRoot is None:
