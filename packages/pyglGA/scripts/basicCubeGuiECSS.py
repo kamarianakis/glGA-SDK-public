@@ -30,9 +30,7 @@ def main(imguiFlag = False):
     # Instantiate a simple complete ECSS with Entities, Components, Camera, Shader, VertexArray and RenderMesh
     #
     """
-    Common setup for all unit tests
-    
-    Scenegraph for unit tests:
+    ECSS for this example:
     
     root
         |---------------------------|           
@@ -141,17 +139,7 @@ def main(imguiFlag = False):
     scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube ECSS Scene")
     
     # ---------------------------------------------------------
-    # run Systems in the scenegraph
-    # root node is accessed via ECSSManagerObject.root property
-    # normally these are run within the rendering loop (except 4th GLInit  System)
-    # --------------------------------------------------------
-    # 1. L2W traversal
-    scene.world.traverse_visit(transUpdate, scene.world.root) 
-    # 2. pre-camera Mr2c traversal
-    scene.world.traverse_visit_pre_camera(camUpdate, orthoCam)
-    # 3. run proper Ml2c traversal
-    scene.world.traverse_visit(camUpdate, scene.world.root)
-    # 4. run pre render GLInit traversal for once!
+    #   Run pre render GLInit traversal for once!
     #   pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
     #   needs an active GL context
     scene.world.traverse_visit(initUpdate, scene.world.root)
@@ -165,10 +153,6 @@ def main(imguiFlag = False):
     print(trans4)
     
     shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
-    
-    # UnitTest mvp mat directly set here with the one extracted/calculated from ECSS
-    #np.testing.assert_array_almost_equal(l2cMat,mvpMat,decimal=5)
-    #np.testing.assert_array_almost_equal(mvpMat,l2cMat)
     
     ############################################
     # Instantiate all Event-related key objects
@@ -207,8 +191,22 @@ def main(imguiFlag = False):
     eManager._publishers[updateBackground.name] = gGUI
     
     while running:
+        # ---------------------------------------------------------
+        # run Systems in the scenegraph
+        # root node is accessed via ECSSManagerObject.root property
+        # normally these are run within the rendering loop (except 4th GLInit  System)
+        # --------------------------------------------------------
+        # 1. L2W traversal
+        scene.world.traverse_visit(transUpdate, scene.world.root) 
+        # 2. pre-camera Mr2c traversal
+        scene.world.traverse_visit_pre_camera(camUpdate, orthoCam)
+        # 3. run proper Ml2c traversal
+        scene.world.traverse_visit(camUpdate, scene.world.root)
+        # 4. call SDLWindow/ImGUI display() and ImGUI event input process
         running = scene.render(running)
+        # 5. call the GL State render System
         scene.world.traverse_visit(renderUpdate, scene.world.root)
+        # 6. ImGUI post-display calls and SDLWindow swap 
         scene.render_post()
         
     scene.shutdown()
