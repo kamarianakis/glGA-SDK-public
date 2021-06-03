@@ -481,6 +481,8 @@ class ImGUIDecorator(RenderDecorator):
         """display the ECSS in an ImGUI tree node structure
         Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
         """
+        pass
+        '''
         sceneRoot = self.wrapeeWindow.scene.world.root.name
         sceneRoot2 = self.wrapeeWindow.scene.world.root.getChild(0).name
         if sceneRoot is None:
@@ -494,6 +496,7 @@ class ImGUIDecorator(RenderDecorator):
                 imgui.text("node")
                 imgui.tree_pop()
         imgui.end()
+        '''
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
         system.apply2ImGUIDecorator(self, event)

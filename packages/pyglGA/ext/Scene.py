@@ -61,7 +61,7 @@ class Scene():
         return self._world
     
     
-    def init(self, sdl2 = True, imgui = False, windowWidth = None, windowHeight = None, windowTitle = None):
+    def init(self, sdl2 = True, imgui = False, windowWidth = None, windowHeight = None, windowTitle = None, customImGUIdecorator = None):
         """call the init() of all systems attached to this Scene based on the Visitor pattern
         """
         #init Viewer GUI subsystem with just SDL2 window or also an ImGUI decorators
@@ -71,9 +71,12 @@ class Scene():
             self.renderWindow.scene = self
             self._gContext = self._renderWindow
         
-        if imgui == True:
+        if imgui == True and customImGUIdecorator == None:
             #gGUI = ImGUIDecorator(self._renderWindow, self.world.eventManager)
             gGUI = ImGUIDecorator(self._renderWindow)
+            self._gContext = gGUI
+        elif imgui == True and customImGUIdecorator is not None:
+            gGUI = customImGUIdecorator(self._renderWindow)
             self._gContext = gGUI
     
         self._gContext.init()

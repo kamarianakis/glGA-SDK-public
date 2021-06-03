@@ -11,24 +11,54 @@ pyglGA ECSS package
 
 from __future__         import annotations
 import numpy as np
+import imgui
 
 import pyglGA.ECSS.utilities as util
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem
 from pyglGA.ECSS.Entity import Entity
 from pyglGA.ECSS.Component import BasicTransform, Camera, RenderMesh
 from pyglGA.ECSS.Event import Event, EventManager
-from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderGLStateSystem
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderGLStateSystem, RenderWindow
 from pyglGA.ECSS.ECSSManager import ECSSManager
 from pyglGA.ext.Shader import InitGLShaderSystem, Shader, ShaderGLDecorator, RenderGLShaderSystem
 from pyglGA.ext.VertexArray import VertexArray
 from pyglGA.ext.Scene import Scene
 
 
+class ImGUIecssDecorator(ImGUIDecorator):
+    """custom ImGUI decorator for this example
+
+    :param ImGUIDecorator: [description]
+    :type ImGUIDecorator: [type]
+    """
+    def __init__(self, wrapee: RenderWindow, imguiContext = None):
+        super().__init__(wrapee, imguiContext)
+        
+    def scenegraphVisualiser(self):
+        """display the ECSS in an ImGUI tree node structure
+        Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
+        """
+        sceneRoot = self.wrapeeWindow.scene.world.root.name
+        sceneRoot2 = self.wrapeeWindow.scene.world.root.getChild(0).name
+        if sceneRoot is None:
+            sceneRoot = "ECSS Root Entity"
+        
+        imgui.begin("ECSS tree")
+        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
+            imgui.text("camera node")
+            imgui.tree_pop()
+            if imgui.tree_node(sceneRoot2):
+                imgui.text("node")
+                imgui.tree_pop()
+        imgui.end()
 
 def main(imguiFlag = False):
+    
+    ##########################################################
+    # Instantiate a simple complete ECSS with Entities, 
+    # Components, Camera, Shader, VertexArray and RenderMesh
     #
-    # Instantiate a simple complete ECSS with Entities, Components, Camera, Shader, VertexArray and RenderMesh
-    #
+    #########################################################
     """
     ECSS for this example:
     
@@ -134,14 +164,16 @@ def main(imguiFlag = False):
     scene.world.print()
     scene.world.eventManager.print()
     
-    running = True
+   
     # MAIN RENDERING LOOP
-    scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube ECSS Scene")
+    running = True
+    scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube ECSS Scene", customImGUIdecorator = ImGUIecssDecorator)
     
     # ---------------------------------------------------------
     #   Run pre render GLInit traversal for once!
     #   pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
     #   needs an active GL context
+    # ---------------------------------------------------------
     scene.world.traverse_visit(initUpdate, scene.world.root)
     
     #
