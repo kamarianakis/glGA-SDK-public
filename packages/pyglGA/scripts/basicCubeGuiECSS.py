@@ -44,14 +44,38 @@ class ImGUIecssDecorator(ImGUIDecorator):
             sceneRoot = "ECSS Root Entity"
         
         imgui.begin("ECSS tree")
+        '''
         if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
             imgui.text("camera node")
             imgui.tree_pop()
             if imgui.tree_node(sceneRoot2):
                 imgui.text("node")
                 imgui.tree_pop()
+        '''
+        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
+            self.drawNode(self.wrapeeWindow.scene.world.root)
+            imgui.tree_pop()
         imgui.end()
-
+        
+    def drawNode(self, component):
+        #create a local iterator of Entity's children
+        if component._children is not None:
+            debugIterator = iter(component._children)
+            #call print() on all children (Concrete Components or Entities) while there are more children to traverse
+            done_traversing = False
+            while not done_traversing:
+                try:
+                    comp = next(debugIterator)
+                    imgui.indent(10)
+                except StopIteration:
+                    done_traversing = True
+                    imgui.unindent(10)
+                else:
+                    if imgui.tree_node(comp.name, imgui.TREE_NODE_OPEN_ON_ARROW):
+                        imgui.text(comp.__str__())
+                        imgui.tree_pop()
+                    self.drawNode(comp) # recursive call of this method to traverse hierarchy
+            
 def main(imguiFlag = False):
     
     ##########################################################
