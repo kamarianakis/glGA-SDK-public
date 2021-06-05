@@ -66,13 +66,11 @@ class Scene():
         """
         #init Viewer GUI subsystem with just SDL2 window or also an ImGUI decorators
         if sdl2 == True:
-            self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle, self.world.eventManager)
-            #pass a reference to Scene
-            self.renderWindow.scene = self
+            #create a basic SDL2 RenderWindow with a reference to the Scene and thus ECSSManager and EventManager
+            self._renderWindow = SDL2Window(windowWidth, windowHeight, windowTitle, self)
             self._gContext = self._renderWindow
         
         if imgui == True and customImGUIdecorator == None:
-            #gGUI = ImGUIDecorator(self._renderWindow, self.world.eventManager)
             gGUI = ImGUIDecorator(self._renderWindow)
             self._gContext = gGUI
         elif imgui == True and customImGUIdecorator is not None:

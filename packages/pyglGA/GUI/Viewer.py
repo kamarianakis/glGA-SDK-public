@@ -104,7 +104,7 @@ class SDL2Window(RenderWindow):
     :type RenderWindow: [type]
     """
     
-    def __init__(self, windowWidth = None, windowHeight = None, windowTitle = None, eventManager = None):
+    def __init__(self, windowWidth = None, windowHeight = None, windowTitle = None, scene = None, eventManager = None):
         """Constructor SDL2Window for basic SDL2 parameters
 
         :param windowWidth: [description], defaults to None
@@ -135,8 +135,15 @@ class SDL2Window(RenderWindow):
         else:
             self._windowTitle = windowTitle
         
-        if eventManager is not None:
+        if eventManager is not None and scene is None:
+            # in case we are testing without a Scene and just an EventManager
             self.eventManager = eventManager
+        
+        if scene is not None:
+            # set the reference of parent RenderWindow to Scene
+            # get the reference to EventManager from Scene.ECSSManager
+            self._scene = scene
+            self.eventManager = scene.world.eventManager
             
         #OpenGL state variables
         self._wireframeMode = False

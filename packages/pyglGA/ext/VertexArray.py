@@ -88,7 +88,7 @@ class VertexArray(Component):
     def primitive(self):
         return self._primitive
     
-    @usage.setter
+    @primitive.setter
     def primitive(self, value):
         self._primitive = value
     
