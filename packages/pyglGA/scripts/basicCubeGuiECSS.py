@@ -33,34 +33,30 @@ class ImGUIecssDecorator(ImGUIDecorator):
     """
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee, imguiContext)
-        self.translation = (0.0, 0.0, 0.0, 0.0)
+        self.translation = [0.0, 0.0, 0.0, 0.0]
         
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
         Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
         """
         sceneRoot = self.wrapeeWindow.scene.world.root.name
-        sceneRoot2 = self.wrapeeWindow.scene.world.root.getChild(0).name
         if sceneRoot is None:
             sceneRoot = "ECSS Root Entity"
         
         imgui.begin("ECSS graph")
         imgui.columns(2,"Properties")
-        
         # below is a recursive call to build-up the whole scenegraph as ImGUI tree
         if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
-            self.drawNode(self.wrapeeWindow.scene.world.root)
+            self.drawNode(self.wrapeeWindow.scene.world.root, self.translation)
             imgui.tree_pop()
-        
         imgui.next_column()
         imgui.text("Properties")
         imgui.separator()
         #TRS sample
         changed, self.translation = imgui.drag_float4("Translation", *self.translation)
-
         imgui.end()
         
-    def drawNode(self, component):
+    def drawNode(self, component, translation = None):
         #create a local iterator of Entity's children
         if component._children is not None:
             debugIterator = iter(component._children)
@@ -76,9 +72,20 @@ class ImGUIecssDecorator(ImGUIDecorator):
                 else:
                     if imgui.tree_node(comp.name, imgui.TREE_NODE_OPEN_ON_ARROW):
                         #imgui.text(comp.__str__())
-                        _, selected = imgui.selectable(comp.__str__(), False)
+                        _, selected = imgui.selectable(comp.__str__(), True)
                         if selected:
                             print(f'Selected: {selected} of node: {comp}'.center(100, '-'))
+                            #check if the component is a BasicTransform
+                            if (isinstance(comp, BasicTransform) and translation is not None):
+                                #retrive the translation vector from the TRS matrix
+                                # @GPTODO this needs to be provided as utility method
+                                trsMat = comp.trs
+                                [x,y,z] = trsMat[:3,3]
+                                translation[0] = x
+                                translation[1] = y
+                                translation[2] = z
+                                translation[3] = 1
+                            selected = False
                         imgui.tree_pop()
                     self.drawNode(comp) # recursive call of this method to traverse hierarchy
             
