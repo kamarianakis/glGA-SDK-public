@@ -360,6 +360,8 @@ class ImGUIDecorator(RenderDecorator):
         else:
             self._imguiContext = imguiContext
         self._imguiRenderer = None
+        #setup a simple Event: change to wireframe mode via the GUI
+        self._updateWireframe = None
         # extra UI elements
         self._wireframeMode = False
         self._changed = False 
@@ -454,7 +456,7 @@ class ImGUIDecorator(RenderDecorator):
         imgui.separator()
         imgui.new_line()
         #
-        # wireframe state
+        # wireframe Event updates the GL state
         self._changed, self._checkbox = imgui.checkbox("Wireframe", self._wireframeMode)
         if self._changed:
             if self._checkbox is True:
@@ -489,21 +491,7 @@ class ImGUIDecorator(RenderDecorator):
         Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
         """
         pass
-        '''
-        sceneRoot = self.wrapeeWindow.scene.world.root.name
-        sceneRoot2 = self.wrapeeWindow.scene.world.root.getChild(0).name
-        if sceneRoot is None:
-            sceneRoot = "ECSS Root Entity"
         
-        imgui.begin("ECSS tree")
-        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
-            imgui.text("camera node")
-            imgui.tree_pop()
-            if imgui.tree_node(sceneRoot2):
-                imgui.text("node")
-                imgui.tree_pop()
-        imgui.end()
-        '''
         
     def accept(self, system: pyglGA.ECSS.System, event = None):
         system.apply2ImGUIDecorator(self, event)
