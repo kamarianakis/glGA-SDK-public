@@ -53,7 +53,8 @@ class ImGUIecssDecorator(ImGUIDecorator):
         imgui.text("Properties")
         imgui.separator()
         #TRS sample
-        changed, self.translation = imgui.drag_float4("Translation", *self.translation)
+        changed, trans = imgui.drag_float4("Translation", *self.translation)
+        self.translation = list(trans)
         imgui.end()
         
     def drawNode(self, component, translation = None):
@@ -75,19 +76,21 @@ class ImGUIecssDecorator(ImGUIDecorator):
                         _, selected = imgui.selectable(comp.__str__(), True)
                         if selected:
                             print(f'Selected: {selected} of node: {comp}'.center(100, '-'))
+                            selected = False
                             #check if the component is a BasicTransform
-                            if (isinstance(comp, BasicTransform) and translation is not None):
+                            if (isinstance(comp, BasicTransform)):
                                 #retrive the translation vector from the TRS matrix
                                 # @GPTODO this needs to be provided as utility method
                                 trsMat = comp.trs
                                 [x,y,z] = trsMat[:3,3]
-                                translation[0] = x
-                                translation[1] = y
-                                translation[2] = z
-                                translation[3] = 1
-                            selected = False
+                                if translation is not None:
+                                    translation[0] = x
+                                    translation[1] = y
+                                    translation[2] = z
+                                    translation[3] = 1
+                        
                         imgui.tree_pop()
-                    self.drawNode(comp) # recursive call of this method to traverse hierarchy
+                    self.drawNode(comp, translation) # recursive call of this method to traverse hierarchy
             
 def main(imguiFlag = False):
     
