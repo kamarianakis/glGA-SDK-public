@@ -58,6 +58,9 @@ class ImGUIecssDecorator(ImGUIDecorator):
         imgui.end()
         
     def drawNode(self, component, translation = None):
+        #save initial translation value
+        lastTranslation = translation
+        
         #create a local iterator of Entity's children
         if component._children is not None:
             debugIterator = iter(component._children)
@@ -79,6 +82,8 @@ class ImGUIecssDecorator(ImGUIDecorator):
                             selected = False
                             #check if the component is a BasicTransform
                             if (isinstance(comp, BasicTransform)):
+                                #set now the comp:
+                                comp.trs = util.translate(lastTranslation[0],lastTranslation[1],lastTranslation[2])
                                 #retrive the translation vector from the TRS matrix
                                 # @GPTODO this needs to be provided as utility method
                                 trsMat = comp.trs
@@ -88,6 +93,7 @@ class ImGUIecssDecorator(ImGUIDecorator):
                                     translation[1] = y
                                     translation[2] = z
                                     translation[3] = 1
+                                    
                         
                         imgui.tree_pop()
                     self.drawNode(comp, translation) # recursive call of this method to traverse hierarchy
