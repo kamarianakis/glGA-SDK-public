@@ -52,25 +52,44 @@ class ECSSManager():
         self._cameras: List[pyglGA.ECSS.Component.Component] = []
         # dict with keys entities and values list of components per entity
         self._entities_components = {}
+        # the ECSSManager creates one main EventManager for the whole world
         self._eventManager = pyglGA.ECSS.Event.EventManager()
         self._root = None
 
-    # define properties for root
-    @property  # root
+    # define properties
+    @property  # root Entity getter
     def root(self) -> Entity:
         """ Get ECSS's root node """
         return self._root
-
-    @root.setter
+    
+    @root.setter #root settter
     def root(self, value):
         self._root = value
     
-    
-    # define properties for EventManager
-    @property 
+    @property # EventManager getter
     def eventManager(self) -> pyglGA.ECSS.Event.EventManager:
         """ Get ECSS's EventManager """
         return self._eventManager
+    
+    @property # Systems getter
+    def systems(self) -> List:
+        return self._systems
+    
+    @property # Components getter
+    def components(self) -> List:
+        return self._components
+    
+    @property # Entities getter
+    def entities(self) -> List:
+        return self._entities
+    
+    @property # Camera Components getter
+    def cameras(self) -> List:
+        return self._cameras
+    
+    @property # Components per Entity getter
+    def entities_components(self) -> Dict:
+        return self._entities_components
     
 
     def createEntity(self, entity: Entity):
