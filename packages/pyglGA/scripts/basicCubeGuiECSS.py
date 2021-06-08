@@ -33,6 +33,7 @@ class ImGUIecssDecorator(ImGUIDecorator):
     """
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee, imguiContext)
+        self.translation = (0.0, 0.0, 0.0, 0.0)
         
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
@@ -43,18 +44,20 @@ class ImGUIecssDecorator(ImGUIDecorator):
         if sceneRoot is None:
             sceneRoot = "ECSS Root Entity"
         
-        imgui.begin("ECSS tree")
-        '''
-        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
-            imgui.text("camera node")
-            imgui.tree_pop()
-            if imgui.tree_node(sceneRoot2):
-                imgui.text("node")
-                imgui.tree_pop()
-        '''
+        imgui.begin("ECSS graph")
+        imgui.columns(2,"Properties")
+        
+        # below is a recursive call to build-up the whole scenegraph as ImGUI tree
         if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
             self.drawNode(self.wrapeeWindow.scene.world.root)
             imgui.tree_pop()
+        
+        imgui.next_column()
+        imgui.text("Properties")
+        imgui.separator()
+        #TRS sample
+        changed, self.translation = imgui.drag_float4("Translation", *self.translation)
+
         imgui.end()
         
     def drawNode(self, component):
@@ -72,7 +75,10 @@ class ImGUIecssDecorator(ImGUIDecorator):
                     imgui.unindent(10)
                 else:
                     if imgui.tree_node(comp.name, imgui.TREE_NODE_OPEN_ON_ARROW):
-                        imgui.text(comp.__str__())
+                        #imgui.text(comp.__str__())
+                        _, selected = imgui.selectable(comp.__str__(), False)
+                        if selected:
+                            print(f'Selected: {selected} of node: {comp}'.center(100, '-'))
                         imgui.tree_pop()
                     self.drawNode(comp) # recursive call of this method to traverse hierarchy
             
