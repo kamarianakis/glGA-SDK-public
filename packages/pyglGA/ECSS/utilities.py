@@ -94,6 +94,7 @@ def ortho(left, right, bottom, top, near, far):
     Original projection matrices defined in http://www.glprogramming.com/red/appendixf.html
     and in http://www.glprogramming.com/red/chapter03.html. Tested also again glm similar 
     functions.
+    For more on projections check: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/ 
     
     :param left: [coordinates of projection unit cube]
     :type left: [float]

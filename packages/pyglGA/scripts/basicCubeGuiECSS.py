@@ -34,6 +34,7 @@ class ImGUIecssDecorator(ImGUIDecorator):
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee, imguiContext)
         self.translation = [0.0, 0.0, 0.0, 0.0]
+        self.camOrtho = [-100.0, 100.0, -100.0, 100.0, 1.0, 100.0]
         
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
@@ -177,16 +178,18 @@ def main(imguiFlag = False):
     # otherwise automatically picked up at ECSS VertexArray level from the Scenegraph System
     # same process as VertexArray is automatically populated from RenderMesh
     #
-    model = util.translate(0.0,0.0,0.5)
+    #model = util.translate(0.0,0.0,0.5)
+    model = util.translate(0.0,0.0,0.0)
     eye = util.vec(0.0, 0.0, -10.0)
     target = util.vec(0,0,0)
     up = util.vec(0.0, 1.0, 0.0)
     view = util.lookat(eye, target, up)
     #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-    projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
-    #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-    #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
+    #projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
+    #projMat = util.ortho(-100.0, 100.0, -100.0, 100.0, 1.0, 100.0)
+    projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
     mvpMat = model @ view @ projMat
+    #mvpMat =  projMat @ view @ model
     
     #
     # setup ECSS nodes pre-systems
@@ -198,8 +201,7 @@ def main(imguiFlag = False):
     
     # decorated components and systems with sample, default pass-through shader with uniform MVP
     shaderDec4 = scene.world.addComponent(node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-    # direct uniform variable shader setup
-    #shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+    
     
     # attach a simple cube in a RenderMesh so that VertexArray can pick it up
     mesh4.vertex_attributes.append(vertexCube)
@@ -229,8 +231,6 @@ def main(imguiFlag = False):
     print(f'\nl2cMat: \n{l2cMat}')
     print(f'\nmvpMat: \n{mvpMat}')
     print(trans4)
-    
-    shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
     
     ############################################
     # Instantiate all Event-related key objects
@@ -280,6 +280,15 @@ def main(imguiFlag = False):
         scene.world.traverse_visit_pre_camera(camUpdate, orthoCam)
         # 3. run proper Ml2c traversal
         scene.world.traverse_visit(camUpdate, scene.world.root)
+        
+        # 3.1 shader uniform variable allocation per frame
+        #shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
+        # direct uniform variable shader setup
+        # should be called before ImGUI and before drawing Geometry
+        shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        #shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
+        #shaderDec4.setUniformVariable(key='modelViewProj', value=trans4.l2cam, mat4=True)
+        
         # 4. call SDLWindow/ImGUI display() and ImGUI event input process
         running = scene.render(running)
         # 5. call the GL State render System

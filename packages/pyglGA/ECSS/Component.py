@@ -336,10 +336,13 @@ class Camera(Component):
     :type Component: [type]
     """
    
-    def __init__(self, projMatrix, name=None, type=None, id=None):
+    def __init__(self, projMatrix=None, name=None, type=None, id=None, left=-100.0, right=100.0, bottom=-100.0, top=100.0, near=1.0, far=100.0):
         super().__init__(name, type, id)
         
-        self._projMat = projMatrix
+        if projMatrix is not None:
+            self._projMat = projMatrix
+        else:
+            self._projMat = util.ortho(left, right, bottom, top, near, far)
         self._root2cam = util.identity()
         self._parent = self
          
