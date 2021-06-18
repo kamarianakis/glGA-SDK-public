@@ -34,7 +34,8 @@ class ImGUIecssDecorator(ImGUIDecorator):
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee, imguiContext)
         self.translation = [0.0, 0.0, 0.0, 0.0]
-        self.camOrtho = [-100.0, 100.0, -100.0, 100.0, 1.0, 100.0]
+        self.camOrthoLRBT = [-100.0, 100.0, -100.0, 100.0]
+        self.camOrthoNF = [1.0, 100.0]
         
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
@@ -48,7 +49,7 @@ class ImGUIecssDecorator(ImGUIDecorator):
         imgui.columns(2,"Properties")
         # below is a recursive call to build-up the whole scenegraph as ImGUI tree
         if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
-            self.drawNode(self.wrapeeWindow.scene.world.root, self.translation)
+            self.drawNode(self.wrapeeWindow.scene.world.root, self.translation, self.camOrthoLRBT, self.camOrthoNF)
             imgui.tree_pop()
         imgui.next_column()
         imgui.text("Properties")
@@ -56,11 +57,18 @@ class ImGUIecssDecorator(ImGUIDecorator):
         #TRS sample
         changed, trans = imgui.drag_float4("Translation", *self.translation)
         self.translation = list(trans)
+        changedLRBT, orthoLRBT = imgui.drag_float4("Camera LRBT", *self.camOrthoLRBT)
+        self.camOrthoLRBT = list(orthoLRBT)
+        changedNF, orthoNF = imgui.drag_float2("Camera Near, Far", *self.camOrthoNF)
+        self.camOrthoNF = list(orthoNF)
+        
         imgui.end()
         
-    def drawNode(self, component, translation = None):
+    def drawNode(self, component, translation = None, camLRBT = None, camNF = None):
         #save initial translation value
         lastTranslation = translation
+        lastLRBT = camLRBT
+        lastNF = camNF
         
         #create a local iterator of Entity's children
         if component._children is not None:
@@ -94,10 +102,14 @@ class ImGUIecssDecorator(ImGUIDecorator):
                                     translation[1] = y
                                     translation[2] = z
                                     translation[3] = 1
+                            if (isinstance(comp, Camera)):
+                                print(comp, " ready to assign new camera values!")
+                                #set now camera params
+                                comp.projMat = util.ortho(lastLRBT[0], lastLRBT[1],lastLRBT[2],lastLRBT[3],lastNF[0], lastNF[1])
                                     
                         
                         imgui.tree_pop()
-                    self.drawNode(comp, translation) # recursive call of this method to traverse hierarchy
+                    self.drawNode(comp, translation, camLRBT, camNF) # recursive call of this method to traverse hierarchy
             
 def main(imguiFlag = False):
     
