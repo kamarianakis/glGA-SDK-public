@@ -36,6 +36,8 @@ class ImGUIecssDecorator(ImGUIDecorator):
         self.translation = [0.0, 0.0, 0.0, 0.0]
         self.camOrthoLRBT = [-100.0, 100.0, -100.0, 100.0]
         self.camOrthoNF = [1.0, 100.0]
+        self.mvpMat = None
+        self.shaderDec = None
         
     def scenegraphVisualiser(self):
         """display the ECSS in an ImGUI tree node structure
@@ -105,8 +107,12 @@ class ImGUIecssDecorator(ImGUIDecorator):
                             if (isinstance(comp, Camera)):
                                 print(comp, " ready to assign new camera values!")
                                 #set now camera params
+                                # @GPTODO
+                                # very dirty code, this is for a proof of concept only, should be replaced!
                                 comp.projMat = util.ortho(lastLRBT[0], lastLRBT[1],lastLRBT[2],lastLRBT[3],lastNF[0], lastNF[1])
-                                    
+                                self.mvpMat = comp.projMat 
+                                if self.shaderDec is not None:
+                                    self.shaderDec.setUniformVariable(key='modelViewProj', value=self.mvpMat, mat4=True)
                         
                         imgui.tree_pop()
                     self.drawNode(comp, translation, camLRBT, camNF) # recursive call of this method to traverse hierarchy
@@ -228,6 +234,9 @@ def main(imguiFlag = False):
     # MAIN RENDERING LOOP
     running = True
     scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube ECSS Scene", customImGUIdecorator = ImGUIecssDecorator)
+    imGUIecss = scene.gContext
+    imGUIecss.mvpMat = mvpMat
+    imGUIecss.shaderDec = shaderDec4
     
     # ---------------------------------------------------------
     #   Run pre render GLInit traversal for once!
