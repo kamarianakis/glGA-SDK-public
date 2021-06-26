@@ -33,6 +33,8 @@ class ImGUIecssDecorator(ImGUIDecorator):
     """
     def __init__(self, wrapee: RenderWindow, imguiContext = None):
         super().__init__(wrapee, imguiContext)
+        # @GPTODO:
+        # we should be able to retrieve all these just from the Scene: ECSSManager
         self.translation = [0.0, 0.0, 0.0, 0.0]
         self.camOrthoLRBT = [-100.0, 100.0, -100.0, 100.0]
         self.camOrthoNF = [1.0, 100.0]
