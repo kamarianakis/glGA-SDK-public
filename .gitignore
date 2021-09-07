@@ -74,6 +74,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/
 
 # PyBuilder
 target/
@@ -97,6 +98,7 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
+
 
 # Celery stuff
 celerybeat-schedule
@@ -133,3 +135,8 @@ dmypy.json
 .pyre/
 .vscode/launch.json
 .vscode/
+packages/pyglGA/.VSCodeCounter/2021-04-20_22-26-58/results.txt
+.gitignore
+packages/pyglGA/.VSCodeCounter/2021-04-20_22-26-58/details.md
+packages/pyglGA/.VSCodeCounter/2021-04-20_22-26-58/results.md
+packages/pyglGA/.VSCodeCounter/2021-04-20_22-26-58/results.csv
