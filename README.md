@@ -1,12 +1,12 @@
 # **glGA SDK**
 
-## *version 2020.1*
+## *version 2022.1*
 
 ## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications with emphasis on virtual character animation, rendering, deformation
 
 ---
 
-### *Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, all Rights Reserved*
+### *Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 all Rights Reserved*
 
 ### *Prof. George Papagiannakis, papagian@csd.uoc.gr*
 
@@ -15,9 +15,9 @@
 ---
 
 > **New decade, new languages, new tools**:
-> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development. This a `Rosetta stone` approach based on *literate programming*, i.e. writing documentation that contains the same code in different systems: e.g. a jupyter notebook showing basic GPU shader-based programming in Python, C++ and C#.
+> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development. This a `Rosetta stone` approach based on *literate programming*, i.e. writing documentation that contains the same code in different systems: e.g. a jupyter notebook showing basic GPU shader-based programming in Python, C++ and C#. This is a complete re-write in python of the `glGA` framework <http://george.papagiannakis.org/?page_id=513> using new Entity - Components - Systems in a Scenegraph principles.
 
-### **A. glGA SDK Requirements**
+### ** A. Requirements for an advanced Computer Graphics curriculum **
 
 **A scientific development/experimentation/visualization and algorithmic design/teaching computation platform** from *CPU to GPU CG and XR* and from *euclidean, quaternion algebra to geometric algebra GA* and *deep learning (DL) for computer graphics (CG)*:
 
@@ -57,25 +57,26 @@
       6. GA Tearing
       7. GA drilling
 
-### **B. glGA SDK main features**
+### **B. glGA SDK main features roadmap**
 
 1. `Full-stack CG development`: same code-base across languages and platforms: from python to C++ and from C# and Unity to C++ and Unreal with same basic CG examples from CPU rendering to GPU shader languages.
-2. `Basic glGA examples for introductory CG` programming in:
+2. `Entity - Components - Systems in a Scenegraph (ECSS)` using modern software engineering principles and s/w design patterns.
+3. `Basic glGA examples for introductory CG` programming in:
    1. C++, OpenGL in glGA 5.0
    2. Python, OpenGL in glGA SDK 2020
    3. C#, OpenGL/Dx in Unity
    4. C++, OpenGL in Unreal
-3. `Path tracing` with smallPT/ray tracing in a weekend
+4. `Path tracing` with smallPT/ray tracing in a weekend
    1. C++ smallPT
    2. Python smallPT
    3. C# smallPT
    4. python RayTracing from P. Shirley
-4. `Support for source control & elegant code` documentation
+5. `Support for source control & elegant code` documentation
    1. Github flow
    2. Github submodules
    3. Python intro to scientific computing
    4. Readthedocs Sphinx project
-5. `Support shader-based CG examples` in glGA
+6. `Support shader-based CG examples` in glGA
    1. BasicWindow
    2. BasicCubeGUI
    3. BasicPhong
@@ -95,14 +96,14 @@
          - Compute
          - Tesselation
            - <https://stackoverflow.com/questions/24083656/tessellation-shader-opengl>
-6. `Support geometric algebra for CG character simulation` in glGA
+7. `Support geometric algebra for CG character simulation` in glGA
     - Gaigen GA on shaders
     - glGAMesh
     - glGAMath
-7. `Support shader-based Unity CG examples`
+8. `Support shader-based Unity CG examples`
     - Same glGA basic shader examples in C# and Cg (similar to glGA but for Unity)
     - Monte Carlo Path Tracing using compute shaders in Unity (BSc thesis)
-8. Support for `python 2 GPU` pathways
+9. Support for `python - GPU` pathways
    1. Python2cpp via pybind (module) - and then via C# wrapper to Unity -
    2. Embed the python interpreter
       1. <https://pybind11.readthedocs.io/en/stable/advanced/embedding.html>
@@ -126,40 +127,40 @@
    7. Using the unity/unreal python embedded console (2.7) (jupyter instructions)
    8. Using Unity’s ML agents external communicator module  (jupyter instructions)
    9. Rebuild unreal engine with Python 3.7 support (instead of 2.7)
-9. `Third party lib support python for data science, CG, GPU and GA` development:
-   1. Jupyter (anaconda, visual studio code)
-   2. numba (conda)
-   3. Clifford (conda)
-   4. galgebra (pip)
-   5. Numpy (conda)
-   6. Matplotlib (conda)
-   7. Scipy (conda)
-   8. Scikit-learn (conda)
-   9. Tensorflow (conda)
-   10. Keras (conda)
-   11. Pybind11 (github)
-   12. Cython (pip)
-   13. Scientific-python-lectures (submodule, github)
-   14. Python CG libraries:
-       1. pyOpenGL/pyOpenGL-accelerate (pip)
-           1. <http://pyopengl.sourceforge.net/context/tutorials/shader_1.html>
-           2. <https://github.com/rougier/python-opengl>
-           3. <http://morpheo.inrialpes.fr/~franco/3dgraphics/practical1.html>
-       2. pySDL2 (pip)
-       3. pyImGUI (pip)
-       4. pyGLM (pip)
-       5. pyAssimp (pip) (first assimp via macports)
-       6. Libigl (conda)
-       7. Pyigl (pip)
-       8. vulkan (pip)
-       9. Pyopencl (github)
+10. `Third party lib support python for data science, CG, GPU and GA` development:
+       1.  Jupyter (anaconda, visual studio code)
+       2.  numba (pip)
+       3.  Clifford (pip)
+       4.  galgebra (pip)
+       5.  Numpy (conda)
+       6.  Matplotlib (conda)
+       7.  Scipy (conda)
+       8.  Scikit-learn (pip)
+       9.  Tensorflow (conda)
+       10. Keras (conda)
+       11. Pybind11 (pip)
+       12. Cython (pip)
+       13. Scientific-python-lectures (submodule, github)
+       14. Python CG libraries:
+           1.  pyOpenGL/pyOpenGL-accelerate (pip)
+               1. <http://pyopengl.sourceforge.net/context/tutorials/shader_1.html>
+               2. <https://github.com/rougier/python-opengl>
+               3. <http://morpheo.inrialpes.fr/~franco/3dgraphics/practical1.html>
+       15. pySDL2 (pip)
+       16. pyImGUI (pip)
+       17. pyGLM (pip)
+       18. pyAssimp (pip) (first assimp via macports)
+       19. Libigl (conda)
+       20. Pyigl (pip)
+       21. vulkan (pip)
+       22. Pyopencl (pip)
           1. Example in Lecture_6b_hpc from python scientific computing notebook
-       10. pyopenvr (github and pip)
+       23. pyopenvr (github and pip)
            1. Has been updated to latest steamvr 1.11.11
-       11. Imageio (conda)
-       12. Pybullet(pip)
-       13. Tqdm progress bar (pip)
-   15. Third party C++/CUDA physics libraries:
+       24. Imageio (conda)
+       25. Pybullet(pip)
+       26. Tqdm progress bar (pip)
+   10. Third party C++/CUDA physics libraries:
        1. PositionBAsedDyanmics
            1. <https://github.com/InteractiveComputerGraphics/PositionBasedDynamics.git>
            2. <https://github.com/Scrawk/Position-Based-Dynamics.git>
@@ -168,7 +169,7 @@
        3. SphereTree
           1. <https://github.com/mlund/spheretree.git>
        4. Bullet (pybullet) conda
-   16. Third party open source CG frameworks for multiOS support
+   11. Third party open source CG frameworks for multiOS support
        1. Magnum (magnum.graphics)
            1. <https://doc.magnum.graphics/magnum/getting-started.html>
 
@@ -200,6 +201,7 @@
 ### **D. Contributors**
 
 - Prof. George Papagiannakis
+- Kamarianakis Manos
 - Papanikolaou Petros
 - Greassidou Elisavet
 - Georgiou Stylianos
@@ -208,11 +210,11 @@
 - Lydatakis Nikolaos
 - Papaefthymiou Margarita
 - Kanakis Marios
-- Bachlitzanakis Vasileios
+- Kentros Michalis
 - Geronikolakis Stratos
 - Evangellou Yannis
 - Kartsonaki Ioanna
-
+  
 ---
 
 ## **APPENDICES**
@@ -237,67 +239,7 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
 
 ---
 
-## B. glGA Folder Structure Outline
-
-- glGA-SDK:
-  - Readme
-  - License
-  - .gitignore
-  - vscode/
-    - #*contains vsCode workspace, macPorts list of third party libraries and python virtual environment list of conda and pip packages and modules*
-  - doc/
-    - #*contains literate programming notebooks with documentation that include code in a Rosetta Stone approach where possible*
-    - CG/
-      - RealtimeRendering/
-      - RealtimeAnimation/
-      - RealtimeDeformation/
-      - CGnotes
-    - GI/
-      - rayTracing
-      - smallPT
-    - Computing/
-      - jupyterJunonotebooks
-    - GA/
-      - GATE/
-    - py2GPU/
-      - Py2cpp/
-      - Py2numba/
-      - Py2csharp/
-    - DLGA/
-      - deepLearning
-        - jupyterDLnotebook
-      - embodiedAI
-    - Physics/
-  - SDK/
-    - python/
-      - glGA/
-        - Helper
-        - Mesh
-        - RigMesh
-        - Math
-        - KDTree
-        - PRT
-      - dlGA/
-        - #*deep learning for graphics algorithms and applications*
-      - Apps/
-        - BasicExamples/
-        - AdvancedExamples/
-        - AssignmentExamples/
-        - OrangeBookExamples/
-    - cpp/
-      - lib/
-      - bin/
-      - thirdPartyLibs
-    - frameworks
-      - cpp/
-        - Submodule: glGA/
-        - Submodule: GAE/
-      - python/
-        - Submodule: MR-GRAIL/
-      - unity/
-        - Submodule: UnityXR-edu/
-      - unreal/
-        - Submodule: Unreal basic shader projects (TBD in future)
+## B. external libraries and packages that are relevant for further R&D
   - extern/
     - python/
       - computing
@@ -341,6 +283,3 @@ e.g. OpenGL is primarily a C API which for most CG applications today is actuall
 
 ## *C. Release notes*
 
-- **17/05/20** initial github repository: <https://github.com/papagiannakis/glGA-SDK.git>
-- **05/06/20** version 0.1 with all submodules setup
-- **24/07/20** updated submodules
