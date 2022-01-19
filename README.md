@@ -1,6 +1,6 @@
 # **glGA SDK**
 
-## *version 2022.1*
+## *version 2022.0.0*
 
 ## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications with emphasis on virtual character animation, rendering, deformation
 
