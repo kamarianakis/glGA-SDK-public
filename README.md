@@ -1,12 +1,13 @@
 # **glGA SDK**
 
-## *version 2022.1*
+## *version 2022.0.0*
 
 ## a **g**eometry and a**l**gebra SDK for computer **G**raphics **A**lgorithms and applications with emphasis on virtual character animation, rendering, deformation
 
 ---
 
-### *Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 all Rights Reserved*
+### *Copyright 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022*
+*all Rights Reserved*
 
 ### *Prof. George Papagiannakis, papagian@csd.uoc.gr*
 
@@ -15,7 +16,7 @@
 ---
 
 > **New decade, new languages, new tools**:
-> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development. This a `Rosetta stone` approach based on *literate programming*, i.e. writing documentation that contains the same code in different systems: e.g. a jupyter notebook showing basic GPU shader-based programming in Python, C++ and C#. This is a complete re-write in python of the `glGA` framework <http://george.papagiannakis.org/?page_id=513> using new Entity - Components - Systems in a Scenegraph principles.
+> cross platform compilation (cmake), cross platform/programming language development with (VSCode) employing Python, C++ and C# for a computer graphics (CG) full-stack deployment ( GPU to CPU character rendering and animation) to realise cross-operating system, cross-game engine, cross-algebra CG character algorithm development. This a `Rosetta stone` approach based on *literate programming*, i.e. writing documentation that contains the same code in different systems: e.g. a jupyter notebook showing basic GPU shader-based programming in Python, C++ and C#. This is a complete re-write in python of the `glGA` framework <http://george.papagiannakis.org/?page_id=513> using a modern `Entity - Components - Systems` in a `Scenegraph` approach.
 
 ### ** A. Requirements for an advanced Computer Graphics curriculum **
 
