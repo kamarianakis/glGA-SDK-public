@@ -181,6 +181,7 @@ class TestEvent(unittest.TestCase):
         """
         print("TestEvent:test_renderCubeWithEvents() START".center(100, '-'))
         
+
         
         # 
         # MVP matrix calculation - 
@@ -265,6 +266,8 @@ class TestEvent(unittest.TestCase):
         gWindow = self.scene.renderWindow
         gGUI = self.scene.gContext
         
+
+        print("\nManos3: ", gWindow._myCamera)
         #simple Event actuator System
         renderGLEventActuator = RenderGLStateSystem()
         
@@ -297,11 +300,17 @@ class TestEvent(unittest.TestCase):
         # Add RenderWindow to the EventManager publishers
         eManager._publishers[updateBackground.name] = gGUI
         
+        # print (gWindow._myCamera)
+
         while running:
             running = self.scene.render(running)
             self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            mvpMat = gWindow._myCamera
+            self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
             self.scene.render_post()
+            # print("\nManos3: ", gWindow._myCamera)
             
         self.scene.shutdown()
+        
         
         print("TestEvent:test_renderCubeWithEvents() END".center(100, '-'))

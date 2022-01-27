@@ -18,6 +18,7 @@ from pyglGA.ECSS.Component import BasicTransform, Camera, RenderMesh
 from pyglGA.ECSS.System import System, TransformSystem, CameraSystem, RenderSystem
 from pyglGA.ext.Scene import Scene
 from pyglGA.ECSS.ECSSManager import ECSSManager
+from pyglGA.GUI.Viewer import SDL2Window, ImGUIDecorator, RenderGLStateSystem
 
 from pyglGA.ext.Shader import InitGLShaderSystem, Shader, ShaderGLDecorator, RenderGLShaderSystem
 from pyglGA.ext.VertexArray import VertexArray
@@ -168,9 +169,9 @@ class TestScene(unittest.TestCase):
     
     def test_axes(self):
         """
-        First time to test a RenderSystem in a Scene with Shader and VertexArray components
+        test_axes
         """
-        print("TestScene:test_renderCube START".center(100, '-'))
+        print("TestScene:test_axes START".center(100, '-'))
         
         # 
         # MVP matrix calculation - 
@@ -216,7 +217,7 @@ class TestScene(unittest.TestCase):
         
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_axes")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -229,12 +230,12 @@ class TestScene(unittest.TestCase):
             
         self.scene.shutdown()
         
-        print("TestScene:test_renderCube END".center(100, '-'))
+        print("TestScene:test_axes END".center(100, '-'))
     def test_axes_shader(self):
         """
         First time to test a RenderSystem in a Scene with Shader and VertexArray components
         """
-        print("TestScene:test_renderCube START".center(100, '-'))
+        print("TestScene:test_axes_shader START".center(100, '-'))
         
         # 
         # MVP matrix calculation - 
@@ -284,7 +285,7 @@ class TestScene(unittest.TestCase):
         
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA Cube Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_axes_shader")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -297,7 +298,7 @@ class TestScene(unittest.TestCase):
             
         self.scene.shutdown()
         
-        print("TestScene:test_renderCube END".center(100, '-'))
+        print("TestScene:test_axes_shader END".center(100, '-'))
     
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderAxesTerrain(self):
@@ -310,12 +311,24 @@ class TestScene(unittest.TestCase):
         # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
 
         # OR
+        # model = util.translate(0.0,0.0,0.0)
+        # eye = util.vec(0.5, 0.5, 0.5)
+        # target = util.vec(0.0, 0.0, 1.0)
+        # up = util.vec(0.0, 1.0, 0.0)
+        # view = util.lookat(eye, target, up)
+
+
         model = util.translate(0.0,0.0,0.0)
-        eye = util.vec(-0.5, -0.5, -0.5)
-        target = util.vec(1.0, 1.0, 1.0)
+        eye = util.vec(0.5, 0.5, 0.5)
+        target = util.vec(0.0, 0.0, 0.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
-        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        
+        projMat = util.perspective(90.0, 1.33, 0.1, 100)
+        # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
+        print("\nprojMat =", projMat)
+        
         mvpMat = model @ view @ projMat
 
         self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
@@ -395,7 +408,7 @@ class TestScene(unittest.TestCase):
 
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Triangle Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_renderAxesTerrain")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -411,8 +424,173 @@ class TestScene(unittest.TestCase):
             
         self.scene.shutdown()
         
-        print("TestScene:test_render END".center(100, '-'))
+        print("TestScene:test_renderAxesTerrainEND".center(100, '-'))
     
+
+    def test_renderAxesTerrainEVENT(self):
+        """
+        First time to test a RenderSystem in a Scene with Shader and VertexArray components
+        """
+        print("TestScene:test_render START".center(100, '-'))
+        
+        # decorated components and systems with sample, default pass-through shader
+        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+
+        # OR
+        # model = util.translate(0.0,0.0,0.0)
+        # eye = util.vec(0.5, 0.5, 0.5)
+        # target = util.vec(0.0, 0.0, 1.0)
+        # up = util.vec(0.0, 1.0, 0.0)
+        # view = util.lookat(eye, target, up)
+
+
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(0.5, 0.5, 0.5)
+        target = util.vec(0.0, 0.0, 0.0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        
+        projMat = util.perspective(90.0, 1.33, 0.1, 100)
+        # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
+        print("\nprojMat =", projMat)
+        
+        mvpMat = model @ view @ projMat
+
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
+        def generateTerrain(size=2,N=2):
+            # Generate Terrain Vertices and Indices
+            x = np.linspace(-size,size,2*N+1)
+            points = []
+            indices = []
+            for j in range(2*N+1):
+                for i in range(2*N+1):
+                    points.append([x[i],0,x[j]])
+                    
+            
+            for j in range(2*N):
+                for i in range(2*N):
+                    # assume we have the square
+                    # C ---- D
+                    # |     /|
+                    # |    / |
+                    # |   /  |
+                    # |  /   |
+                    # | /    |
+                    # |/     |
+                    # A -----B
+                    indexA = i + (2*N+1)*j
+                    indexB = indexA +1
+                    indexC = indexA + (2*N+1)
+                    indexD = indexB + (2*N+1)
+                    # triangle ABD
+                    indices.append(indexA)
+                    indices.append(indexB)
+                    indices.append(indexD)
+                    # triangle ADC
+                    indices.append(indexA)
+                    indices.append(indexD)
+                    indices.append(indexC)
+
+            #colors
+            uniform_color = [0.4,0.4,0.4,1.0]
+            colorT = [uniform_color]*((2*N+1))**2 
+            return np.array(points,dtype=np.float32) , np.array(indices,dtype=np.float32), np.array(colorT, dtype=np.float32)
+
+        
+        self.vertexTerrain, self.indexTerrain, self.colorTerrain= generateTerrain(size=2,N=2)
+        
+        
+
+        # # attach terrain data to the RenderMesh
+        self.mesh4.vertex_attributes.append(self.vertexTerrain) 
+        self.mesh4.vertex_attributes.append(self.colorTerrain)
+        self.mesh4.vertex_index.append(self.indexTerrain)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+   
+
+        
+        ## ADD AXES TO THIS MESH ##
+        self.axes = self.scene.world.createEntity(Entity(name="axes"))
+        self.scene.world.addEntityChild(self.rootEntity, self.axes)
+        self.axes_trans = self.scene.world.addComponent(self.axes, BasicTransform(name="axes_trans", trs=util.identity()))
+        self.axes_mesh = self.scene.world.addComponent(self.axes, RenderMesh(name="axes_mesh"))
+        
+
+
+        self.axes_mesh.vertex_attributes.append(self.vertexAxes) 
+        self.axes_mesh.vertex_attributes.append(self.colorAxes)
+        self.axes_mesh.vertex_index.append(self.indexAxes)
+        self.axes_vArray = self.scene.world.addComponent(self.axes, VertexArray(primitive=GL_LINES)) # note the primitive change
+
+        # self.shaderDec_axes = self.scene.world.addComponent(self.axes, Shader())
+        # OR
+        self.shaderDec42 = self.scene.world.addComponent(self.axes, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec42.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
+        running = True
+        # MAIN RENDERING LOOP
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_renderAxesTerrainEVENT")
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        # needs an active GL context
+
+        # vArrayAxes.primitive = gl.GL_LINES
+
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
+        ################### EVENT MANAGER 
+        # instantiate new EventManager
+        # need to pass that instance to all event publishers e.g. ImGUIDecorator
+        eManager = self.scene.world.eventManager
+        gWindow = self.scene.renderWindow
+        gGUI = self.scene.gContext
+    
+        renderGLEventActuator = RenderGLStateSystem()
+        
+        #setup Events and add them to the EventManager
+        # updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
+        # updateBackground = Event(name="OnUpdateBackground", id=200, value=None)
+        # #updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
+        
+
+        # eManager._events[updateTRS.name] = updateTRS
+        # eManager._events[updateBackground.name] = updateBackground
+        #eManager._events[updateWireframe.name] = updateWireframe # this is added inside ImGUIDecorator
+        
+        # Add RenderWindow to the EventManager subscribers
+        # @GPTODO
+        # values of these Dicts below should be List items, not objects only 
+        #   use subscribe(), publish(), actuate() methhods
+        #
+        # eManager._subscribers[updateTRS.name] = gGUI
+        # eManager._subscribers[updateBackground.name] = gGUI
+        
+        eManager._subscribers['OnUpdateWireframe'] = gWindow
+        eManager._actuators['OnUpdateWireframe'] = renderGLEventActuator
+        eManager._subscribers['OnUpdateCamera'] = gWindow 
+        eManager._actuators['OnUpdateCamera'] = renderGLEventActuator
+        # MANOS END
+        # Add RenderWindow to the EventManager publishers
+        # eManager._publishers[updateBackground.name] = gGUI
+
+
+        while running:
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            mvpMat = gWindow._myCamera
+            self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            self.shaderDec42.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            self.scene.render_post()
+            
+        self.scene.shutdown()
+        
+        print("TestScene:test_renderAxesTerrainEVENT END".center(100, '-'))
+
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderTriangle(self):
         """
@@ -443,7 +621,7 @@ class TestScene(unittest.TestCase):
 
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Triangle Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_renderTriangle")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -459,12 +637,12 @@ class TestScene(unittest.TestCase):
             
         self.scene.shutdown()
         
-        print("TestScene:test_render END".center(100, '-'))
+        print("TestScene:test_renderTriangle END".center(100, '-'))
 
 
     def test_renderTriangle_shader(self):
         """
-        First time to test QQQ
+        test_renderTriangle_shader
         """
         model = util.translate(0.0,0.0,0.5)
         eye = util.vec(0.0, 5.0, 5.0)
@@ -506,7 +684,7 @@ class TestScene(unittest.TestCase):
 
         running = True
         # MAIN RENDERING LOOP
-        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Triangle Scene")
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_renderTriangle_shader")
         
         # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
         # needs an active GL context
@@ -520,7 +698,7 @@ class TestScene(unittest.TestCase):
             
         self.scene.shutdown()
         
-        print("TestScene:test_render END".center(100, '-'))
+        print("TestScene:test_renderTriangle_shader END".center(100, '-'))
 
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderCube(self):

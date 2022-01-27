@@ -273,9 +273,11 @@ def lookat(eye, target, up):
     """
  
     eye = normalise(vec(eye)[:3])
-    target = normalise(vec(target)[:3])
+    # target = normalise(vec(target)[:3])
+    # eye = vec(eye)[:3]
+    target = vec(target)[:3]
     view = normalise(vec(target)[:3] - vec(eye)[:3]) #f in glm
-    up = normalise(vec(up)[:3])
+    # up = normalise(vec(up)[:3])
     right = normalise(np.cross(up, view)) #s in glm
     up = np.cross(view, right) #u in glm
     

@@ -29,6 +29,7 @@ import pyglGA.ECSS.System
 import pyglGA.ECSS.utilities as util
 import pyglGA.ECSS.Event
 from pyglGA.ECSS.System import System 
+import numpy as np
 
 class RenderWindow(ABC):
     """
@@ -147,6 +148,7 @@ class SDL2Window(RenderWindow):
             
         #OpenGL state variables
         self._wireframeMode = False
+        self._myCamera = np.identity(4)
              
     @property
     def gWindow(self):
@@ -368,7 +370,7 @@ class ImGUIDecorator(RenderDecorator):
         self._changed = False 
         self._checkbox = False 
         self._colorEditor = (0.0, 0.0, 0.0)
-        self._eye = (0.0, 0.0, 0.0)
+        self._eye = (1.0, 1.0, 1.0)
         self._target = (0.0, 0.0, 0.0) # also named target
         self._up = (0.0, 1.0, 0.0)
        
@@ -490,7 +492,7 @@ class ImGUIDecorator(RenderDecorator):
         #
         # MANOS - START
         # simple slider for eye - IMPORTANT PART HERE
-        self._changed, self._eye = imgui.slider_int3( "Eye", *self._eye,min_value=-50, max_value=50,format="%d")
+        self._changed, self._eye = imgui.slider_float3( "Eye", *self._eye,min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
@@ -500,7 +502,7 @@ class ImGUIDecorator(RenderDecorator):
         imgui.separator()
         #
         # simple slider for target
-        self._changed, self._target = imgui.slider_int3( "Target", *self._target,min_value=-50, max_value=50,format="%d")
+        self._changed, self._target = imgui.slider_float3( "Target", *self._target,min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
@@ -509,7 +511,7 @@ class ImGUIDecorator(RenderDecorator):
             print(f"_target: {self._target}")
         imgui.separator()
         # simple slider for up
-        self._changed, self._up = imgui.slider_int3( "Up", *self._up,min_value=-50, max_value=50,format="%d")
+        self._changed, self._up = imgui.slider_float3( "Up", *self._up,min_value=-5, max_value=5,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
@@ -584,6 +586,8 @@ class RenderGLStateSystem(System):
         if event.name == "OnUpdateCamera":
             print(f"MANOS: RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
             sdlWindow._myCamera = event.value
+            print("Manos3: ", type(sdlWindow))
+            print("MANOS2: ", sdlWindow._myCamera)
         # MANOS - END
         
 
