@@ -86,11 +86,11 @@ class TestScene(unittest.TestCase):
         #Colored Axes
         self.vertexAxes = np.array([
             [0.0, 0.0, 0.0, 1.0],
-            [0.7, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
-            [0.0, 0.7, 0.0, 1.0],
+            [0.0, 1.0, 0.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
-            [0.0, 0.0, 0.7, 1.0]
+            [0.0, 0.0, 1.0, 1.0]
         ],dtype=np.float32) 
         self.colorAxes = np.array([
             [1.0, 0.0, 0.0, 1.0],
@@ -248,9 +248,10 @@ class TestScene(unittest.TestCase):
         target = util.vec(1.0, 1.0, 1.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
+        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
         # projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
-        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         # model = util.translate(0.0,0.0,0.0)
         # eye = util.vec(0.0, 5.0, 5.0)
         # target = util.vec(0,1,1)
@@ -297,6 +298,121 @@ class TestScene(unittest.TestCase):
         self.scene.shutdown()
         
         print("TestScene:test_renderCube END".center(100, '-'))
+    
+    #@unittest.skip("Requires active GL context, skipping the test")
+    def test_renderAxesTerrain(self):
+        """
+        First time to test a RenderSystem in a Scene with Shader and VertexArray components
+        """
+        print("TestScene:test_render START".center(100, '-'))
+        
+        # decorated components and systems with sample, default pass-through shader
+        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+
+        # OR
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(-0.5, -0.5, -0.5)
+        target = util.vec(1.0, 1.0, 1.0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        mvpMat = model @ view @ projMat
+
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
+        def generateTerrain(size=2,N=2):
+            # Generate Terrain Vertices and Indices
+            x = np.linspace(-size,size,2*N+1)
+            points = []
+            indices = []
+            for j in range(2*N+1):
+                for i in range(2*N+1):
+                    points.append([x[i],0,x[j]])
+                    
+            
+            for j in range(2*N):
+                for i in range(2*N):
+                    # assume we have the square
+                    # C ---- D
+                    # |     /|
+                    # |    / |
+                    # |   /  |
+                    # |  /   |
+                    # | /    |
+                    # |/     |
+                    # A -----B
+                    indexA = i + (2*N+1)*j
+                    indexB = indexA +1
+                    indexC = indexA + (2*N+1)
+                    indexD = indexB + (2*N+1)
+                    # triangle ABD
+                    indices.append(indexA)
+                    indices.append(indexB)
+                    indices.append(indexD)
+                    # triangle ADC
+                    indices.append(indexA)
+                    indices.append(indexD)
+                    indices.append(indexC)
+
+            #colors
+            uniform_color = [0.4,0.4,0.4,1.0]
+            colorT = [uniform_color]*((2*N+1))**2 
+            return np.array(points,dtype=np.float32) , np.array(indices,dtype=np.float32), np.array(colorT, dtype=np.float32)
+
+        
+        self.vertexTerrain, self.indexTerrain, self.colorTerrain= generateTerrain(size=2,N=2)
+        
+        
+
+        # # attach terrain data to the RenderMesh
+        self.mesh4.vertex_attributes.append(self.vertexTerrain) 
+        self.mesh4.vertex_attributes.append(self.colorTerrain)
+        self.mesh4.vertex_index.append(self.indexTerrain)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+   
+
+        
+        ## ADD AXES TO THIS MESH ##
+        self.axes = self.scene.world.createEntity(Entity(name="axes"))
+        self.scene.world.addEntityChild(self.rootEntity, self.axes)
+        self.axes_trans = self.scene.world.addComponent(self.axes, BasicTransform(name="axes_trans", trs=util.identity()))
+        self.axes_mesh = self.scene.world.addComponent(self.axes, RenderMesh(name="axes_mesh"))
+        
+
+
+        self.axes_mesh.vertex_attributes.append(self.vertexAxes) 
+        self.axes_mesh.vertex_attributes.append(self.colorAxes)
+        self.axes_mesh.vertex_index.append(self.indexAxes)
+        self.axes_vArray = self.scene.world.addComponent(self.axes, VertexArray(primitive=GL_LINES)) # note the primitive change
+
+        # self.shaderDec_axes = self.scene.world.addComponent(self.axes, Shader())
+        # OR
+        self.shaderDec4 = self.scene.world.addComponent(self.axes, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
+        running = True
+        # MAIN RENDERING LOOP
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA ECSS Triangle Scene")
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        # needs an active GL context
+
+        # vArrayAxes.primitive = gl.GL_LINES
+
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
+        while running:
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.scene.render_post()
+            
+        self.scene.shutdown()
+        
+        print("TestScene:test_render END".center(100, '-'))
+    
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderTriangle(self):
         """
