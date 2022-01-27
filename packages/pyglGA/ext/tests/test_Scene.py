@@ -242,15 +242,24 @@ class TestScene(unittest.TestCase):
         # should be autoamtically picked up at ECSS VertexArray level from Scenegraph System
         # same process as VertexArray is automatically populated from RenderMesh
         #
-        model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 5.0, 5.0)
-        target = util.vec(0,0,0)
+
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(-0.5, -0.5, -0.5)
+        target = util.vec(1.0, 1.0, 1.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
         #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-        projMat = util.perspective(120.0, 1.33, 0.1, 100.0) ## THIS WAS THE ORIGINAL
+        # projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
+        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        # model = util.translate(0.0,0.0,0.0)
+        # eye = util.vec(0.0, 5.0, 5.0)
+        # target = util.vec(0,1,1)
+        # up = util.vec(0.0, 1.0, 0.0)
+        # view = util.lookat(eye, target, up)
+        # #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
+        # # projMat = util.perspective(120.0, 1.33, 0.1, 100.0) ## THIS WAS THE ORIGINAL
         # projMat = util.ortho(-100.0, 100.0, -100.0, 100.0, -0.5, 100.0)
-        #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0)
+        # #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0)
         #mvpMat = projMat @ view @ model
         mvpMat = model @ view @ projMat
                 
@@ -353,10 +362,10 @@ class TestScene(unittest.TestCase):
         # decorated components and systems with sample, default pass-through shader
         # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
         
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
 
-        # self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        # self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
         
         # attach that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData) 
@@ -411,14 +420,20 @@ class TestScene(unittest.TestCase):
         # same process as VertexArray is automatically populated from RenderMesh
         #
         model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(1.0, 0.0, 50.0)
+        # WORKING VALUES - START
+        # eye = util.vec(1.0, 0.0, 50.0)
+        # target = util.vec(0,0,0)
+        # up = util.vec(0.0, 1.0, 0.0)
+        # view = util.lookat(eye, target, up)
+        # WORKING VALUES - END
+        eye = util.vec(100.0, 100.0, 50.0)
         target = util.vec(0,0,0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
-        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
+        # projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
         projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
-        #projMat = util.ortho(-100.0, 100.0, -100.0, 100.0, -0.5, 100.0)
-        #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0)
+        # projMat = util.ortho(-100.0, 100.0, -100.0, 100.0, -0.5, 100.0)
+        # projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, 0.1, 100.0)
         #mvpMat = projMat @ view @ model
         mvpMat = model @ view @ projMat
         
@@ -465,13 +480,15 @@ class TestScene(unittest.TestCase):
         # otherwise automatically picked up at ECSS VertexArray level from the Scenegraph System
         # same process as VertexArray is automatically populated from RenderMesh
         #
+        # WORKING VALUES - START
         model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 0.0, -10.0)
+        eye = util.vec(-20.0, -20.0, -20.0)
         target = util.vec(0,0,0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
-        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
         projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
+        # WORKING VALUES - END
+        #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
         #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
         mvpMat = model @ view @ projMat

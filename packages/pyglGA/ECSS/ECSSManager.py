@@ -259,13 +259,15 @@ class ECSSManager():
 
         if isinstance(system, pyglGA.ECSS.System.System) and iterator is not None:
             tic1 = time.perf_counter()
-            print(f"\nthis is the {system.name} traversal START".center(100, '-'))
+            # MANOS DISABLED THE LINE BELOW
+            # print(f"\nthis is the {system.name} traversal START".center(100, '-'))
             done_traversing = False
             while(not done_traversing):
                 try:
                     traversedComp = next(iterator)
                 except StopIteration:
-                    print("\n--- end of Scene reached, traversed all Components!---")
+                    # MANOS DISABLED THE ONE BELOW
+                    # print("\n--- end of Scene reached, traversed all Components!---")
                     done_traversing = True
                 else:
                     # only if we reached end of Entity's children traversedComp is None
@@ -276,8 +278,8 @@ class ECSSManager():
                         traversedComp.accept(system)
 
             toc1 = time.perf_counter()
-            print(
-                f"\n{system.name} traversal took {(toc1 - tic1)*1000:0.4f} msecs".center(100, '-'))
+            # print( ## MANOS DISABLED THIS
+            #     f"\n{system.name} traversal took {(toc1 - tic1)*1000:0.4f} msecs".center(100, '-'))
 
     def print(self):
         """

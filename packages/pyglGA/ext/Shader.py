@@ -403,4 +403,5 @@ class RenderGLShaderSystem(System):
         vertexArray.update()
         compShader.disableShader()
         
-        print(f'\nMain shader GL render within {self.getClassName()}::render() \n')
+        # MANOS DISABLED THE LINE BELOW
+        # print(f'\nMain shader GL render within {self.getClassName()}::render() \n')

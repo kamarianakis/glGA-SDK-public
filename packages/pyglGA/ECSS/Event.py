@@ -75,7 +75,11 @@ class EventManager(EventPublisher):
                 print(f'\n{event.name}: will be actuated from the appropriate system\n')
             elif event.name == "OnUpdateWireframe":
                 print(f'\n{event.name}: will be actuated from the appropriate system\n')
-                
+            # MANOS - START
+            elif event.name == "OnUpdateCamera":
+                print(f'\n{event.name}: will be actuated from the appropriate system - MANOS\n')
+            # MANOS - END
+
             if event.name in self._subscribers:
                 subscriber  = self._subscribers[event.name] 
                 print(f'\n{EventManager.getClassName()}: notify() subscriber: {subscriber} for {event}\n')

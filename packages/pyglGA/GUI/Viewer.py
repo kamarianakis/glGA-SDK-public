@@ -362,12 +362,16 @@ class ImGUIDecorator(RenderDecorator):
         self._imguiRenderer = None
         #setup a simple Event: change to wireframe mode via the GUI
         self._updateWireframe = None
+        self._updateCamera = None # MANOS
         # extra UI elements
         self._wireframeMode = False
         self._changed = False 
         self._checkbox = False 
         self._colorEditor = (0.0, 0.0, 0.0)
-    
+        self._eye = (0.0, 0.0, 0.0)
+        self._target = (0.0, 0.0, 0.0) # also named target
+        self._up = (0.0, 1.0, 0.0)
+       
     def init(self):
         """
         Calls Decoratee init() and also sets up events
@@ -392,6 +396,12 @@ class ImGUIDecorator(RenderDecorator):
             self._wrapeeWindow.eventManager._events[self._updateWireframe.name] = self._updateWireframe
             self._wrapeeWindow.eventManager._publishers[self._updateWireframe.name] = self
         
+        # MANOS - START
+        self._updateCamera = pyglGA.ECSS.Event.Event(name="OnUpdateCamera", id=300, value=None)
+        if self._wrapeeWindow.eventManager is not None:
+            self._wrapeeWindow.eventManager._events[self._updateCamera.name] = self._updateCamera
+            self._wrapeeWindow.eventManager._publishers[self._updateCamera.name] = self
+        # MANOS - END
         print(f'{self.getClassName()}: init()')
         
         
@@ -439,7 +449,7 @@ class ImGUIDecorator(RenderDecorator):
     def extra(self):
         """sample ImGUI widgets to be rendered on a RenderWindow
         """
-        imgui.set_next_window_size(300.0, 150.0)
+        imgui.set_next_window_size(300.0, 200.0)
         
         #start new ImGUI frame context
         imgui.new_frame()
@@ -475,9 +485,39 @@ class ImGUIDecorator(RenderDecorator):
         # simple slider for color
         self._changed, self._colorEditor = imgui.color_edit3("Color edit", *self._colorEditor)
         if self._changed:
-             print(f"_colorEditor: {self._colorEditor}")
+            print(f"_colorEditor: {self._colorEditor}")
         imgui.separator()
         #
+        # MANOS - START
+        # simple slider for eye - IMPORTANT PART HERE
+        self._changed, self._eye = imgui.slider_int3( "Eye", *self._eye,min_value=-50, max_value=50,format="%d")
+        if self._changed:
+            self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
+            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            if self._wrapeeWindow.eventManager is not None:
+                    self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
+            print(f"_eye: {self._eye}")
+        imgui.separator()
+        #
+        # simple slider for target
+        self._changed, self._target = imgui.slider_int3( "Target", *self._target,min_value=-50, max_value=50,format="%d")
+        if self._changed:
+            self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
+            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            if self._wrapeeWindow.eventManager is not None:
+                self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
+            print(f"_target: {self._target}")
+        imgui.separator()
+        # simple slider for up
+        self._changed, self._up = imgui.slider_int3( "Up", *self._up,min_value=-50, max_value=50,format="%d")
+        if self._changed:
+            self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
+            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            if self._wrapeeWindow.eventManager is not None:
+                self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
+            print(f"_up: {self._up}")
+        imgui.separator()
+        # MANOS - END
         # simple FPS counter
         strFrameRate = str(("Application average: ", imgui.get_io().framerate, " FPS"))
         imgui.text(strFrameRate)
@@ -539,6 +579,12 @@ class RenderGLStateSystem(System):
         if event.name == "OnUpdateWireframe":
             print(f"RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
             sdlWindow._wireframeMode = event.value
+
+        # MANOS - START
+        if event.name == "OnUpdateCamera":
+            print(f"MANOS: RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
+            sdlWindow._myCamera = event.value
+        # MANOS - END
         
 
 

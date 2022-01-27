@@ -188,14 +188,14 @@ class TestEvent(unittest.TestCase):
         # otherwise automatically picked up at ECSS VertexArray level from the Scenegraph System
         # same process as VertexArray is automatically populated from RenderMesh
         #
-        model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 0.0, -10.0)
-        target = util.vec(0,0,0)
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(-0.5, -0.5, -0.5)
+        target = util.vec(1.0, 1.0, 1.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
         #projMat = util.frustum(-10.0, 10.0,-10.0,10.0, -1.0, 10)
-        projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
-        #projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        # projMat = util.perspective(120.0, 1.33, 0.1, 100.0)
+        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         #projMat = util.ortho(-5.0, 5.0, -5.0, 5.0, -1.0, 5.0)
         mvpMat = model @ view @ projMat
         
@@ -210,7 +210,7 @@ class TestEvent(unittest.TestCase):
         # decorated components and systems with sample, default pass-through shader with uniform MVP
         self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
         # direct uniform variable shader setup
-        #self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
         
         # attach a simple cube in a RenderMesh so that VertexArray can pick it up
         self.mesh4.vertex_attributes.append(self.vertexCube)
@@ -249,7 +249,7 @@ class TestEvent(unittest.TestCase):
         print(f'\nmvpMat: \n{mvpMat}')
         print(self.trans4)
         
-        self.shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
+        # self.shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
         
         # UnitTest mvp mat directly set here with the one extracted/calculated from ECSS
         #np.testing.assert_array_almost_equal(l2cMat,mvpMat,decimal=5)
@@ -272,6 +272,8 @@ class TestEvent(unittest.TestCase):
         updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
         updateBackground = Event(name="OnUpdateBackground", id=200, value=None)
         #updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
+        
+
         eManager._events[updateTRS.name] = updateTRS
         eManager._events[updateBackground.name] = updateBackground
         #eManager._events[updateWireframe.name] = updateWireframe # this is added inside ImGUIDecorator
@@ -288,6 +290,10 @@ class TestEvent(unittest.TestCase):
         eManager._subscribers['OnUpdateWireframe'] = gWindow
         eManager._actuators['OnUpdateWireframe'] = renderGLEventActuator
         
+        # MANOS START
+        eManager._subscribers['OnUpdateCamera'] = gWindow #CHOOSE THE CORRECT ONE
+        eManager._actuators['OnUpdateCamera'] = renderGLEventActuator #CHOOSE THE CORRECT ONE
+        # MANOS END
         # Add RenderWindow to the EventManager publishers
         eManager._publishers[updateBackground.name] = gGUI
         
