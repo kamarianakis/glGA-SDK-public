@@ -325,7 +325,7 @@ class TestScene(unittest.TestCase):
         view = util.lookat(eye, target, up)
         # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         
-        projMat = util.perspective(90.0, 1.33, 0.1, 100)
+        projMat = util.perspective(90.0, 1, 0.1, 1000)
         # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
         print("\nprojMat =", projMat)
         
@@ -360,14 +360,16 @@ class TestScene(unittest.TestCase):
                     indexB = indexA +1
                     indexC = indexA + (2*N+1)
                     indexD = indexB + (2*N+1)
-                    # triangle ABD
+                    # For GL_Triangles:
+                    ## triangle ABD
                     indices.append(indexA)
                     indices.append(indexB)
                     indices.append(indexD)
-                    # triangle ADC
+                    ## triangle ADC
                     indices.append(indexA)
                     indices.append(indexD)
                     indices.append(indexC)
+
 
             #colors
             uniform_color = [0.4,0.4,0.4,1.0]
@@ -384,7 +386,7 @@ class TestScene(unittest.TestCase):
         self.mesh4.vertex_attributes.append(self.colorTerrain)
         self.mesh4.vertex_index.append(self.indexTerrain)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
-   
+    
 
         
         ## ADD AXES TO THIS MESH ##
@@ -398,7 +400,7 @@ class TestScene(unittest.TestCase):
         self.axes_mesh.vertex_attributes.append(self.vertexAxes) 
         self.axes_mesh.vertex_attributes.append(self.colorAxes)
         self.axes_mesh.vertex_index.append(self.indexAxes)
-        self.axes_vArray = self.scene.world.addComponent(self.axes, VertexArray(primitive=GL_LINES)) # note the primitive change
+        self.axes_vArray = self.scene.world.addComponent(self.axes, VertexArray(primitive=GL_LINES)) # note the primitive change for lines
 
         # self.shaderDec_axes = self.scene.world.addComponent(self.axes, Shader())
         # OR
@@ -425,7 +427,6 @@ class TestScene(unittest.TestCase):
         self.scene.shutdown()
         
         print("TestScene:test_renderAxesTerrainEND".center(100, '-'))
-    
 
     def test_renderAxesTerrainEVENT(self):
         """
@@ -486,14 +487,26 @@ class TestScene(unittest.TestCase):
                     indexB = indexA +1
                     indexC = indexA + (2*N+1)
                     indexD = indexB + (2*N+1)
-                    # triangle ABD
+                    # # triangle ABD
+                    # indices.append(indexA)
+                    # indices.append(indexB)
+                    # indices.append(indexD)
+                    # # triangle ADC
+                    # indices.append(indexA)
+                    # indices.append(indexD)
+                    # indices.append(indexC)
+                    # For primitive=GL_LINES:
+                    ## triangle AB, BD, DA, DC, CA
                     indices.append(indexA)
                     indices.append(indexB)
+                    indices.append(indexB)
                     indices.append(indexD)
-                    # triangle ADC
+                    indices.append(indexD)
                     indices.append(indexA)
                     indices.append(indexD)
                     indices.append(indexC)
+                    indices.append(indexC)
+                    indices.append(indexA)
 
             #colors
             uniform_color = [0.4,0.4,0.4,1.0]
@@ -501,7 +514,7 @@ class TestScene(unittest.TestCase):
             return np.array(points,dtype=np.float32) , np.array(indices,dtype=np.float32), np.array(colorT, dtype=np.float32)
 
         
-        self.vertexTerrain, self.indexTerrain, self.colorTerrain= generateTerrain(size=2,N=2)
+        self.vertexTerrain, self.indexTerrain, self.colorTerrain= generateTerrain(size=2,N=20)
         
         
 
@@ -509,8 +522,8 @@ class TestScene(unittest.TestCase):
         self.mesh4.vertex_attributes.append(self.vertexTerrain) 
         self.mesh4.vertex_attributes.append(self.colorTerrain)
         self.mesh4.vertex_index.append(self.indexTerrain)
-        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
-   
+        # self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray(primitive=GL_LINES))
 
         
         ## ADD AXES TO THIS MESH ##
@@ -591,6 +604,189 @@ class TestScene(unittest.TestCase):
         
         print("TestScene:test_renderAxesTerrainEVENT END".center(100, '-'))
 
+
+    def test_renderCubeAxesTerrainEVENT(self):
+        """
+        test_renderCubeAxesTerrainEVENT
+        """
+        print("TestScene:test_renderCubeAxesTerrainEVENT START".center(100, '-'))
+        
+        # decorated components and systems with sample, default pass-through shader
+        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+
+        # OR
+        # model = util.translate(0.0,0.0,0.0)
+        # eye = util.vec(0.5, 0.5, 0.5)
+        # target = util.vec(0.0, 0.0, 1.0)
+        # up = util.vec(0.0, 1.0, 0.0)
+        # view = util.lookat(eye, target, up)
+
+
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(0.5, 0.5, 0.5)
+        target = util.vec(0.0, 0.0, 0.0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        
+        projMat = util.perspective(90.0, 1.33, 0.1, 100)
+        # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
+        print("\nprojMat =", projMat)
+        
+        mvpMat = model @ view @ projMat
+
+        ## ADD CUBE ##
+        # attach a simple cube in a RenderMesh so that VertexArray can pick it up
+        self.mesh4.vertex_attributes.append(self.vertexCube)
+        self.mesh4.vertex_attributes.append(self.colorCube)
+        self.mesh4.vertex_index.append(self.indexCube)
+        self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        # decorated components and systems with sample, default pass-through shader with uniform MVP
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        
+
+        def generateTerrain(size=2,N=2):
+            # Generate Terrain Vertices and Indices
+            x = np.linspace(-size,size,2*N+1)
+            points = []
+            indices = []
+            for j in range(2*N+1):
+                for i in range(2*N+1):
+                    points.append([x[i],0,x[j]])
+                    
+            
+            for j in range(2*N):
+                for i in range(2*N):
+                    # assume we have the square
+                    # C ---- D
+                    # |     /|
+                    # |    / |
+                    # |   /  |
+                    # |  /   |
+                    # | /    |
+                    # |/     |
+                    # A -----B
+                    indexA = i + (2*N+1)*j
+                    indexB = indexA +1
+                    indexC = indexA + (2*N+1)
+                    indexD = indexB + (2*N+1)
+                    # # triangle ABD
+                    # indices.append(indexA)
+                    # indices.append(indexB)
+                    # indices.append(indexD)
+                    # # triangle ADC
+                    # indices.append(indexA)
+                    # indices.append(indexD)
+                    # indices.append(indexC)
+                    # For primitive=GL_LINES:
+                    ## triangle AB, BD, DA, DC, CA
+                    indices.append(indexA)
+                    indices.append(indexB)
+                    indices.append(indexB)
+                    indices.append(indexD)
+                    indices.append(indexD)
+                    indices.append(indexA)
+                    indices.append(indexD)
+                    indices.append(indexC)
+                    indices.append(indexC)
+                    indices.append(indexA)
+
+            #colors
+            uniform_color = [0.4,0.4,0.4,1.0]
+            colorT = [uniform_color]*((2*N+1))**2 
+            return np.array(points,dtype=np.float32) , np.array(indices,dtype=np.float32), np.array(colorT, dtype=np.float32)
+
+        # Generate terrain
+        self.vertexTerrain, self.indexTerrain, self.colorTerrain= generateTerrain(size=4,N=20)
+        # Add terrain
+        self.terrain = self.scene.world.createEntity(Entity(name="terrain"))
+        self.scene.world.addEntityChild(self.rootEntity, self.terrain)
+        self.terrain_trans = self.scene.world.addComponent(self.terrain, BasicTransform(name="terrain_trans", trs=util.identity()))
+        self.terrain_mesh = self.scene.world.addComponent(self.terrain, RenderMesh(name="terrain_mesh"))
+        self.terrain_mesh.vertex_attributes.append(self.vertexTerrain) 
+        self.terrain_mesh.vertex_attributes.append(self.colorTerrain)
+        self.terrain_mesh.vertex_index.append(self.indexTerrain)
+        self.terrain_vArray = self.scene.world.addComponent(self.terrain, VertexArray(primitive=GL_LINES))
+        self.terrain_shader = self.scene.world.addComponent(self.terrain, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        
+        ## ADD AXES ##
+        self.axes = self.scene.world.createEntity(Entity(name="axes"))
+        self.scene.world.addEntityChild(self.rootEntity, self.axes)
+        self.axes_trans = self.scene.world.addComponent(self.axes, BasicTransform(name="axes_trans", trs=util.identity()))
+        self.axes_mesh = self.scene.world.addComponent(self.axes, RenderMesh(name="axes_mesh"))
+        self.axes_mesh.vertex_attributes.append(self.vertexAxes) 
+        self.axes_mesh.vertex_attributes.append(self.colorAxes)
+        self.axes_mesh.vertex_index.append(self.indexAxes)
+        self.axes_vArray = self.scene.world.addComponent(self.axes, VertexArray(primitive=GL_LINES)) # note the primitive change
+
+        # self.shaderDec_axes = self.scene.world.addComponent(self.axes, Shader())
+        # OR
+        self.axes_shader = self.scene.world.addComponent(self.axes, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.axes_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
+        running = True
+        # MAIN RENDERING LOOP
+        self.scene.init(imgui=True, windowWidth = 1024, windowHeight = 768, windowTitle = "pyglGA test_renderAxesTerrainEVENT")
+        
+        # pre-pass scenegraph to initialise all GL context dependent geometry, shader classes
+        # needs an active GL context
+
+        # vArrayAxes.primitive = gl.GL_LINES
+
+        self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
+        
+        ################### EVENT MANAGER 
+        # instantiate new EventManager
+        # need to pass that instance to all event publishers e.g. ImGUIDecorator
+        eManager = self.scene.world.eventManager
+        gWindow = self.scene.renderWindow
+        gGUI = self.scene.gContext
+    
+        renderGLEventActuator = RenderGLStateSystem()
+        
+        #setup Events and add them to the EventManager
+        # updateTRS = Event(name="OnUpdateTRS", id=100, value=None)
+        # updateBackground = Event(name="OnUpdateBackground", id=200, value=None)
+        # #updateWireframe = Event(name="OnUpdateWireframe", id=201, value=None)
+        
+
+        # eManager._events[updateTRS.name] = updateTRS
+        # eManager._events[updateBackground.name] = updateBackground
+        #eManager._events[updateWireframe.name] = updateWireframe # this is added inside ImGUIDecorator
+        
+        # Add RenderWindow to the EventManager subscribers
+        # @GPTODO
+        # values of these Dicts below should be List items, not objects only 
+        #   use subscribe(), publish(), actuate() methhods
+        #
+        # eManager._subscribers[updateTRS.name] = gGUI
+        # eManager._subscribers[updateBackground.name] = gGUI
+        
+        eManager._subscribers['OnUpdateWireframe'] = gWindow
+        eManager._actuators['OnUpdateWireframe'] = renderGLEventActuator
+        eManager._subscribers['OnUpdateCamera'] = gWindow 
+        eManager._actuators['OnUpdateCamera'] = renderGLEventActuator
+        # MANOS END
+        # Add RenderWindow to the EventManager publishers
+        # eManager._publishers[updateBackground.name] = gGUI
+
+
+        while running:
+            running = self.scene.render(running)
+            self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            mvpMat = gWindow._myCamera
+            self.axes_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            self.scene.render_post()
+            
+        self.scene.shutdown()
+        
+        print("TestScene:test_renderCubeAxesTerrainEVENT END".center(100, '-'))
+
     #@unittest.skip("Requires active GL context, skipping the test")
     def test_renderTriangle(self):
         """
@@ -644,22 +840,23 @@ class TestScene(unittest.TestCase):
         """
         test_renderTriangle_shader
         """
-        model = util.translate(0.0,0.0,0.5)
-        eye = util.vec(0.0, 5.0, 5.0)
-        target = util.vec(0,0,0)
+        model = util.translate(0.0,0.0,0.0)
+        eye = util.vec(0.5, 0.5, 0.5)
+        target = util.vec(0.0, 0.0, 0.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
-        projMat = util.perspective(120.0, 1.33, 0.1, 100.0) ## THIS WAS THE ORIGINAL
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        
+        projMat = util.perspective(90.0, 1.33, 0.1, 100)
         mvpMat = model @ view @ projMat
         
         
         # decorated components and systems with sample, default pass-through shader
         # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
         
-        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+        
 
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        
         
         # attach that simple triangle in a RenderMesh
         self.mesh4.vertex_attributes.append(self.vertexData) 
@@ -667,7 +864,11 @@ class TestScene(unittest.TestCase):
         self.mesh4.vertex_index.append(self.index)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
 
-        
+        # self.shaderDec4 = self.scene.world.addComponent(self.node4, Shader())
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
+
         showaxes = 0
         ## ADD AXES TO THIS MESH - START##
         if showaxes :
@@ -691,9 +892,19 @@ class TestScene(unittest.TestCase):
 
         self.scene.world.traverse_visit(self.initUpdate, self.scene.world.root)
         
+        eManager = self.scene.world.eventManager
+        gWindow = self.scene.renderWindow
+        gGUI = self.scene.gContext
+        renderGLEventActuator = RenderGLStateSystem()
+        eManager._subscribers['OnUpdateCamera'] = gWindow 
+        eManager._actuators['OnUpdateCamera'] = renderGLEventActuator
+        eManager._subscribers['OnUpdateWireframe'] = gWindow
+        eManager._actuators['OnUpdateWireframe'] = renderGLEventActuator
+
         while running:
             running = self.scene.render(running)
             self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
+            self.shaderDec4.setUniformVariable(key='modelViewProj', value=gWindow._myCamera, mat4=True)
             self.scene.render_post()
             
         self.scene.shutdown()
@@ -731,15 +942,16 @@ class TestScene(unittest.TestCase):
         #mvpMat = projMat @ view @ model
         mvpMat = model @ view @ projMat
         
-        # decorated components and systems with sample, default pass-through shader with uniform MVP
-        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
-        
+        ## ADD CUBE ##
         # attach a simple cube in a RenderMesh so that VertexArray can pick it up
         self.mesh4.vertex_attributes.append(self.vertexCube)
         self.mesh4.vertex_attributes.append(self.colorCube)
         self.mesh4.vertex_index.append(self.indexCube)
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
+        # decorated components and systems with sample, default pass-through shader with uniform MVP
+        self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
+        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+
         
         self.scene.world.print()
 
