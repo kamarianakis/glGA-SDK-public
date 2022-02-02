@@ -257,7 +257,7 @@ def rotate(axis=(1.0,0.0,0.0), angle=0.0, radians=None):
                      [x*z*nc - y*s, y*z*nc + x*s, z*z*nc + c,   0],
                      [0,            0,            0,            1]], dtype=np.float,order='F')
     
-    
+
 def lookat(eye, target, up):
     """Utility function to calculate a 4x4 camera lookat matrix, based on the eye, target and up camera vectors:
     based on the gluLookAt() convenience method of https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
@@ -272,35 +272,49 @@ def lookat(eye, target, up):
     :type up: [type]
     """
  
-    eye = normalise(vec(eye)[:3])
-    # target = normalise(vec(target)[:3])
-    # eye = vec(eye)[:3]
-    target = vec(target)[:3]
-    view = normalise(vec(target)[:3] - vec(eye)[:3]) #f in glm
-    # up = normalise(vec(up)[:3])
-    right = normalise(np.cross(up, view)) #s in glm
-    up = np.cross(view, right) #u in glm
-    
-    f = view
-    s = right
-    u = up
-    
-    rotation = np.identity(4)
-    
-    rotation[0,0] = s[0]
-    rotation[0,1] = s[1]
-    rotation[0,2] = s[2]
-    rotation[1,0] = u[0]
-    rotation[1,1] = u[1]
-    rotation[1,2] = u[2]
-    rotation[2,0] = f[0]
-    rotation[2,1] = f[1]
-    rotation[2,2] = f[2]
-    rotation[0,3] = -np.dot(s, eye)
-    rotation[1,3] = -np.dot(u, eye)
-    rotation[2,3] = -np.dot(f, eye)
-    
-    return rotation
+    _eye = np.array(eye)
+    _target = np.array(target)
+    _up = np.array(up)
+
+    def normalise(x):
+        return x/np.linalg.norm(x)
+
+    # lookAtLH
+    _f = normalise(_target - _eye) 
+    _s = normalise(np.cross(_up, _f))
+    _u = np.cross(_f, _s) 
+    M = np.identity(4)
+    M[0,0] = _s[0]
+    M[0,1] = _s[1]
+    M[0,2] = _s[2]
+    M[1,0] = _u[0]
+    M[1,1] = _u[1]
+    M[1,2] = _u[2]
+    M[2,0] = _f[0]
+    M[2,1] = _f[1]
+    M[2,2] = _f[2]
+    M[0,3] = -np.dot(_s, _eye)
+    M[1,3] = -np.dot(_u, _eye)
+    M[2,3] = -np.dot(_f, _eye)
+    # # lookAtRH
+    # _f = normalise(_target - _eye) 
+    # _s = normalise(np.cross(_f,_up))
+    # _u = np.cross(_s,_f) 
+    # M = np.identity(4)
+    # M[0,0] = _s[0]
+    # M[0,1] = _s[1]
+    # M[0,2] = _s[2]
+    # M[1,0] = _u[0]
+    # M[1,1] = _u[1]
+    # M[1,2] = _u[2]
+    # M[2,0] = -_f[0]
+    # M[2,1] = -_f[1]
+    # M[2,2] = -_f[2]
+    # M[0,3] = -np.dot(_s, _eye)
+    # M[1,3] = -np.dot(_u, _eye)
+    # M[2,3] =  np.dot(_f, _eye)
+
+    return M
 
 # -------------------- quaternion algebra convenience functions ----------------------
 
