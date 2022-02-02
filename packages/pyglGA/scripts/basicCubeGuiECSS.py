@@ -288,6 +288,11 @@ def main(imguiFlag = False):
     eManager._subscribers['OnUpdateWireframe'] = gWindow
     eManager._actuators['OnUpdateWireframe'] = renderGLEventActuator
     
+    # MANOS - START
+    eManager._subscribers['OnUpdateCamera'] = gWindow
+    eManager._actuators['OnUpdateCamera'] = renderGLEventActuator
+    # MANOS - END
+
     # Add RenderWindow to the EventManager publishers
     eManager._publishers[updateBackground.name] = gGUI
     
@@ -308,7 +313,7 @@ def main(imguiFlag = False):
         #shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
         # direct uniform variable shader setup
         # should be called before ImGUI and before drawing Geometry
-        shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        shaderDec4.setUniformVariable(key='modelViewProj', value=gWindow._myCamera, mat4=True)
         #shaderDec4.setUniformVariable(key='modelViewProj', value=l2cMat, mat4=True)
         #shaderDec4.setUniformVariable(key='modelViewProj', value=trans4.l2cam, mat4=True)
         
