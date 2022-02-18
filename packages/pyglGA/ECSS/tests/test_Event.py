@@ -267,7 +267,7 @@ class TestEvent(unittest.TestCase):
         gGUI = self.scene.gContext
         
 
-        print("\nManos3: ", gWindow._myCamera)
+        # print("\nManos3: ", gWindow._myCamera)
         #simple Event actuator System
         renderGLEventActuator = RenderGLStateSystem()
         

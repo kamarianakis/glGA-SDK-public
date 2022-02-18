@@ -495,7 +495,7 @@ class ImGUIDecorator(RenderDecorator):
         self._changed, self._eye = imgui.drag_float3( "Eye", *self._eye,min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
-            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            print ("NEW CAMERA VALUE", self._updateCamera.value)
             if self._wrapeeWindow.eventManager is not None:
                     self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
             print(f"_eye: {self._eye}")
@@ -505,7 +505,7 @@ class ImGUIDecorator(RenderDecorator):
         self._changed, self._target = imgui.drag_float3( "Target", *self._target,min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
-            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            print ("NEW CAMERA VALUE", self._updateCamera.value)
             if self._wrapeeWindow.eventManager is not None:
                 self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
             print(f"_target: {self._target}")
@@ -514,7 +514,7 @@ class ImGUIDecorator(RenderDecorator):
         self._changed, self._up = imgui.drag_float3( "Up", *self._up,min_value=-5, max_value=5,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
-            print ("Manos - NEW CAMERA VALUE", self._updateCamera.value)
+            print ("NEW CAMERA VALUE", self._updateCamera.value)
             if self._wrapeeWindow.eventManager is not None:
                 self.wrapeeWindow.eventManager.notify(self, self._updateCamera)
             print(f"_up: {self._up}")
@@ -584,10 +584,10 @@ class RenderGLStateSystem(System):
 
         # MANOS - START
         if event.name == "OnUpdateCamera":
-            print(f"MANOS: RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
+            print(f"OnUpdateCamera: RenderGLStateSystem():apply2SDLWindow() actuator system for: {event}")
             sdlWindow._myCamera = event.value
-            print("Manos3: ", type(sdlWindow))
-            print("MANOS2: ", sdlWindow._myCamera)
+            # print("Manos3: ", type(sdlWindow))
+            # print("MANOS2: ", sdlWindow._myCamera)
         # MANOS - END
         
 

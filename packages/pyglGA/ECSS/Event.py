@@ -77,7 +77,7 @@ class EventManager(EventPublisher):
                 print(f'\n{event.name}: will be actuated from the appropriate system\n')
             # MANOS - START
             elif event.name == "OnUpdateCamera":
-                print(f'\n{event.name}: will be actuated from the appropriate system - MANOS\n')
+                print(f'\n{event.name}: will be actuated from the appropriate system - OnUpdateCamera\n')
             # MANOS - END
 
             if event.name in self._subscribers:
