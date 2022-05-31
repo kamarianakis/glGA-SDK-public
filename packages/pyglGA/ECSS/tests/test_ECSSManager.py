@@ -144,7 +144,9 @@ class TestECSSManager(unittest.TestCase):
         self.WorldManager.print()
         
         print("TestECSSManager:test_addComponent END".center(100, '-'))
-        
+
+
+    @unittest.skip("MKTODO, it should be revised, skipping the test")
     def test_traverse_visit(self):
         """
         ECSSManager traverse_visit

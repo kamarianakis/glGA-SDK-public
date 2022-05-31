@@ -249,6 +249,7 @@ class TestCameraSystem(unittest.TestCase):
         """
         pass
     
+    @unittest.skip("MKTODO, it should be revised, skipping the test")
     def test_CameraSystem_use(self):
         """
         TestCameraSystem() use case test
@@ -364,6 +365,7 @@ class TestCameraSystem(unittest.TestCase):
         
         print("test_CameraSystem_use() END")
 
+    @unittest.skip("MKTODO, it should be revised, skipping the test")
     def test_CameraSystem_MVP(self):
         """
         test_CameraSystem_MVP() use case test for model-view-projection matrices
