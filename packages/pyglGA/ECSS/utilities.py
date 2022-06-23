@@ -226,6 +226,7 @@ def translate(x=0.0, y=0.0, z=0.0):
     return Tmat
 
 
+
 def scale(x, y=None, z=None):
     """Convert a euclidean scaling vector in homogeneous coordinates to a 
     standard 4x4 Scaling Transformation matrix based on the original OpenGL formulas defined in:
@@ -303,26 +304,9 @@ def lookat(eye, target, up):
         return x/np.linalg.norm(x)
 
     # lookAtLH
-    _f = normalise(_target - _eye) 
-    _s = normalise(np.cross(_up, _f))
-    _u = np.cross(_f, _s) 
-    M = np.identity(4)
-    M[0,0] = _s[0]
-    M[0,1] = _s[1]
-    M[0,2] = _s[2]
-    M[1,0] = _u[0]
-    M[1,1] = _u[1]
-    M[1,2] = _u[2]
-    M[2,0] = _f[0]
-    M[2,1] = _f[1]
-    M[2,2] = _f[2]
-    M[0,3] = -np.dot(_s, _eye)
-    M[1,3] = -np.dot(_u, _eye)
-    M[2,3] = -np.dot(_f, _eye)
-    # # lookAtRH
     # _f = normalise(_target - _eye) 
-    # _s = normalise(np.cross(_f,_up))
-    # _u = np.cross(_s,_f) 
+    # _s = normalise(np.cross(_up, _f))
+    # _u = np.cross(_f, _s) 
     # M = np.identity(4)
     # M[0,0] = _s[0]
     # M[0,1] = _s[1]
@@ -330,12 +314,29 @@ def lookat(eye, target, up):
     # M[1,0] = _u[0]
     # M[1,1] = _u[1]
     # M[1,2] = _u[2]
-    # M[2,0] = -_f[0]
-    # M[2,1] = -_f[1]
-    # M[2,2] = -_f[2]
+    # M[2,0] = _f[0]
+    # M[2,1] = _f[1]
+    # M[2,2] = _f[2]
     # M[0,3] = -np.dot(_s, _eye)
     # M[1,3] = -np.dot(_u, _eye)
-    # M[2,3] =  np.dot(_f, _eye)
+    # M[2,3] = -np.dot(_f, _eye)
+    # # lookAtRH
+    _f = normalise(_target - _eye) 
+    _s = normalise(np.cross(_f,_up))
+    _u = np.cross(_s,_f) 
+    M = np.identity(4)
+    M[0,0] = _s[0]
+    M[0,1] = _s[1]
+    M[0,2] = _s[2]
+    M[1,0] = _u[0]
+    M[1,1] = _u[1]
+    M[1,2] = _u[2]
+    M[2,0] = -_f[0]
+    M[2,1] = -_f[1]
+    M[2,2] = -_f[2]
+    M[0,3] = -np.dot(_s, _eye)
+    M[1,3] = -np.dot(_u, _eye)
+    M[2,3] =  np.dot(_f, _eye)
 
     return M
 
