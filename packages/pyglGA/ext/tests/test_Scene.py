@@ -25,6 +25,10 @@ from pyglGA.ext.VertexArray import VertexArray
 
 from OpenGL.GL import GL_LINES
 
+import OpenGL.GL as gl
+
+
+
 class TestScene(unittest.TestCase):
     """Main body of Scene Unit Test class
 
@@ -46,6 +50,8 @@ class TestScene(unittest.TestCase):
                                                                 
             
         """
+        
+
         self.s1 = Scene()
         self.scene = Scene()    
         self.assertEqual(self.s1, self.scene)
@@ -450,9 +456,9 @@ class TestScene(unittest.TestCase):
         target = util.vec(0.0, 0.0, 0.0)
         up = util.vec(0.0, 1.0, 0.0)
         view = util.lookat(eye, target, up)
-        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
+        projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
         
-        projMat = util.perspective(90.0, 1.33, 0.1, 100)
+        # projMat = util.perspective(90.0, 1.33, 0.1, 100)
         # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
         print("\nprojMat =", projMat)
         
@@ -595,7 +601,7 @@ class TestScene(unittest.TestCase):
         while running:
             running = self.scene.render(running)
             self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
-            mvpMat = gWindow._myCamera
+            # mvpMat = gWindow._myCamera
             self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
             self.shaderDec42.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
             self.scene.render_post()
@@ -606,6 +612,8 @@ class TestScene(unittest.TestCase):
 
 
     def test_renderCubeAxesTerrainEVENT(self):
+        
+
         """
         test_renderCubeAxesTerrainEVENT
         """
@@ -622,18 +630,7 @@ class TestScene(unittest.TestCase):
         # view = util.lookat(eye, target, up)
 
 
-        model = util.translate(0.0,0.0,0.0)
-        eye = util.vec(0.5, 0.5, 0.5)
-        target = util.vec(0.0, 0.0, 0.0)
-        up = util.vec(0.0, 1.0, 0.0)
-        view = util.lookat(eye, target, up)
-        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0)
-        
-        projMat = util.perspective(90.0, 1.33, 0.1, 100)
-        # projMat = util.perspective(90.0, 1, 0.01, 100.0) ## THIS WAS THE ORIGINAL
-        print("\nprojMat =", projMat)
-        
-        mvpMat = model @ view @ projMat
+
 
         ## ADD CUBE ##
         # attach a simple cube in a RenderMesh so that VertexArray can pick it up
@@ -643,7 +640,7 @@ class TestScene(unittest.TestCase):
         self.vArray4 = self.scene.world.addComponent(self.node4, VertexArray())
         # decorated components and systems with sample, default pass-through shader with uniform MVP
         self.shaderDec4 = self.scene.world.addComponent(self.node4, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        # self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
         
 
         def generateTerrain(size=2,N=2):
@@ -709,7 +706,7 @@ class TestScene(unittest.TestCase):
         self.terrain_mesh.vertex_index.append(self.indexTerrain)
         self.terrain_vArray = self.scene.world.addComponent(self.terrain, VertexArray(primitive=GL_LINES))
         self.terrain_shader = self.scene.world.addComponent(self.terrain, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        # self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
         
         ## ADD AXES ##
         self.axes = self.scene.world.createEntity(Entity(name="axes"))
@@ -724,7 +721,7 @@ class TestScene(unittest.TestCase):
         # self.shaderDec_axes = self.scene.world.addComponent(self.axes, Shader())
         # OR
         self.axes_shader = self.scene.world.addComponent(self.axes, ShaderGLDecorator(Shader(vertex_source = Shader.COLOR_VERT_MVP, fragment_source=Shader.COLOR_FRAG)))
-        self.axes_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+        # self.axes_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
 
 
         running = True
@@ -773,14 +770,29 @@ class TestScene(unittest.TestCase):
         # Add RenderWindow to the EventManager publishers
         # eManager._publishers[updateBackground.name] = gGUI
 
+        
+        eye = util.vec(2.5, 2.5, 2.5)
+        target = util.vec(0.0, 0.0, 0.0)
+        up = util.vec(0.0, 1.0, 0.0)
+        view = util.lookat(eye, target, up)
+        # projMat = util.ortho(-10.0, 10.0, -10.0, 10.0, -1.0, 10.0) ## WORKING
+        # projMat = util.perspective(90.0, 1.33, 0.1, 100) ## WORKING
+        projMat = util.perspective(50.0, 1.0, 1.0, 10.0) ## WORKING 
+        
+        gWindow._myCamera = view # otherwise, an imgui slider must be moved to properly update
+
+        model_terrain_axes = util.translate(0.0,0.0,0.0)
+        model_cube = util.scale(0.3) @ util.translate(0.0,0.5,0.0)
 
         while running:
             running = self.scene.render(running)
             self.scene.world.traverse_visit(self.renderUpdate, self.scene.world.root)
-            mvpMat = gWindow._myCamera
-            self.axes_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
-            self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
-            self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvpMat, mat4=True)
+            view =  gWindow._myCamera # updates view via the imgui
+            mvp_cube = projMat @ view @ model_cube
+            mvp_terrain_axes = projMat @ view @ model_terrain_axes
+            self.axes_shader.setUniformVariable(key='modelViewProj', value=mvp_terrain_axes, mat4=True)
+            self.terrain_shader.setUniformVariable(key='modelViewProj', value=mvp_terrain_axes, mat4=True)
+            self.shaderDec4.setUniformVariable(key='modelViewProj', value=mvp_cube, mat4=True)
             self.scene.render_post()
             
         self.scene.shutdown()
