@@ -29,6 +29,7 @@ import pyglGA.ECSS.System
 import pyglGA.ECSS.utilities as util
 import pyglGA.ECSS.Event
 from pyglGA.ECSS.System import System 
+from pyglGA.ECSS.Component import BasicTransform
 import numpy as np
 
 class RenderWindow(ABC):
@@ -232,6 +233,15 @@ class SDL2Window(RenderWindow):
         gl.glClearColor(0.0,0.0,0.0,1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDisable(gl.GL_CULL_FACE)
+        gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glDepthFunc(gl.GL_LESS)
+        # gl.glDepthFunc(gl.GL_LEQUAL);
+        
+        
+        
+        # gl.glDepthMask(gl.GL_FALSE);  
+    
+    
         #gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
         
         #setup some extra GL state flags
@@ -371,8 +381,8 @@ class ImGUIDecorator(RenderDecorator):
         self._changed = False 
         self._checkbox = False 
         self._colorEditor = (0.0, 0.0, 0.0)
-        self._eye = (1.0, 1.0, 1.0)
-        self._target = (0.0, 0.0, 0.0) # also named target
+        self._eye = (2.5, 2.5, 2.5)
+        self._target = (0.0, 0.0, 0.0) 
         self._up = (0.0, 1.0, 0.0)
        
     def init(self):
@@ -493,7 +503,7 @@ class ImGUIDecorator(RenderDecorator):
         #
         # MANOS - START
         # simple slider for eye - IMPORTANT PART HERE
-        self._changed, self._eye = imgui.drag_float3( "Eye", *self._eye,min_value=-10, max_value=10,format="%.3f")
+        self._changed, self._eye = imgui.drag_float3( "Eye", *self._eye, change_speed = 0.01, min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("NEW CAMERA VALUE", self._updateCamera.value)
@@ -503,7 +513,7 @@ class ImGUIDecorator(RenderDecorator):
         imgui.separator()
         #
         # simple slider for target
-        self._changed, self._target = imgui.drag_float3( "Target", *self._target,min_value=-10, max_value=10,format="%.3f")
+        self._changed, self._target = imgui.drag_float3( "Target", *self._target, change_speed = 0.01, min_value=-10, max_value=10,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("NEW CAMERA VALUE", self._updateCamera.value)
@@ -512,7 +522,7 @@ class ImGUIDecorator(RenderDecorator):
             print(f"_target: {self._target}")
         imgui.separator()
         # simple slider for up
-        self._changed, self._up = imgui.drag_float3( "Up", *self._up,min_value=-5, max_value=5,format="%.3f")
+        self._changed, self._up = imgui.drag_float3( "Up", *self._up, change_speed = 0.01 ,min_value=-5, max_value=5,format="%.3f")
         if self._changed:
             self._updateCamera.value = util.lookat(util.vec(self._eye), util.vec(self._target), util.vec(self._up))
             print ("NEW CAMERA VALUE", self._updateCamera.value)
@@ -539,7 +549,125 @@ class ImGUIDecorator(RenderDecorator):
     def accept(self, system: pyglGA.ECSS.System, event = None):
         system.apply2ImGUIDecorator(self, event)
 
+class ImGUIecssDecorator(ImGUIDecorator):
+    """custom ImGUI decorator for this example
 
+    :param ImGUIDecorator: [description]
+    :type ImGUIDecorator: [type]
+    """
+    def __init__(self, wrapee: RenderWindow, imguiContext = None):
+        super().__init__(wrapee, imguiContext)
+        self.selected = None; # Selected should be a component
+
+        # TRS Variables 
+        self.translation = {};
+        self.translation["x"] = 0; self.translation["y"] = 0; self.translation["z"] = 0; 
+
+        self.rotation = {};
+        self.rotation["x"] = 0; self.rotation["y"] = 0; self.rotation["z"] = 0; 
+
+        self.scale = {};
+        self.scale["x"] = 0; self.scale["y"] = 0; self.scale["z"] = 0; 
+
+        self.color = [255, 50, 50];
+        
+    def scenegraphVisualiser(self):
+        """display the ECSS in an ImGUI tree node structure
+        Typically this is a custom widget to be extended in an ImGUIDecorator subclass 
+        """
+        sceneRoot = self.wrapeeWindow.scene.world.root.name
+        if sceneRoot is None:
+            sceneRoot = "ECSS Root Entity"
+        
+        imgui.begin("ECSS graph")
+        imgui.columns(2,"Properties")
+        # below is a recursive call to build-up the whole scenegraph as ImGUI tree
+        if imgui.tree_node(sceneRoot, imgui.TREE_NODE_OPEN_ON_ARROW):
+            self.drawNode(self.wrapeeWindow.scene.world.root)
+            imgui.tree_pop()
+        imgui.next_column()
+        imgui.text("Properties")
+        imgui.separator()
+
+        #TRS sample
+        # if(isinstance(self.selected, BasicTransform)):
+        if imgui.tree_node("Translation", imgui.TREE_NODE_OPEN_ON_ARROW):
+            changed, value = imgui.slider_float("X", self.translation["x"], -3, 3, "%.01f", 1);
+            self.translation["x"] = value;
+            changed, value = imgui.slider_float("Y", self.translation["y"], -3, 3, "%.01f", 1);
+            self.translation["y"] = value;
+            changed, value = imgui.slider_float("Z", self.translation["z"], -3, 3, "%.01f", 1);
+            self.translation["z"] = value;
+            imgui.tree_pop();
+        if imgui.tree_node("Rotation", imgui.TREE_NODE_OPEN_ON_ARROW):
+            changed, value = imgui.slider_float("X", self.rotation["x"], -90, 90, "%.1f", 1);
+            self.rotation["x"] = value;
+            changed, value = imgui.slider_float("Y", self.rotation["y"], -90, 90, "%.1f", 1);
+            self.rotation["y"] = value;
+            changed, value = imgui.slider_float("Z", self.rotation["z"], -90, 90, "%.1f", 1);
+            self.rotation["z"] = value;
+            imgui.tree_pop();
+        if imgui.tree_node("Scale", imgui.TREE_NODE_OPEN_ON_ARROW):
+            changed, value = imgui.slider_float("X", self.scale["x"], 0, 3, "%.01f", 1);
+            self.scale["x"] = value;
+            changed, value = imgui.slider_float("Y", self.scale["y"], 0, 3, "%.01f", 1);
+            self.scale["y"] = value;
+            changed, value = imgui.slider_float("Z", self.scale["z"], 0, 3, "%.01f", 1);
+            self.scale["z"] = value;
+            imgui.tree_pop();
+
+        imgui.end()
+        
+    def drawNode(self, component):
+        #create a local iterator of Entity's children
+        if component._children is not None:
+            debugIterator = iter(component._children)
+            #call print() on all children (Concrete Components or Entities) while there are more children to traverse
+            done_traversing = False
+            while not done_traversing:
+                try:
+                    comp = next(debugIterator)
+                    imgui.indent(10)
+                except StopIteration:
+                    done_traversing = True
+                else:
+                    if imgui.tree_node(comp.name + " | " + str(comp.id), imgui.TREE_NODE_OPEN_ON_ARROW):
+                        _, selected = imgui.selectable(comp.__str__(), True)
+                        if selected:
+                            if comp != self.selected: # First time selecting it. Set trs values to GUI;
+                                self.selected = comp;
+                                if isinstance(comp, BasicTransform):
+                                    [x, y, z] = comp.translation;
+                                    self.translation["x"] = x;
+                                    self.translation["y"] = y;
+                                    self.translation["z"] = z;
+                                    [x, y, z] = comp.scale;
+                                    self.scale["x"] = x;
+                                    self.scale["y"] = y;
+                                    self.scale["z"] = z;
+                                    [x, y, z] = comp.rotationEulerAngles;
+                                    self.rotation["x"] = x;
+                                    self.rotation["y"] = y;
+                                    self.rotation["z"] = z;
+                                # elif isinstance(comp, GameObjectEntity):
+                                    # self.color = comp.color.copy();
+                            else:                       # Set GUI values to trs;
+                                if isinstance(comp, BasicTransform):
+                                    transMat = util.translate(self.translation["x"], self.translation["y"], self.translation["z"]);
+                                    rotMatX = util.rotate((1, 0, 0), self.rotation["x"])
+                                    rotMatY = util.rotate((0, 1, 0), self.rotation["y"])
+                                    rotMatZ = util.rotate((0, 0, 1), self.rotation["z"])
+                                    scaleMat = util.scale(self.scale["x"], self.scale["y"], self.scale["z"])
+
+                                    comp.trs = util.identity() @ transMat @ rotMatX @ rotMatY @ rotMatZ @ scaleMat;
+                                    # comp.trs = scaleMat @ rotMatZ @ rotMatY @ rotMatX @ transMat;
+                                elif hasattr(comp, "drawSelfGui"):
+                                    comp.drawSelfGui(imgui);
+
+                        imgui.tree_pop()
+                    
+                    self.drawNode(comp) # recursive call of this method to traverse hierarchy
+                    imgui.unindent(10) # Corrent placement of unindent
 class RenderGLStateSystem(System):
     """
     System that operates on a RenderDecorator (ImGUIDecorator) and affect GL State
