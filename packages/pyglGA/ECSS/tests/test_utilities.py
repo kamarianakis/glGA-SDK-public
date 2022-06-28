@@ -337,39 +337,33 @@ class TestUtilities(unittest.TestCase):
         eye = (1.0, 1.0, 1.0)
         target = (10,10,10)
         up = (0.0, 1.0, 0.0)
-        
         matLookat = lookat(eye, target, up)               
-        mLat = np.array([[ 0.707107,   0.0,       -0.707107,  -0.0       ],
+        mLat = np.array([[ -0.707107,   0.0,       0.707107,  -0.0       ],
                          [-0.408248,   0.816497,  -0.408248,  -0.0       ],
-                         [ 0.57735,    0.57735,    0.577353,  -1.73205081],
+                         [ -0.57735,    -0.57735,   -0.577353,  1.73205081],
                          [ 0.0,        0.0,        0.0,        1.0       ]],
-                         dtype=np.float,order='F') #glm.lookAtLH
+                         dtype=np.float,order='F') #glm.lookAtRH
 
         ## 
         matLookat2 = lookat((0.0, 0.0, -1.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0))
         mLat2 = np.array([
-            [1.0,0.0,0.0,-0.0],
+            [-1.0,0.0,0.0,-0.0],
             [0.0,1.0,0.0,-0.0],
-            [0.0,0.0,1.0,1.0],
+            [0.0,0.0,-1.0,-1.0],
             [0.0,0.0,0.0,1.0]],
-            dtype=np.float,order='F') #glm.lookAtLH
+            dtype=np.float,order='F') #glm.lookAtRH
         
         ##
         matLookat3 = lookat((1.0, 2.0, 3.0), (3.0, 2.0, 1.0), (0.0, 1.0, 0.0))
-        mLat3 = np.array([[-0.70710678,  0.0,         -0.70710678,  2.82842712 ],
+        mLat3 = np.array([[0.70710678,  0.0,         0.70710678,  -2.82842712 ],
                           [ 0.0,         1.0,          0.0,         -2.        ],
-                          [ 0.70710678,  0.0,         -0.70710678,  1.41421356 ],
+                          [ -0.70710678,  0.0,         0.70710678,  -1.41421356 ],
                           [ 0.0,         0.0,          0.0,          1.        ]],
                           dtype=np.float,order='F')
         
         
        
-        print("matLookat = \n",matLookat)
-        print("mLat = \n",mLat)
-        # print("matLookat2 = \n",matLookat2)
-        # print("mLat2 = \n",mLat2)
 
-        #self.assertAlmostEquals(matRot.all(), mR.all(),6)
         np.testing.assert_array_almost_equal(matLookat,mLat,decimal=5)
         np.testing.assert_array_almost_equal(matLookat2,mLat2,decimal=5)
         np.testing.assert_array_almost_equal(matLookat3,mLat3,decimal=5)
